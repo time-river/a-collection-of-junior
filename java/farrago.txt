@@ -1,0 +1,2 @@
+A fileInputStream obtains input bytes from a file in a file system.
+What files are availables depends on the host environment.
