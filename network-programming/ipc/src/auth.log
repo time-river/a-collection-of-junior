@@ -1,0 +1,642 @@
+Nov  6 22:45:21 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:45:21 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:45:21 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:45:30 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:45:30 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:45:30 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:45:36 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:45:36 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:45:36 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:46:08 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.
+Nov  6 22:46:08 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:46:08 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:46:09 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:46:09 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:46:09 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:46:36 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:46:36 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:46:36 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:46:41 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:46:41 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:46:41 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:52:34 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:52:34 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:52:34 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:52:38 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.
+Nov  6 22:52:38 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:52:38 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:52:39 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:52:39 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:52:39 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:53:52 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:53:52 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:53:52 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:54:17 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:54:17 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:54:17 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:54:43 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:54:43 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:54:43 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:54:53 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:54:53 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:54:53 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:54:55 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:54:55 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:54:55 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:55:26 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:55:26 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:55:26 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:56:22 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:56:22 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:56:22 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:56:43 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:56:43 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:56:43 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:58:10 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:58:10 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:58:10 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:58:21 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:58:21 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:58:21 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:59:05 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 22:59:05 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:59:05 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 22:59:53 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 22:59:53 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 22:59:53 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:01:36 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:01:36 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:01:36 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:03:41 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:03:41 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:03:41 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:03:51 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:03:51 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:03:51 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:08:48 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:08:48 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:08:48 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:15:13 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:15:13 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:15:13 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:15:18 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:15:18 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:15:18 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:15:18 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:15:18 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:15:18 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:15:27 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:15:27 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:15:27 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:17:01 me-U24 CRON[18452]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  6 23:17:01 me-U24 CRON[18452]: pam_unix(cron:session): session closed for user root
+Nov  6 23:19:02 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:19:02 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:19:02 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:20:32 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:20:32 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:20:32 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:21:26 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:21:26 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:21:26 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:21:32 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:21:32 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:21:32 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:22:31 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:22:31 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:22:31 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:22:43 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:22:43 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:22:43 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:27:33 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:27:33 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:27:33 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:30:23 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:30:23 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:30:23 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:30:25 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:30:25 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:30:25 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:30:33 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:30:33 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:30:33 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:31:40 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:31:40 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:31:40 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:32:28 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:32:28 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:32:28 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:33:01 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:33:01 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:33:01 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:36:40 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:36:40 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:36:40 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:37:45 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:37:45 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:37:45 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:40:47 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:40:47 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:40:47 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:40:53 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:40:53 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:40:53 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:40:55 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:40:55 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:40:55 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:40:58 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  6 23:40:58 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:40:58 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:41:51 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me ; USER=root ; COMMAND=/sbin/poweroff
+Nov  6 23:41:51 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:43:28 me-U24 systemd-logind[957]: New seat seat0.
+Nov  6 23:43:28 me-U24 systemd-logind[957]: Watching system buttons on /dev/input/event3 (Power Button)
+Nov  6 23:43:28 me-U24 systemd-logind[957]: Watching system buttons on /dev/input/event6 (Video Bus)
+Nov  6 23:43:28 me-U24 systemd-logind[957]: Watching system buttons on /dev/input/event0 (Lid Switch)
+Nov  6 23:43:28 me-U24 systemd-logind[957]: Watching system buttons on /dev/input/event1 (Sleep Button)
+Nov  6 23:43:28 me-U24 systemd-logind[957]: Watching system buttons on /dev/input/event5 (Video Bus)
+Nov  6 23:43:28 me-U24 systemd-logind[957]: Watching system buttons on /dev/input/event2 (Power Button)
+Nov  6 23:43:28 me-U24 lightdm: pam_unix(lightdm-autologin:session): session opened for user me by (uid=0)
+Nov  6 23:43:28 me-U24 systemd-logind[957]: New session c1 of user me.
+Nov  6 23:43:28 me-U24 systemd: pam_unix(systemd-user:session): session opened for user me by (uid=0)
+Nov  6 23:43:29 me-U24 gnome-keyring-daemon[1440]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  6 23:43:30 me-U24 gnome-keyring-daemon[1440]: The PKCS#11 component was already initialized
+Nov  6 23:43:30 me-U24 gnome-keyring-daemon[1440]: The SSH agent was already initialized
+Nov  6 23:43:30 me-U24 gnome-keyring-daemon[1440]: The Secret Service was already initialized
+Nov  6 23:43:31 me-U24 polkitd(authority=local): Registered Authentication Agent for unix-session:c1 (system bus name :1.47 [/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1], object path /org/gnome/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Nov  6 23:43:55 me-U24 dbus[852]: [system] Failed to activate service 'org.bluez': timed out
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: bus acquired: org.gnome.keyring.SystemPrompter
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: registering prompter
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: bus acquired: org.gnome.keyring.PrivatePrompter
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: received BeginPrompting call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: preparing a prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: creating new GcrPromptDialog prompt
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: automatically selecting secret exchange protocol
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: generating public key
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: beginning the secret exchange: [sx-aes-1]\npublic=myhLHmKWk4r181CXpmLwR762igyCZsbqtbIz89QG8cVjXwsBjunHVuQ/yVw4kJuozrk3By9QOWsfdFD2CjsYL1Ikge0FdD1u+gsEsyunSeySBiJc4EToXuGmuBZSJyFw1TVdxUdGEl4+FNpkAc8qlKL8+DP9MyTDC+lnJr880k79HYQqxUFiCm5O6lDUdL+DOzz05ayvogssVrbt3QhFeNwhrSbQTU2lR38mzOqjwjdcgsC0l4Ok7ysn8Nd/n/ps\n
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: acquired name: org.gnome.keyring.SystemPrompter
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: acquired name: org.gnome.keyring.PrivatePrompter
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: receiving secret exchange: [sx-aes-1]\npublic=61h+ODjK0vjfDu8XaDU/NaK5armQnkTObAMgx/mlTK8EWspFOziQSO03U0MKh09nNaCMKpvvBLCJoGWujX+yN+F3ndXIxThvwR9w5iwVXt+/F6+4CWo8gLtBiOXFcJGb/skNhMiuaO4TZZJd4JyF/v8ctFIBUxbyizEK7XJg/cb5Ri8ks6W1XlbH7YJvTjYrIP54oauD3AfacXlR/rCY++au7HQe+bfsQw4Yg+adTH9Jy447viVnXv1gpiM+4Wjb\n
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: deriving shared transport key
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: deriving transport key
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gcr: starting password prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:19 me-U24 gcr-prompter[2602]: Gtk: GtkDialog mapped without a transient parent. This is discouraged.
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: completed password prompt for callback :1.2@/org/gnome/keyring/Prompt/p2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: encrypting data
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: sending the secret exchange: [sx-aes-1]\npublic=myhLHmKWk4r181CXpmLwR762igyCZsbqtbIz89QG8cVjXwsBjunHVuQ/yVw4kJuozrk3By9QOWsfdFD2CjsYL1Ikge0FdD1u+gsEsyunSeySBiJc4EToXuGmuBZSJyFw1TVdxUdGEl4+FNpkAc8qlKL8+DP9MyTDC+lnJr880k79HYQqxUFiCm5O6lDUdL+DOzz05ayvogssVrbt3QhFeNwhrSbQTU2lR38mzOqjwjdcgsC0l4Ok7ysn8Nd/n/ps\nsecret=+ucI5GZRfdk5DxDwCJvQ0A==\niv=BWJLNILDhflnqRBqkor30w==\n
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gnome-keyring-daemon[1440]: couldn't allocate secure memory to keep passwords and or keys from being written to the disk
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: closing the prompt
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  6 23:45:23 me-U24 gcr-prompter[2602]: Gcr: calling the PromptDone method on /org/gnome/keyring/Prompt/p2@:1.2, and ignoring reply
+Nov  6 23:45:23 me-U24 gnome-keyring-daemon[1440]: asked to register item /org/freedesktop/secrets/collection/login/55, but it's already registered
+Nov  6 23:45:33 me-U24 gcr-prompter[2602]: 10 second inactivity timeout, quitting
+Nov  6 23:45:33 me-U24 gcr-prompter[2602]: Gcr: unregistering prompter
+Nov  6 23:45:33 me-U24 gcr-prompter[2602]: Gcr: disposing prompter
+Nov  6 23:45:33 me-U24 gcr-prompter[2602]: Gcr: finalizing prompter
+Nov  6 23:45:48 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  6 23:45:48 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:45:48 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  6 23:46:05 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system ; USER=root ; COMMAND=/sbin/poweroff
+Nov  6 23:46:05 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  6 23:46:05 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: New seat seat0.
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: Watching system buttons on /dev/input/event3 (Power Button)
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: Watching system buttons on /dev/input/event6 (Video Bus)
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: Watching system buttons on /dev/input/event0 (Lid Switch)
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: Watching system buttons on /dev/input/event1 (Sleep Button)
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: Watching system buttons on /dev/input/event5 (Video Bus)
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: Watching system buttons on /dev/input/event2 (Power Button)
+Nov  7 11:14:49 me-U24 lightdm: pam_unix(lightdm-autologin:session): session opened for user me by (uid=0)
+Nov  7 11:14:49 me-U24 systemd: pam_unix(systemd-user:session): session opened for user me by (uid=0)
+Nov  7 11:14:49 me-U24 systemd-logind[1027]: New session c1 of user me.
+Nov  7 11:14:50 me-U24 gnome-keyring-daemon[1453]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  7 11:14:50 me-U24 gnome-keyring-daemon[1460]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  7 11:14:51 me-U24 gnome-keyring-daemon[1453]: The PKCS#11 component was already initialized
+Nov  7 11:14:51 me-U24 gnome-keyring-daemon[1453]: The SSH agent was already initialized
+Nov  7 11:14:51 me-U24 gnome-keyring-daemon[1453]: The Secret Service was already initialized
+Nov  7 11:14:52 me-U24 polkitd(authority=local): Registered Authentication Agent for unix-session:c1 (system bus name :1.50 [/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1], object path /org/gnome/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Nov  7 11:15:01 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 11:15:01 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:15:01 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:15:08 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 11:15:08 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:15:08 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:15:10 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 11:15:10 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:15:10 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:15:11 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 11:15:11 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:15:14 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:15:14 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 11:15:14 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:15:16 me-U24 dbus[893]: [system] Failed to activate service 'org.bluez': timed out
+Nov  7 11:15:18 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:15:20 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 11:15:20 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:15:23 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:16:49 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 11:16:49 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:16:59 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: bus acquired: org.gnome.keyring.SystemPrompter
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: registering prompter
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: bus acquired: org.gnome.keyring.PrivatePrompter
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: received BeginPrompting call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: preparing a prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: creating new GcrPromptDialog prompt
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: automatically selecting secret exchange protocol
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: generating public key
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: beginning the secret exchange: [sx-aes-1]\npublic=2CxjXxPSPpg0PE78dpT+cBqxuBIW6nry6PdXMZ1vKVaGEnQdtd0xG26U6LZ7Va+DIIzWH7pQHoRSWOqksZpkQHOk4EylYQnjw3fvflyE1cwpJtPjeV53exQbBqkclh6mNMZvFanISuPbxjfjZIhRwK0NAvOhUekDsRarypUyHWGk7VYbZwP6KrpvCvXi5Vu5c+zIB6nPsWA6o2ebMPRhpXOYtCiubLMKhdndhhQb3jLPeKCOvDILKc0MSXqY63l+\n
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: acquired name: org.gnome.keyring.SystemPrompter
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: acquired name: org.gnome.keyring.PrivatePrompter
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: receiving secret exchange: [sx-aes-1]\npublic=5v+ExD39jA4WG3CNvZSQHtfB7RjA1qniSodt2mIkVzEeTbFJSvy25RxLqTLeRGCBT1A3awk2PYBcznIRqEj066efzD8ci2NSXnOJFP3n4ymlR8xwAyhvYhQHFgV/h4MQRRSnDtwHybYh/ciD+XD5YSiiLDmh+UwvFnZQrihB/3/su8py6LahYMkxlmiOXZ6EVS4ibNbp+tWPZHQqBEZCodelAZw5aNFpM6AlTVReDQYcoPW6Rl47EJEc6tn10Xec\n
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: deriving shared transport key
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: deriving transport key
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gcr: starting password prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:00 me-U24 gcr-prompter[3762]: Gtk: GtkDialog mapped without a transient parent. This is discouraged.
+Nov  7 11:17:01 me-U24 CRON[3770]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  7 11:17:01 me-U24 CRON[3770]: pam_unix(cron:session): session closed for user root
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: completed password prompt for callback :1.2@/org/gnome/keyring/Prompt/p2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: encrypting data
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: sending the secret exchange: [sx-aes-1]\npublic=2CxjXxPSPpg0PE78dpT+cBqxuBIW6nry6PdXMZ1vKVaGEnQdtd0xG26U6LZ7Va+DIIzWH7pQHoRSWOqksZpkQHOk4EylYQnjw3fvflyE1cwpJtPjeV53exQbBqkclh6mNMZvFanISuPbxjfjZIhRwK0NAvOhUekDsRarypUyHWGk7VYbZwP6KrpvCvXi5Vu5c+zIB6nPsWA6o2ebMPRhpXOYtCiubLMKhdndhhQb3jLPeKCOvDILKc0MSXqY63l+\nsecret=bPuwnQtoCkkLWo1Kg27bbg==\niv=BcCm5EPiSP1xRqMR5Z6SUg==\n
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gnome-keyring-daemon[1453]: couldn't allocate secure memory to keep passwords and or keys from being written to the disk
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: closing the prompt
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 11:17:06 me-U24 gcr-prompter[3762]: Gcr: calling the PromptDone method on /org/gnome/keyring/Prompt/p2@:1.2, and ignoring reply
+Nov  7 11:17:11 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt dist-upgrade
+Nov  7 11:17:11 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:17:16 me-U24 gcr-prompter[3762]: 10 second inactivity timeout, quitting
+Nov  7 11:17:16 me-U24 gcr-prompter[3762]: Gcr: unregistering prompter
+Nov  7 11:17:16 me-U24 gcr-prompter[3762]: Gcr: disposing prompter
+Nov  7 11:17:16 me-U24 gcr-prompter[3762]: Gcr: finalizing prompter
+Nov  7 11:17:50 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:22:31 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt autoremove --purge
+Nov  7 11:22:31 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:22:35 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:23:06 me-U24 sudo:       me : TTY=pts/17 ; PWD=/boot ; USER=root ; COMMAND=/bin/cat System.map-4.4.0-45-generic
+Nov  7 11:23:06 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:23:07 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:23:54 me-U24 sudo:       me : TTY=pts/17 ; PWD=/boot ; USER=root ; COMMAND=/bin/bash
+Nov  7 11:23:54 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:24:02 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:27:48 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt purge nvidia-361
+Nov  7 11:27:48 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:27:52 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:27:57 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt purge --autoremove nvidia-361
+Nov  7 11:27:57 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:28:00 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:40:46 me-U24 sudo:       me : TTY=pts/1 ; PWD=/lib/udev/rules.d ; USER=root ; COMMAND=/bin/mv 99-traverse.rules /home/me/ownCloud/code/system/9/
+Nov  7 11:40:46 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:40:46 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:44:40 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 11:44:40 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:44:40 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:44:42 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/bin/bash
+Nov  7 11:44:42 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 11:45:10 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 11:46:33 me-U24 dbus[893]: [system] Failed to activate service 'org.bluez': timed out
+Nov  7 12:05:31 me-U24 sudo: pam_unix(sudo:auth): auth could not identify password for [me]
+Nov  7 12:07:34 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/usr/bin/make install
+Nov  7 12:07:34 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:07:34 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:08:37 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=./test-traverse
+Nov  7 12:08:37 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:08:37 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:08:55 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/usr/bin/make clean
+Nov  7 12:08:55 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:08:58 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:09:20 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/usr/bin/make clean
+Nov  7 12:09:20 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:09:22 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:09:48 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/usr/bin/make clean
+Nov  7 12:09:48 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:09:50 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:10:02 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/usr/bin/make clean
+Nov  7 12:10:02 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:10:04 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:10:23 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/usr/bin/make clean
+Nov  7 12:10:23 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:10:26 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:11:02 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 12:11:02 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:11:02 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:11:06 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  7 12:11:06 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:11:06 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:11:07 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 12:11:07 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:11:07 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:11:45 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 12:11:45 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:11:45 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:11:49 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  7 12:11:49 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:11:49 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:11:52 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 12:11:52 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:11:52 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:04 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 12:15:04 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:04 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:08 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  7 12:15:08 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:08 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:09 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 12:15:09 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:09 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:12 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  7 12:15:12 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:12 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:27 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/bin/rm /lib/udev/rules.d/99-traverse.rules
+Nov  7 12:15:27 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:27 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:45 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 12:15:45 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:45 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:50 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=./test-traverse
+Nov  7 12:15:50 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:50 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:15:54 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  7 12:15:54 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 12:15:54 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 12:17:01 me-U24 CRON[21740]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  7 12:17:01 me-U24 CRON[21740]: pam_unix(cron:session): session closed for user root
+Nov  7 12:20:25 me-U24 dbus[893]: [system] Failed to activate service 'org.bluez': timed out
+Nov  7 12:22:13 me-U24 sudo:       me : TTY=pts/1 ; PWD=/home/me ; USER=root ; COMMAND=/sbin/poweroff
+Nov  7 12:22:13 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 15:42:43 me-U24 systemd-logind[986]: New seat seat0.
+Nov  7 15:42:43 me-U24 systemd-logind[986]: Watching system buttons on /dev/input/event3 (Power Button)
+Nov  7 15:42:43 me-U24 systemd-logind[986]: Watching system buttons on /dev/input/event6 (Video Bus)
+Nov  7 15:42:43 me-U24 systemd-logind[986]: Watching system buttons on /dev/input/event0 (Lid Switch)
+Nov  7 15:42:43 me-U24 systemd-logind[986]: Watching system buttons on /dev/input/event1 (Sleep Button)
+Nov  7 15:42:43 me-U24 systemd-logind[986]: Watching system buttons on /dev/input/event5 (Video Bus)
+Nov  7 15:42:43 me-U24 systemd-logind[986]: Watching system buttons on /dev/input/event2 (Power Button)
+Nov  7 15:42:43 me-U24 lightdm: pam_unix(lightdm-autologin:session): session opened for user me by (uid=0)
+Nov  7 15:42:43 me-U24 systemd-logind[986]: New session c1 of user me.
+Nov  7 15:42:43 me-U24 systemd: pam_unix(systemd-user:session): session opened for user me by (uid=0)
+Nov  7 15:42:44 me-U24 gnome-keyring-daemon[1583]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  7 15:42:45 me-U24 gnome-keyring-daemon[1583]: The PKCS#11 component was already initialized
+Nov  7 15:42:45 me-U24 gnome-keyring-daemon[1583]: The SSH agent was already initialized
+Nov  7 15:42:45 me-U24 gnome-keyring-daemon[1583]: The Secret Service was already initialized
+Nov  7 15:42:46 me-U24 polkitd(authority=local): Registered Authentication Agent for unix-session:c1 (system bus name :1.58 [/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1], object path /org/gnome/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Nov  7 15:43:10 me-U24 dbus[1002]: [system] Failed to activate service 'org.bluez': timed out
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: bus acquired: org.gnome.keyring.SystemPrompter
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: registering prompter
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: bus acquired: org.gnome.keyring.PrivatePrompter
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: received BeginPrompting call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: preparing a prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: creating new GcrPromptDialog prompt
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: automatically selecting secret exchange protocol
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: generating public key
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: beginning the secret exchange: [sx-aes-1]\npublic=EUFm0yXvQAO+ptC43tHvdL9GnxK1JFDxGxvkV5CJTLYcy+4ndDWEKXzEEM3ZLHE0m7NS2XVxm9KB3xJQUEhm3oks7GbLpRKbeWa+n2HNA6V1hUE8ZMp01t2P0WUeyRtowXMHtNAhQEB8aWUIexucypnVRKmXT8Na18mq+hrWIV2OeGOCAQv0avWm5CeMMCRwlxmrfWp1fTnNmzwdvnr0b636P5+mxr0D5ViDrWWyKOnATKNGgdhWj5LQYhkUuAU0\n
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: acquired name: org.gnome.keyring.SystemPrompter
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: acquired name: org.gnome.keyring.PrivatePrompter
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: receiving secret exchange: [sx-aes-1]\npublic=b5WjBMQyTE1heS4PXm56Q+N/2CGvrBmscETay9sxRqPwC3PYIRk8lTHKTBJ5RyJo6PsvqH3YQOp4QOTDvjumpUHfiCiKssmDI+DmpfVXoN7SlO/ObzmXqzGlfqUx99eKPxLM8PVBtkhs7/rdBsxjz+9amU64R0H8KLFthmSrTimww7bMV3vDxF7h+QqOOCfkHvOioj4PUGlRWHKa4GaGR1lOsMDmKh0aW0vem+ltk+druRWLrZ2hh7o+lcuQ9EY/\n
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: deriving shared transport key
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: deriving transport key
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gcr: starting password prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:46 me-U24 gcr-prompter[3565]: Gtk: GtkDialog mapped without a transient parent. This is discouraged.
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: completed password prompt for callback :1.2@/org/gnome/keyring/Prompt/p2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: encrypting data
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: sending the secret exchange: [sx-aes-1]\npublic=EUFm0yXvQAO+ptC43tHvdL9GnxK1JFDxGxvkV5CJTLYcy+4ndDWEKXzEEM3ZLHE0m7NS2XVxm9KB3xJQUEhm3oks7GbLpRKbeWa+n2HNA6V1hUE8ZMp01t2P0WUeyRtowXMHtNAhQEB8aWUIexucypnVRKmXT8Na18mq+hrWIV2OeGOCAQv0avWm5CeMMCRwlxmrfWp1fTnNmzwdvnr0b636P5+mxr0D5ViDrWWyKOnATKNGgdhWj5LQYhkUuAU0\nsecret=addds+qZ4erdfiw3MUr7iw==\niv=km9hGaBfOuPfBkNrdDlRRQ==\n
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gnome-keyring-daemon[1583]: couldn't allocate secure memory to keep passwords and or keys from being written to the disk
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: closing the prompt
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 15:46:48 me-U24 gcr-prompter[3565]: Gcr: calling the PromptDone method on /org/gnome/keyring/Prompt/p2@:1.2, and ignoring reply
+Nov  7 15:46:58 me-U24 gcr-prompter[3565]: 10 second inactivity timeout, quitting
+Nov  7 15:46:58 me-U24 gcr-prompter[3565]: Gcr: unregistering prompter
+Nov  7 15:46:58 me-U24 gcr-prompter[3565]: Gcr: disposing prompter
+Nov  7 15:46:58 me-U24 gcr-prompter[3565]: Gcr: finalizing prompter
+Nov  7 15:54:03 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me ; USER=root ; COMMAND=/sbin/poweroff
+Nov  7 15:54:03 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 17:52:52 me-U24 systemd-logind[964]: New seat seat0.
+Nov  7 17:52:52 me-U24 systemd-logind[964]: Watching system buttons on /dev/input/event3 (Power Button)
+Nov  7 17:52:52 me-U24 systemd-logind[964]: Watching system buttons on /dev/input/event6 (Video Bus)
+Nov  7 17:52:52 me-U24 systemd-logind[964]: Watching system buttons on /dev/input/event0 (Lid Switch)
+Nov  7 17:52:52 me-U24 systemd-logind[964]: Watching system buttons on /dev/input/event1 (Sleep Button)
+Nov  7 17:52:52 me-U24 systemd-logind[964]: Watching system buttons on /dev/input/event5 (Video Bus)
+Nov  7 17:52:52 me-U24 systemd-logind[964]: Watching system buttons on /dev/input/event2 (Power Button)
+Nov  7 17:52:53 me-U24 lightdm: pam_unix(lightdm-autologin:session): session opened for user me by (uid=0)
+Nov  7 17:52:53 me-U24 systemd: pam_unix(systemd-user:session): session opened for user me by (uid=0)
+Nov  7 17:52:53 me-U24 systemd-logind[964]: New session c1 of user me.
+Nov  7 17:52:53 me-U24 gnome-keyring-daemon[1571]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  7 17:52:53 me-U24 gnome-keyring-daemon[1576]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  7 17:52:55 me-U24 gnome-keyring-daemon[1571]: The PKCS#11 component was already initialized
+Nov  7 17:52:55 me-U24 gnome-keyring-daemon[1571]: The SSH agent was already initialized
+Nov  7 17:52:55 me-U24 gnome-keyring-daemon[1571]: The Secret Service was already initialized
+Nov  7 17:52:55 me-U24 polkitd(authority=local): Registered Authentication Agent for unix-session:c1 (system bus name :1.55 [/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1], object path /org/gnome/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Nov  7 17:53:19 me-U24 dbus[1022]: [system] Failed to activate service 'org.bluez': timed out
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: bus acquired: org.gnome.keyring.SystemPrompter
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: registering prompter
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: bus acquired: org.gnome.keyring.PrivatePrompter
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: received BeginPrompting call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: preparing a prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: creating new GcrPromptDialog prompt
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: automatically selecting secret exchange protocol
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: generating public key
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: beginning the secret exchange: [sx-aes-1]\npublic=OC+wuCNeN1H9PDiM3iGnE2pGt4H0aDulguUehoJi1sze7M5luRQl3k34zxY+TGb9ukFcB7wxC84fFjJVB/mQemmLRYgQ6UYe7FGrP1umdgai7kozpQoIvyaHyY6qmhu2D7R/xWzJgM7b/ehcsN1CZD69hpB43de6fl1w7VpIyu5CwyfkoyCYpWoYU0FE6lvCYSF0+dyD7lMujuTUatUfKLM8ziwN7CIl9HbytiDUNbUP2dTeyr+zAskr9EezADB2\n
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: acquired name: org.gnome.keyring.SystemPrompter
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: acquired name: org.gnome.keyring.PrivatePrompter
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: receiving secret exchange: [sx-aes-1]\npublic=lL9POF083Ng2DIUeFkBkMUzWLPjwXLINzbzfiB+B586Ff+2ur9xipzopiAvT2anstkmMtouSmQ98Ugz5Q74wj/wff0ktQLYJgL4q/y3p2nQ+eZLuqecUNA6OTSN5FeUTbEJmMxk5ModPDSUje/BxmB5eT8a9eN6gBz3Ab1SgWxteOaX766TValQ2It1DwjMktDuNIlw8/6uFDswrFuJsISTo6UfoMfOatg+K3ePsG1qWcrqRp5EnNVHAGaANl1b3\n
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: deriving shared transport key
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: deriving transport key
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: starting password prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gtk: GtkDialog mapped without a transient parent. This is discouraged.
+Nov  7 17:54:49 me-U24 gcr-prompter[2783]: Gcr: could not grab keyboard: already grabbed
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: completed password prompt for callback :1.2@/org/gnome/keyring/Prompt/p2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: encrypting data
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: sending the secret exchange: [sx-aes-1]\npublic=OC+wuCNeN1H9PDiM3iGnE2pGt4H0aDulguUehoJi1sze7M5luRQl3k34zxY+TGb9ukFcB7wxC84fFjJVB/mQemmLRYgQ6UYe7FGrP1umdgai7kozpQoIvyaHyY6qmhu2D7R/xWzJgM7b/ehcsN1CZD69hpB43de6fl1w7VpIyu5CwyfkoyCYpWoYU0FE6lvCYSF0+dyD7lMujuTUatUfKLM8ziwN7CIl9HbytiDUNbUP2dTeyr+zAskr9EezADB2\nsecret=5wQd0x1qAMRWgZ1ulTUEHg==\niv=D4NxzhFt+JoB+loUINIB9w==\n
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gnome-keyring-daemon[1571]: couldn't allocate secure memory to keep passwords and or keys from being written to the disk
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: closing the prompt
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  7 17:54:52 me-U24 gcr-prompter[2783]: Gcr: calling the PromptDone method on /org/gnome/keyring/Prompt/p2@:1.2, and ignoring reply
+Nov  7 17:55:03 me-U24 gcr-prompter[2783]: 10 second inactivity timeout, quitting
+Nov  7 17:55:03 me-U24 gcr-prompter[2783]: Gcr: unregistering prompter
+Nov  7 17:55:03 me-U24 gcr-prompter[2783]: Gcr: disposing prompter
+Nov  7 17:55:03 me-U24 gcr-prompter[2783]: Gcr: finalizing prompter
+Nov  7 18:02:05 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/insmod traverse.ko
+Nov  7 18:02:05 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 18:02:05 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 18:02:10 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=./test-traverse
+Nov  7 18:02:10 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 18:02:10 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 18:04:19 me-U24 sudo:       me : TTY=pts/17 ; PWD=/home/me/ownCloud/code/system/9 ; USER=root ; COMMAND=/sbin/rmmod traverse
+Nov  7 18:04:19 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 18:04:19 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 18:09:37 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ipc/src ; USER=root ; COMMAND=/usr/bin/nvidia-settings
+Nov  7 18:09:37 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 18:09:51 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 18:10:09 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ipc/src ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  7 18:10:09 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 18:10:25 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 18:10:30 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me/ipc/src ; USER=root ; COMMAND=/usr/bin/apt dist-upgrade
+Nov  7 18:10:30 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 18:10:31 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 18:17:01 me-U24 CRON[4613]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  7 18:17:01 me-U24 CRON[4613]: pam_unix(cron:session): session closed for user root
+Nov  7 18:30:50 me-U24 systemd-logind[964]: Delay lock is active (UID 1000/me, PID 1921/compiz) but inhibitor timeout is reached.
+Nov  7 19:27:09 me-U24 systemd-logind[964]: Operation 'sleep' finished.
+Nov  7 19:36:13 me-U24 login[1428]: pam_unix(login:session): session opened for user me by LOGIN(uid=0)
+Nov  7 19:36:13 me-U24 systemd-logind[964]: New session 2 of user me.
+Nov  7 19:36:32 me-U24 dbus[1022]: [system] Failed to activate service 'org.bluez': timed out
+Nov  7 20:17:01 me-U24 CRON[7382]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  7 20:17:01 me-U24 CRON[7382]: pam_unix(cron:session): session closed for user root
+Nov  7 20:43:01 me-U24 CRON[8550]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  7 20:43:01 me-U24 CRON[8550]: pam_unix(cron:session): session closed for user root
+Nov  7 21:07:50 me-U24 sudo:       me : TTY=pts/21 ; PWD=/home/me ; USER=root ; COMMAND=/bin/bash
+Nov  7 21:07:50 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 21:08:13 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 21:08:58 me-U24 sudo:       me : TTY=pts/21 ; PWD=/home/me ; USER=root ; COMMAND=/bin/bash
+Nov  7 21:08:58 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  7 21:11:12 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  7 21:17:01 me-U24 CRON[9769]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  7 21:17:01 me-U24 CRON[9769]: pam_unix(cron:session): session closed for user root
+Nov  7 22:17:01 me-U24 CRON[11094]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  7 22:17:01 me-U24 CRON[11094]: pam_unix(cron:session): session closed for user root
+Nov  7 22:20:02 me-U24 sudo:       me : TTY=pts/4 ; PWD=/home/me ; USER=root ; COMMAND=/sbin/poweroff
+Nov  7 22:20:02 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  8 13:29:39 me-U24 systemd-logind[999]: New seat seat0.
+Nov  8 13:29:39 me-U24 systemd-logind[999]: Watching system buttons on /dev/input/event3 (Power Button)
+Nov  8 13:29:39 me-U24 systemd-logind[999]: Watching system buttons on /dev/input/event6 (Video Bus)
+Nov  8 13:29:39 me-U24 systemd-logind[999]: Watching system buttons on /dev/input/event0 (Lid Switch)
+Nov  8 13:29:39 me-U24 systemd-logind[999]: Watching system buttons on /dev/input/event1 (Sleep Button)
+Nov  8 13:29:39 me-U24 systemd-logind[999]: Watching system buttons on /dev/input/event5 (Video Bus)
+Nov  8 13:29:39 me-U24 systemd-logind[999]: Watching system buttons on /dev/input/event2 (Power Button)
+Nov  8 13:29:39 me-U24 lightdm: pam_unix(lightdm-autologin:session): session opened for user me by (uid=0)
+Nov  8 13:29:39 me-U24 systemd-logind[999]: New session c1 of user me.
+Nov  8 13:29:39 me-U24 systemd: pam_unix(systemd-user:session): session opened for user me by (uid=0)
+Nov  8 13:29:40 me-U24 gnome-keyring-daemon[1607]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  8 13:29:40 me-U24 gnome-keyring-daemon[1609]: couldn't access control socket: /run/user/1000/keyring/control: No such file or directory
+Nov  8 13:29:41 me-U24 gnome-keyring-daemon[1609]: The PKCS#11 component was already initialized
+Nov  8 13:29:41 me-U24 gnome-keyring-daemon[1609]: The SSH agent was already initialized
+Nov  8 13:29:41 me-U24 gnome-keyring-daemon[1609]: The Secret Service was already initialized
+Nov  8 13:29:42 me-U24 polkitd(authority=local): Registered Authentication Agent for unix-session:c1 (system bus name :1.59 [/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1], object path /org/gnome/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Nov  8 13:30:06 me-U24 dbus[1024]: [system] Failed to activate service 'org.bluez': timed out
+Nov  8 14:17:01 me-U24 CRON[4180]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 14:17:01 me-U24 CRON[4180]: pam_unix(cron:session): session closed for user root
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: bus acquired: org.gnome.keyring.SystemPrompter
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: registering prompter
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: bus acquired: org.gnome.keyring.PrivatePrompter
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: received BeginPrompting call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: preparing a prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: creating new GcrPromptDialog prompt
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: automatically selecting secret exchange protocol
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: generating public key
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: beginning the secret exchange: [sx-aes-1]\npublic=CZtMJb5rV+VVzm1PaCxgt7nHkeKOYZhYnVXKT5k9VRbFyxbCHYMHsmYRemA116d7dbi1JjXgeO1svGByy4xNOmwBVdrrYWRAqqExloqwqVtYmvioK14a8kLzhApZhKYPN/qT9SvcaHYFPjozJC2tuRdzBtVpq2/yzjshz/DC+slVLKbT9Jmt3OoLgo5yqbc8q1UmXwwaZPSuF6BOHGvGk4JleG3fRCI2xw8Xr4L748XqQEJJJkZqoGd0CvPimpZa\n
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: acquired name: org.gnome.keyring.SystemPrompter
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: acquired name: org.gnome.keyring.PrivatePrompter
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: receiving secret exchange: [sx-aes-1]\npublic=CKGD70DBDfe6bMDXyMAFMgHxp4f3Yrcqln3DQNww3OdWoUmgsXUQ/F2pPNhJoUhbpl0Ww90M0FzZugJjoDwqq0ChnLeNyQLFyIdY0LLTggR37HiEteD69BzUuWuYtrM3CD2fFwjb7lI1miRS5e6ByWjfcHYO/WUjM7vYcxare4quubgqlafEg2svgaLGLhtuMQ522xAc2dSUk5p76inwu+iw+/ec8ntaqcHXPcJp2Tn7IAqk1NMbqYEFrZ8X89wi\n
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: deriving shared transport key
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: deriving transport key
+Nov  8 14:31:49 me-U24 gcr-prompter[4714]: Gcr: starting password prompt for callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:50 me-U24 gcr-prompter[4714]: Gtk: GtkDialog mapped without a transient parent. This is discouraged.
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: completed password prompt for callback :1.2@/org/gnome/keyring/Prompt/p2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: encrypting data
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: sending the secret exchange: [sx-aes-1]\npublic=CZtMJb5rV+VVzm1PaCxgt7nHkeKOYZhYnVXKT5k9VRbFyxbCHYMHsmYRemA116d7dbi1JjXgeO1svGByy4xNOmwBVdrrYWRAqqExloqwqVtYmvioK14a8kLzhApZhKYPN/qT9SvcaHYFPjozJC2tuRdzBtVpq2/yzjshz/DC+slVLKbT9Jmt3OoLgo5yqbc8q1UmXwwaZPSuF6BOHGvGk4JleG3fRCI2xw8Xr4L748XqQEJJJkZqoGd0CvPimpZa\nsecret=LQSxOa+Z0InOVl2gRDoIsg==\niv=6SSUv3F5t2C/6D5TG6lYUg==\n
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: calling the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: returned from the PromptReady method on /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gnome-keyring-daemon[1609]: couldn't allocate secure memory to keep passwords and or keys from being written to the disk
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: received PerformPrompt call from callback /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: closing the prompt
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: stopping prompting for operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: couldn't find the callback for prompting operation /org/gnome/keyring/Prompt/p2@:1.2
+Nov  8 14:31:52 me-U24 gcr-prompter[4714]: Gcr: calling the PromptDone method on /org/gnome/keyring/Prompt/p2@:1.2, and ignoring reply
+Nov  8 14:32:02 me-U24 gcr-prompter[4714]: 10 second inactivity timeout, quitting
+Nov  8 14:32:02 me-U24 gcr-prompter[4714]: Gcr: unregistering prompter
+Nov  8 14:32:02 me-U24 gcr-prompter[4714]: Gcr: disposing prompter
+Nov  8 14:32:02 me-U24 gcr-prompter[4714]: Gcr: finalizing prompter
+Nov  8 14:32:02 me-U24 login[1451]: pam_unix(login:session): session opened for user me by LOGIN(uid=0)
+Nov  8 14:32:02 me-U24 systemd-logind[999]: New session 2 of user me.
+Nov  8 14:32:25 me-U24 dbus[1024]: [system] Failed to activate service 'org.bluez': timed out
+Nov  8 15:17:01 me-U24 CRON[7540]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 15:17:01 me-U24 CRON[7540]: pam_unix(cron:session): session closed for user root
+Nov  8 16:17:01 me-U24 CRON[9757]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 16:17:01 me-U24 CRON[9757]: pam_unix(cron:session): session closed for user root
+Nov  8 17:17:01 me-U24 CRON[11838]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 17:17:01 me-U24 CRON[11838]: pam_unix(cron:session): session closed for user root
+Nov  8 17:30:55 me-U24 sudo:       me : TTY=pts/20 ; PWD=/home/me ; USER=root ; COMMAND=/usr/bin/apt update
+Nov  8 17:30:55 me-U24 sudo: pam_unix(sudo:session): session opened for user root by (uid=0)
+Nov  8 17:31:31 me-U24 sudo: pam_unix(sudo:session): session closed for user root
+Nov  8 18:17:01 me-U24 CRON[14756]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 18:17:01 me-U24 CRON[14756]: pam_unix(cron:session): session closed for user root
+Nov  8 19:17:01 me-U24 CRON[15847]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 19:17:01 me-U24 CRON[15847]: pam_unix(cron:session): session closed for user root
+Nov  8 20:17:01 me-U24 CRON[16440]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 20:17:01 me-U24 CRON[16440]: pam_unix(cron:session): session closed for user root
+Nov  8 20:43:01 me-U24 CRON[16939]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 20:43:01 me-U24 CRON[16939]: pam_unix(cron:session): session closed for user root
+Nov  8 21:17:01 me-U24 CRON[18534]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  8 21:17:01 me-U24 CRON[18534]: pam_unix(cron:session): session closed for user root
+Nov  8 22:03:58 me-U24 systemd-logind[999]: Lid closed.
+Nov  8 22:03:58 me-U24 systemd-logind[999]: Suspending...
+Nov  8 22:04:03 me-U24 systemd-logind[999]: Delay lock is active (UID 1000/me, PID 1956/compiz) but inhibitor timeout is reached.
+Nov  8 22:04:09 me-U24 systemd-logind[999]: Operation 'sleep' finished.
+Nov  8 22:04:18 me-U24 systemd-logind[999]: Lid opened.
+Nov  8 22:04:39 me-U24 systemd-logind[999]: Lid closed.
+Nov  8 22:04:39 me-U24 systemd-logind[999]: Suspending...
+Nov  8 22:04:44 me-U24 systemd-logind[999]: Delay lock is active (UID 1000/me, PID 1956/compiz) but inhibitor timeout is reached.
+Nov  9 13:40:07 me-U24 systemd-logind[999]: Lid opened.
+Nov  9 13:40:08 me-U24 systemd-logind[999]: Operation 'sleep' finished.
+Nov  9 13:40:45 me-U24 systemd-logind[999]: Lid closed.
+Nov  9 13:40:45 me-U24 systemd-logind[999]: Suspending...
+Nov  9 13:40:50 me-U24 systemd-logind[999]: Delay lock is active (UID 1000/me, PID 1956/compiz) but inhibitor timeout is reached.
+Nov  9 13:41:18 me-U24 systemd-logind[999]: Lid opened.
+Nov  9 13:41:19 me-U24 systemd-logind[999]: Operation 'sleep' finished.
+Nov  9 14:10:45 me-U24 dbus[1024]: [system] Failed to activate service 'org.bluez': timed out
+Nov  9 14:17:01 me-U24 CRON[24475]: pam_unix(cron:session): session opened for user root by (uid=0)
+Nov  9 14:17:01 me-U24 CRON[24475]: pam_unix(cron:session): session closed for user root
