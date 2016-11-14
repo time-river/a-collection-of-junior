@@ -1,12 +1,12 @@
 all: main
 
 main: semaphore.o shm.o
-main-gdb: main
+main-gdb: semaphore.o shm.o
 
 .PYONY: clean
 
 clean:
-	-rm *.o
-	-rm main
+	-rm -f *.o
+	-rm -f main main-gdb
 
 CC += -g
