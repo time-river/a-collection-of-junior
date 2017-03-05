@@ -1,0 +1,1 @@
+SUBSYSTEM=="misc", KERNEL=="traverse", MODE="0666"
