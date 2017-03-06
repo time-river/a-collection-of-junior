@@ -1,0 +1,3 @@
+[submodule "AlgorithmsSedgewick"]
+    path = homework/algorithms/AlgorithmsSedgewick
+    url = https://github.com/aistrate/AlgorithmsSedgewick.git
