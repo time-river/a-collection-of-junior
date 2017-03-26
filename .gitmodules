@@ -1,3 +1,7 @@
 [submodule "AlgorithmsSedgewick"]
     path = homework/algorithms/AlgorithmsSedgewick
     url = https://github.com/aistrate/AlgorithmsSedgewick.git
+
+[submodule "Software-engineering"]
+    path = homework/Software-engineering
+    url = https://github.com/time-river/turbo-editor.git
