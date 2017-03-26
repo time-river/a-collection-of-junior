@@ -7,5 +7,5 @@
     url = https://github.com/time-river/turbo-editor.git
 
 [submodule "Network computing"]
-    path = home/network-computing
+    path = homework/network-computing
     url = https://github.com/intgerzero/network-computing.git
