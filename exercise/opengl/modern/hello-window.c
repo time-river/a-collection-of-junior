@@ -1,3 +1,11 @@
+/* LearnOpenGL CN
+ * 你好，窗口
+ * https://learnopengl-cn.github.io/01%20Getting%20started/03%20Hello%20Window/
+ * Usage:
+ *     $make hello-window
+ *     $./hello-window
+ */
+
 #include <stdio.h>
 // GLEW
 #define GLEW_STATIC // 使用 GLEW 静态链接库
@@ -17,7 +25,9 @@ int main(void){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     // 设置 OpenGL 最小的版本号为 3.3
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // 采用的 profile
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    // 禁止用户改变窗口大小
 
     // Create a GLFWwindow object that we can use for GLFW's functions
     GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", NULL, NULL);
