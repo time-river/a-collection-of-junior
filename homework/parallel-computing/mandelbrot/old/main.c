@@ -17,6 +17,7 @@
 void init(void);
 void reshape(int width, int height);
 void display(void);
+void set_pixel(int i, int j, int k, int type, double complex z, double complex c);
 
 static double imax = 2.0, imin = -2.0;
 static double rmax = 2.0, rmin = -2.0;
@@ -80,22 +81,8 @@ void display(void){
                 modulus = cabs(z);
             }
 
-            if(k > max_repeats){
-                //glColor3f(0.0f, 0.0f, 0.0f);
-                glColor3f(0.5f, 0.0f, 0.5f);
-                glBegin(GL_POINTS);
-                    glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
-                glEnd();
-            }
-            else{
-                glColor3f((GLfloat)k/(GLfloat)max_repeats, 0.0f, 0.0f);
-                //float z_real, c_real;
-                //glColor3f((GLfloat)modff(cabs(z), &z_real), (GLfloat)modff(cabs(c), &c_real), (GLfloat)k/(GLfloat)max_repeats);
-                glBegin(GL_POINTS);
-                    glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
-                glEnd();
-            }
-			
+            set_pixel(i, j, k, 3, z, c);
+
         }
     }
 
@@ -103,7 +90,7 @@ void display(void){
     glFlush();
 }
 
-void set_pixel(int i, int j, int k){
+void set_pixel(int i, int j, int k, int type, double complex z, double complex c){
 
 #define NUMCOLOR 16
 unsigned short color_table[NUMCOLOR][3] = {
@@ -125,11 +112,46 @@ unsigned short color_table[NUMCOLOR][3] = {
     {128,128,128}  //GRAY
 };
 
-	unsigned short *color = color_table[k%NUMCOLOR];
-	glColor3f(color[0]/255, color[1]/255, color[2]/255);
-        glBegin(GL_POINTS);
-            glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
-    glEnd();
+unsigned short *color;
+    switch(type){
+        case 1:
+	        color = color_table[k%NUMCOLOR];
+	        glColor3f((GLfloat)color[0]/255, (GLfloat)color[1]/255, (GLfloat)color[2]/255);
+            glBegin(GL_POINTS);
+                glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
+            glEnd();
+            break;
+        case 2:
+            if(k > max_repeats){
+                glColor3f(0.5f, 0.0f, 0.5f);
+                glBegin(GL_POINTS);
+                    glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
+                glEnd();
+            }
+            else{
+                glColor3f((GLfloat)k/(GLfloat)max_repeats, 0.0f, 0.0f);
+                glBegin(GL_POINTS);
+                    glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
+                glEnd();
+            }
+		    break;	
+        case 3:
+            if(k > max_repeats){
+                glColor3f(0.0f, 0.0f, 0.0f);
+                glBegin(GL_POINTS);
+                    glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
+                glEnd();
+            }
+            else{
+                float z_real, c_real;
+                glColor3f((GLfloat)modff(cabs(z), &z_real), (GLfloat)modff(cabs(c), &c_real), (GLfloat)k/(GLfloat)max_repeats);
+                glBegin(GL_POINTS);
+                    glVertex3d((GLdouble)i, (GLdouble)j, 0.0);
+                glEnd();
+            }
+			
+        }
+
 }
 
 
