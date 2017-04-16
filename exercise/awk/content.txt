@@ -1,0 +1,203 @@
+awk 的数据只有两种类型：数值与由字符组成的字符串
+awk 从塔的输入中每次读取一行，将行分解为一个个的字段（默认将字段看作是非空白字符组成的序列）。当前输入行的第一个字段叫做 $1，第二个是 $2，一次类推。一整行记为 $0.每行的字段数可能不一样。
+通常情况下，要做的是打印每一行的部分或全部字段，也可能会做一些计算。
+
+打印每一行
+打印每一个当前输入行至标准输出
+{ print } == { print $0 }
+
+打印某些字段
+打印每一个输入行的第一与第三个字段
+{ print $1, $3 }
+print 语句中由逗号分隔的表达式，在输出时默认用一个空格分隔。由 print 打印的每一行都由一个换行符终止
+
+NF, 字段的数量
+{ print NF, $1, $NF } 打印每一个输入行字段数量，第一个字段，以及最后一个字段
+
+
+计算和打印
+{ print $1, $2 * $3 }
+
+打印行号
+NR, 读取到行数
+{ print NR, $0 }
+
+将文本放入输入中
+{ print "total pay for", $1, "is", $2 * $3 }
+
+格式化输入 printf
+形式:
+  printf(format, value1, value2, ... , valuen)
+
+{ printf("totak pay for %s is %.2f\n", $1, $2 * $3) }
+{ printf("%-8s $%6.2f\n", $1, $2 * $3) }
+
+输出排序
+awk '{ printf("%6.2f %s\n", $2 * $3, $0) }' emp.data | sort -n
+
+
+选择
+1.通过比较进行选择
+$2 >= 5
+2.通过计算进行选择
+$2 * $3 > 50 { printf("$%.2f for %s\n", $2 * $3, $1) }
+3.通过文本内容进行选择
+$1 == "Susie" 通过正则表达式模式完成
+4.模式的组合
+&& - AND - / || - OR - / ! - NOT -
+$2 >= 4 || $3 >= 20
+!($2 < 4 && $3 < 20) 注意程序
+5.数据验证
+NF != 3 { print $0, "number of fields is not equal to 3" }
+$2 < 3.35 { print $0, "rate is below minimum wage" }
+$2 > 10 { print $0, "rate exceeds $10 per hour" }
+$3 < 10 { print $0, "negative hours  worked" }
+$3 > 60 { print $0, "too many hours worked" }
+6.BEGIN 与 END
+BEGIN { print "NAME RATE    Hours"; print ""}
+    { print }
+同一行可以放置多行语句，语句之间用分号隔开.print 打印一个空行
+
+用 awk 计算
+1.计数
+$3 > 15 { emp = emp + 1 }
+END     { print emp, "employes worked than 15 hours" }
+awk 变量使用时，默认初始化为 0
+2.计算总和与平均数
+END { print NR, "employees" }
+```
+{ pay = pay + $2 * $3 }
+END { print NR, "emplotees"
+      print "total pay is", pay
+      print "average pay is", pay / NR
+    }
+```
+3.操作文本
+$2 > maxrate { maxrate = $2; maxemp = $1 }
+END { print "highest hourly rate:", maxrate, "for", maxemp }
+4.字符串拼接
+    { names = names $1 " "}
+END { print names }
+一个awk程序中，字符串的拼接操作是通过陆续写出字符串来完成
+5.打印最后一行
+    { last = $0 }
+END { print last}
+6.内建函数
+{ print $1, length($1) }
+7.行，单词与字符的计数
+{ nc = nc + length($0) + 1
+  nw = nw + NF
+}
+END { print NR, "lines,", nw, "words,", nc, "characters" }
+为每一个换行符+1, $0 不包含换行符
+
+流程控制语句
+1. If-Else语句
+计算每小时工资多于$6.00的雇员的总报酬与平均报酬
+$2 > 6 { n= n + 1; pay = pay + $2 * $3 }
+END { if (n > 0)
+        print n, "employees, total pay is", pay, "everage pay is", pay/n
+    else
+        print "no employees are paid more than $6/hour"
+    }
+2.while语句
+# interest1 - coupute compound interest
+#   input:  amount rate yeats
+#   output: compouded value at the end of each year
+{   i = 1
+    while (i <= $3){
+        printf("\t%.2f\n", $1 * (1 + $2) ^ i)
+        i = i + 1
+    }
+}
+3.for语句
+value=amount(1+rate)^years
+# interest2 - compute compound interest
+#   input:  amount reate years
+#   output: compouded value at the end of each year
+{   for (i = 1; i <= $3; i = i + 1)
+        printf("\t%.2f\n", $1 * (1+ $2)^i)
+}3.for语句
+# interest2 - compute compound interest
+#   input:  amount reate years
+#   output: compouded value at the end of each year
+{   for (i = 1; i <= $3; i = i + 1)
+        printf("\t%.2f\n", $1 * (1+ $2)^i)
+}3.for语句
+# interest2 - compute compound interest
+#   input:  amount reate years
+#   output: compouded value at the end of each year
+{   for (i = 1; i <= $3; i = i + 1)
+        printf("\t%.2f\n", $1 * (1+ $2)^i)
+}
+
+数组
+# while: reverse - print input in reverse order by line
+    { line[NR] = $0 } # remember each input line
+END { i = NR          # print lines in reverse order
+      while (i > 0){
+        print line[i]
+        i = i - 1
+      }
+    }
+# for: reverse - print input in reverse order by line
+    { line[NR] = $0 } # remember each input line
+END { for (i = NR; i > 0; i = i - 1)
+        print line[i]
+    }
+
+实用“一行”手册
+1.输入行的总行数
+END { print NR }
+2.打印第10行
+NR == 10
+3.打印每一个输入行的最后一个字段
+{ print $NF }
+4.打印最后一行的最后一个字段
+{ field = $NF }
+END { print field }
+5.打印字段数多于4个的输入行
+NF > 4
+6.打印最后一个字段值大于4的输入行
+$NF > 4
+7.打印所有输入行的字段数的总和
+{ nf = nf + NF }
+END { print nf }
+8.打印包含Beth的行的数量
+/Beth/ { nlines = nlines + 1 }
+END { print nlines }
+9.打印具有最大值的第一个字段，以及包含它的行（假设$1总是正的）
+$1 > max { max = $1; maxline = $0 }
+END { print max, maxline }
+10.打印至少包含一个字段的行
+NF > 0
+11.打印长度超过80个字符的行
+length($0) > 80
+12.在每一行的前面加上它的字段数
+{ print NF, $0 }
+13.打印每一行的第一与第二个字段，但顺序相反
+{ print $2, $1 }
+14.交换每一行的第一与第二个字段，并打印该行
+{ temp = $1; $1 = $2; $2 = temp; print }
+15.将每一行的第一个字段用行号代替
+{ $1 = NR; print }
+16.打印删除来第二个字段后的行
+{ $2 = ""; print }
+17.将每一行的字段按逆序打印
+{ for ( i = NF; i > 0; i = i - 1 ) printf("%s ", $i)
+  printf("\n")
+}
+18.打印每一行的所有字段值之和
+{ sum = 0
+  for (i = 0; i <= NF; i = i + 1) sum = sum + $i
+  print sum
+}
+19.将所有行的所有字段值累加起来
+{ for (i = 1; i <= NF; i = i + 1) sum = sum + $1 }
+END { print sum }
+20.将每一行的每一个字段用它的绝对值替换
+{ for (i = 1; i <= NF; i = i + 1) if ($i < 0) $i = -$i
+  print
+}
+
+awk的要点:多个 模式–动作 语句组成的序列
