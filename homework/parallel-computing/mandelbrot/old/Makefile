@@ -1,16 +1,39 @@
 .PYONY: all, clean
 
+EXECS := mpi single-serial double-serial
+
 LDLIBS = -lGL -lGLU -lglut -lm
-CC := /usr/bin/mpicc
+MPICC := /usr/bin/mpicc
+CC := /usr/bin/gcc
 
-mpi: mpi_main.c
-	${CC} -o mpi mpi_main.c ${LDLIBS} -g
+all: ${EXECS}
 
-test:
+single-serial: single-serial-main.c
+	${CC} -o $@ $^ ${LDLIBS}
+
+double-serial: double-serial-main.c
+	${CC} -o $@ $^ ${LDLIBS}
+
+mpi: mpi-main.c
+	${MPICC} -o $@ $^ ${LDLIBS}
+
+mpi-gdb: mpi-main.c
+	${MPICC} -o $@ $^ ${LDLIBS} -g
+
+test-single:
+	@${PWD}/single-serial
+
+test-double:
+	@${PWD}/double-serial
+
+test-mpi:
+	@mpirun -np 4 -host localhost ${PWD}/mpi
+
+test-mpi-multimachine:
 	@mpirun -np 2 -host localhost ${PWD}/mpi
 
-test-gdb:
-	@mpirun -np 2 xterm -e gdb ${PWD}/mpi
+test-mpi-gdb: mpi-gdb
+	@mpirun -np 2 xterm -e gdb ${PWD}/mpi-gdb
 
 clean:
-	rm -rf mpi
+	rm -rf ${EXECS} mpi-gdb

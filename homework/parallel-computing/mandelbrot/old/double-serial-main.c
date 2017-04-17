@@ -87,7 +87,7 @@ void display(void){
         }
         glEnd();
 
-        glFlush();
+        // glFlush(); 可省略
         glutSwapBuffers();
     }
 }
@@ -140,6 +140,5 @@ void set_pixel(int i, int j, int k, int type, double complex z, double complex c
     }
 
     float test;
-    printf("i: %f j: %f k: %f z: %f c: %f\n", (float)i/width, (float)j/height, (float)k/max_repeats, modff(cabs(z), &test), modff(cabs(c), &test));
     glVertex2d((GLdouble)i/width, (GLdouble)j/height);
 }
