@@ -65,7 +65,7 @@ void slave_func(void){
 
     MPI_Recv(buf, 2, MPI_INT, 0, TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-    printf("Recv buf: %d %d\n", buf[0], buf[1]);
+    //printf("Recv buf: %d %d\n", buf[0], buf[1]);
     int w = buf[1] - buf[0]; // [buf[0], buf[1])
     int size = 5 * height * w;
     /* 
@@ -91,22 +91,22 @@ void slave_func(void){
             z = 0.0f;
             c = (rmin + (i+buf[0])*DCR) + (imin + j*DCI)*I;
 
-            for(k=0, modulus=0.0f; modulus<=escape_radius && k<=max_repeats; k++){
+            for(k=0, modulus=0.0f; modulus<escape_radius && k<max_repeats; k++){
                 z = cpowf(z, 2.0f) + c;
                 modulus = cabsf(z);
             }
 
-            float integer;
+            float integer, tmp_z, tmp_c;
             result[i*height+j*5+0] = (float)(i+buf[0])/width;
             result[i*height+j*5+1] = (float)j/height;
             result[i*height+j*5+2] = (float)k/max_repeats;
-            result[j*height+j*5+3] = modff(cabsf(z), &integer);
-            result[j*height+j*5+4] = modff(cabsf(c), &integer);
+            result[i*height+j*5+3] = modff(modulus, &integer);
+            result[i*height+j*5+4] = modff(cabsf(c), &integer);
         }
     }
     MPI_Send(result, size, MPI_FLOAT, 0, TAG, MPI_COMM_WORLD);
 
-    printf("send successfully\n");
+    //printf("send successfully\n");
     free(result);
 
     return;
@@ -132,14 +132,6 @@ void init(void){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glShadeModel(GL_SMOOTH);
     glClear(GL_COLOR_BUFFER_BIT);
-
-    // Initialize viewing values 
-    glMatrixMode(GL_PROJECTION); // Select Matrix Mode
-    glLoadIdentity();            // Provide Base Matrix
-    //glOrtho(0.0, width, 0.0, height, -1.0, 1.0); // Set window dimension
-    glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0); // Set window dimension
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 }
 
 void reshape(int width, int height){
@@ -184,9 +176,9 @@ void display(void){
             MPI_Abort(MPI_COMM_WORLD, 1);
         }
 
-        printf("Receive successfully\n");
+        //printf("Receive successfully\n");
 
-        printf("rank: %d\n", rank);
+        //printf("rank: %d\n", rank);
         for(int i=0; i<w; i++){
             glBegin(GL_POINTS);
             
@@ -194,7 +186,7 @@ void display(void){
                 set_pixel(result[i*height+j*5+0],
                         result[i*height+j*5+1],
                         result[i*height+j*5+2],
-                        3,
+                        1,
                         result[i*height+j*5+3],
                         result[i*height+j*5+4]);
             }
@@ -203,7 +195,7 @@ void display(void){
             glFlush();
             glutSwapBuffers();
         }
-        printf("Swap end\n");
+        //printf("Swap end\n");
     }
 
     free(result);
@@ -233,26 +225,28 @@ void set_pixel(float i, float j, float k, int type, float z, float c){
 
     switch(type){
         case 1:
-            color = color_table[(int)k%NUMCOLOR];
+            color = color_table[(int)(k*max_repeats)%NUMCOLOR];
             glColor3f((GLfloat)color[0]/255, (GLfloat)color[1]/255, (GLfloat)color[2]/255);
             break;
         case 2:
-            if(k > max_repeats){
-                glColor3f(0.5f, 0.0f, 0.5f);
+            if(k < 1.0f ){
+                glColor3f(k, 0.0f, 0.0f);
             }
             else{
-                glColor3f(k, 0.0f, 0.0f);
+                glColor3f(0.5f, 0.0f, 0.5f);
             }
             break;
         case 3: default:
-            if(k > max_repeats){
-                glColor3f(0.0f, 0.0f, 0.0f);
+            if(k < 1.0f){
+                glColor3f(z, c, k);
             }
             else{
-                glColor3f(z, c, k);
+                glColor3f(0.0f, 0.0f, 0.0f);
             }
             break;
     }
 
+    printf("i: %f j: %f k: %f z: %f c: %f\n", i, j, k, z, c);
     glVertex2f(i, j);
+    glFlush();
 }

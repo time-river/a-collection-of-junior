@@ -3,6 +3,7 @@
  * https://github.com/Ibrahim-Habib/Parallel-Fractal-Mandelbrot-Set-Visualization
  */
 
+#include <stdio.h>
 #include <tgmath.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -138,5 +139,7 @@ void set_pixel(int i, int j, int k, int type, double complex z, double complex c
             break;
     }
 
+    float test;
+    printf("i: %f j: %f k: %f z: %f c: %f\n", (float)i/width, (float)j/height, (float)k/max_repeats, modff(cabs(z), &test), modff(cabs(c), &test));
     glVertex2d((GLdouble)i/width, (GLdouble)j/height);
 }
