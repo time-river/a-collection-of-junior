@@ -1,5 +1,5 @@
 /* 
- * Sequential Mandelbrot program:  <16-04-17, river>
+ * Sequential Mandelbrot program without animation:  <16-04-17, river>
  * https://www.tjhsst.edu/~rlatimer/assignments2005/mandelbrot1Glut.txt
  */
 
@@ -41,12 +41,12 @@ int main(int argc, char *argv[]){
 
 void init(void){
     // Clear the window, select clearing (background) color —— gray
-    glClearColor(0.5f, 0.5f, 0.5f, 0.0);
+    glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 
     // Initialize viewing values
-    glMatrixMode(GL_PROJECTION); // Select Matrix Mode
-    glLoadIdentity();            // Provide Base Matrix
-    glOrtho(0.0, width, 0.0, height, -1.0, 1.0); // Set window dimensions
+    // glMatrixMode(GL_PROJECTION); // Select Matrix Mode
+    // glLoadIdentity();            // Provide Base Matrix
+    // glOrtho(0.0, width, 0.0, height, -1.0, 1.0); // Set window dimensions
 
 }
 
@@ -74,7 +74,7 @@ void display(void){
     for(i=0; i<width; i++){
         for(j=0; j<height; j++){
             z = 0.0;
-            c = (rmin + i*DCR) + (imin + j*DCR)*I;
+            c = (rmin + i*DCR) + (imin + j*DCI)*I;
 
             for(k=0, modulus=0.0; modulus<=escape_radius && k<=max_repeats; k++){
                 z = cpow(z, 2.0) + c;

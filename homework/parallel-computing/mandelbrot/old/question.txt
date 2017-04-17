@@ -1,0 +1,3 @@
+MPI 非阻塞方式发送
+要求数组为连续的空间
+MPI 发送多维数组 http://blog.csdn.net/qiang_yang/article/details/29561837
