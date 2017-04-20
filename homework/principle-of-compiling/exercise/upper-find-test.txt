@@ -1,0 +1,4 @@
+unsigned int rand_code(unsigned int* rand_seed, unsigned int generator)
+{
+return *rand_seed = ((*_rand_seed * 234generator + 1)>>16)&65535;
+}
