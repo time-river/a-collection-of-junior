@@ -86,7 +86,7 @@ void slave_func(void){
     float modulus;
     int i, j, k;
 
-    FILE *file = fopen("slave.txt", "w");
+    //FILE *file = fopen("slave.txt", "w");
     for(i=0; i<w; i++){
         for(j=0; j<h; j++){
             z = 0.0f;
@@ -109,7 +109,7 @@ void slave_func(void){
                     result[i*h*5+j*5+4]);*/
         }
     }
-    fclose(file);
+    //fclose(file);
 
     MPI_Send(result, size, MPI_FLOAT, 0, TAG, MPI_COMM_WORLD);
 
@@ -187,7 +187,7 @@ void display(void){
         //printf("Receive successfully\n");
 
         //printf("rank: %d\n", rank);
-        FILE *file = fopen("display.txt", "w");
+        //FILE *file = fopen("display.txt", "w");
         for(int i=0; i<w; i++){
             glBegin(GL_POINTS); 
             for(int j=0; j<height; j++){
@@ -206,7 +206,7 @@ void display(void){
             glutSwapBuffers();
             //glutPostRedisplay();
         }
-        fclose(file);
+        //fclose(file);
         //printf("Swap end\n");
     }
 
