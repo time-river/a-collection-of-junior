@@ -23,9 +23,10 @@ OPERATOR    {BRACKET}|{ARITHMETIC}|{RELATIONAL}|{LOGICAL}|{ASSIGNMENT}
 \n      {} /* newline */
 --[.]*  {} /* comment */
 ([[:alpha:]]|_)([[:alpha:]]|[[:digit:]])* { printf("Line %d: (ID, %s)\n", yylineno, yytext); } /* word, ignore case */
-[-+]?[[:digit:]]+ { printf("Line %d: (INT: %s)\n", yylineno, yytext); } /* integer */
-[-+]?[[:digit:]]+\.[[:digit:]]+ { printf("Line %d: (FLOAT: %s)\n", yylineno, yytext); } /* float */
+[[:digit:]]+ { printf("Line %d: (INT: %s)\n", yylineno, yytext); } /* integer */
+[[:digit:]]+\.[[:digit:]]+ { printf("Line %d: (FLOAT: %s)\n", yylineno, yytext); } /* float */
 {OPERATOR}  { printf("Line %d: (SYM, %s)\n", yylineno, yytext); }
+(\"|').*(\"|')  { printf("Line %d: (STR %s)\n", yylineno, yytext); }
 
 [[:digit:]]([[:alpha:]]|[[:digit:]])* {
     printf("Line %d: illegal variable identifier %s\n", yylineno, yytext);
