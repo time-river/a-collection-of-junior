@@ -1,11 +1,13 @@
-{
 a + 123
 a == -123
 _ && +123
 _1 = 123.123
 _a = (-123.123-543)
 _a1 = +123.123
-a = 'str'
-a = "str"
+a = "strin"
+a = 'string'
 a = ""
-}
+USE TABLE;
+use table;
+1a
+"

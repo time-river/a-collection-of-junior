@@ -1,4 +1,7 @@
-/* lexical analysis with flex 2.6.0:  <17-04-17, river> */
+/* lexical analysis with flex 2.6.0:  <17-04-17, river>
+ * string regex
+ *   http://stackoverflow.com/questions/2039795/regular-expression-for-a-string-literal-in-flex-lex
+ */
 
 %option yylineno
 %option noyywrap
@@ -6,8 +9,7 @@
 %top{
 #include <stdlib.h>
 #include <string.h>
-#include "y.tab.h"
-%}
+}
 
 /* definition */
 /* arithmetic operator
@@ -16,7 +18,7 @@
  * assignment operator
  */
 
-BRACKET         "("|")"
+BRACKET         "{"|"}"|"("|")"
 ARITHMETIC      "+"|"-"|"*"|"/"|"%"
 RELATIONAL      "=="|"!="|">"|"<"|">="|"<="
 LOGICAL         "&&"|"||"|"!"
@@ -38,46 +40,22 @@ STR             {ONESTR}|{TWOSTR}
 --[.]*      {} /* comment */
 
 {KEYWORD}   { 
-#ifdef DEBUG
     printf("Line %d: (KEY, %s)\n", yylineno, yytext);
-#endif
-    yylval = strdup(yytext);
-    return KEYWORD;
 }   /* keyword */
 {ID}        {
-#ifdef DEBUG
-printf("Line %d: (ID, %s)\n", yylineno, yytext);
-#endif
-    yylval = strdup(yytext);
-    return ID;
+    printf("Line %d: (ID, %s)\n", yylineno, yytext);
 }    /* id */
 {INT}       {
-#ifdef DEBUG
     printf("Line %d: (INT: %s)\n", yylineno, yytext);
-#endif
-    yylval = atoi(yytext);
-    return INT;
 }   /* integer */
 {FLOAT}     {
-#ifdef DEBUG
     printf("Line %d: (FLOAT: %s)\n", yylineno, yytext);
-#endif
-    yylval = strtof(yytext, NULL);
-    return FLOAT;
 } /* float */
 {SYM}       {
-#ifdef DEBUG
     printf("Line %d: (SYM, %s)\n", yylineno, yytext);
-#endif
-    yylval = strdup(yytext);
-    return SYM;
 }   /* operator */
 {STR}       {
-#ifdef DEBUG
     printf("Line %d: (STR %s)\n", yylineno, yytext);
-#endif
-    yylval = strdup(yytext);
-    return STR;
 }    /* string */
 
 [[:digit:]]([[:alpha:]]|[[:digit:]])* {
@@ -85,7 +63,7 @@ printf("Line %d: (ID, %s)\n", yylineno, yytext);
     yyterminate();
 }   /* illegal variable identifier */
 .   {
-    if(*yytext == '{' || *yytext == '\'')
+    if(*yytext == '\'')
         printf("Line %d: missing the right part of %s\n",
                 yylineno, yytext);
     else
