@@ -22,5 +22,10 @@ int main(int argc, char** argv)
     printf("OpenGL支持的扩展：%s\n",Extensions );  
     printf("OGLU工具库版本：%s\n", gluVersion);  
     printf("GLSL版本: %s\n", glslVersion);  
+
+    GLint nrAttributes;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+    printf("Maximum nr of vertex attributes supported: %d\n", nrAttributes);
+
     return 0;  
 }  

@@ -9,3 +9,4 @@
 /* priority and coherence */
 %left '+' '-' '*' '/' '%'
 %left '&&' '||' '!'
+%right '=' '+=' '-=' '*=' '/='
