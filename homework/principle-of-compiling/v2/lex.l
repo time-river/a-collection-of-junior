@@ -8,7 +8,7 @@
 DATATYPE        (?i:float|int|string)
 /* 字母开头，数字与字母的组合 */
 ID              ([[:alpha:]][[:alpha:][:digit:]]*)
-OPERATOR        ";"
+OPERATOR        ";"|"("|")"
 
 %%
 

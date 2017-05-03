@@ -5,17 +5,12 @@
 #include "common.h"
 
 #define YYERROR_VERBOSE
-#define YYSTYPE char *
+#define YYSTYPE void *
 
 int yylex(void);
 void yyerror(const char *s);
 
-struct command_t instruct = {
-    .database_name = NULL,
-    .table_name = NULL
-};
-struct command_t *command = &instruct;
-
+char *database = NULL;
 %}
 
 %token CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
@@ -27,31 +22,49 @@ struct command_t *command = &instruct;
 %%
 
 start
-    : start lines ';' { hub(command); }
+    : start lines ';' { hub($2); }
     | start ';' { fprintf(stdout, "ERROR: No query specified\n"); }
     | /* empty */
     ;
 
 lines
-    : create_stmt   { command->stmt = CREATE_STMT; }
-    | drop_stmt     { command->stmt = DROP_STMT; }
-    | show_stmt     { command->stmt = SHOW_STMT; }
-    | use_stmt      { command->stmt = USE_STMT; }
-    | exit_stmt     { command->stmt = EXIT_STMT; }
-    | select_stmt   { command->stmt = SELECT_STMT; }
-    | insert_stmt   { command->stmt = INSERT_STMT; }
-    | update_stmt   { command->stmt = UPDATE_STMT; }
-    | delete_stmt   { command->stmt = DELETE_STMT; }
+    : create_stmt   { ((struct command_t *)$1)->stmt = CREATE_STMT; $$ = $1; }
+    | drop_stmt     { ((struct command_t *)$1)->stmt = DROP_STMT;   $$ = $1; }
+    | show_stmt     { ((struct command_t *)$1)->stmt = SHOW_STMT;   $$ = $1; }
+    | use_stmt      { ((struct command_t *)$1)->stmt = USE_STMT;    $$ = $1; }
+    | exit_stmt     { ((struct command_t *)$1)->stmt = EXIT_STMT;   $$ = $1; }
+    | select_stmt   { ((struct command_t *)$1)->stmt = SELECT_STMT; $$ = $1; }
+    | insert_stmt   { ((struct command_t *)$1)->stmt = INSERT_STMT; $$ = $1; }
+    | update_stmt   { ((struct command_t *)$1)->stmt = UPDATE_STMT; $$ = $1; }
+    | delete_stmt   { ((struct command_t *)$1)->stmt = DELETE_STMT; $$ = $1; }
     ;
 
 create_stmt
-    : CREATE DATABASE database_name { assign_database_name(command, $3); }
-    | CREATE TABLE table_name '(' column_type_list')' { assign_table_name(command, $3); assign_column_type_list(command, $4); }
+    : CREATE DATABASE database_name {
+            $$ = create_command(database);
+            if($$ != NULL)
+                assign_database_name($$, $3);
+        }
+    | CREATE TABLE table_name '(' column_type_list')' { 
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_table_name($$, $3);
+                assign_column_type_list($$, $5);
+            }
+        }
     ;
 
 drop_stmt
-    : DROP DATABASE database_name   { assign_database_name(command, $3); }
-    | DROP TABLE table_name         { assign_table_name(command, $3); }
+    : DROP DATABASE database_name   {
+            $$ = create_command(database);
+            if($$ != NULL)
+                assign_database_name($$, $3);
+        }
+    | DROP TABLE table_name         {
+            $$ = create_command(database);
+            if($$ != NULL)
+                assign_table_name($$, $3);
+        }
     ;
 
 show_stmt
@@ -60,31 +73,88 @@ show_stmt
     ;
 
 use_stmt
-    : USE database_name { assign_database_name(command, $2); }
+    : USE database_name { 
+            $$ = create_command(ROOT);
+            if($$ != NULL)
+                assign_database_name($$, $2);
+        }
     ;
 
 exit_stmt
-    : EXIT
+    : EXIT  { $$ = create_command(ROOT); }
     ;
 
 select_stmt
-    : SELECT '*' FROM table_name    { assign_column_list(command, $2); assign_table_name(command, $4); }
-    | SELECT column_list FROM table_name    { assign_column_list(command, $2); assign_table_name(command, $4); }
-    | SELECT '*' FROM table_name WHERE condition    { assign_column_list(command, $2); assign_table_name(command, $4); assign_condition(command, $6); }
-    | SELECT column_list FROM table_name WHERE condition    { assign_column_list(command, $2); assign_table_name(command, $4); assign_condition(command, $6); }
+    : SELECT '*' FROM table_name    {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_column_list($$, $2);
+                assign_table_name($$, $4);
+            }
+        }
+    | SELECT column_list FROM table_name    {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_column_list($$, $2);
+                assign_table_name($$, $4);
+            }
+        }
+    | SELECT '*' FROM table_name WHERE condition    {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_column_list($$, $2);
+                assign_table_name($$, $4);
+                assign_condition($$, $6);
+            }
+        }
+    | SELECT column_list FROM table_name WHERE condition    {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_column_list($$, $2);
+                assign_table_name($$, $4);
+                assign_condition($$, $6);
+            }
+        }
     ;
 
 insert_stmt
-    : INSERT INTO table_name VALUES '(' value_column_list ')' { assign_table_name(command, $3); assign_column_list(command, NULL); assign_value_column_list(command, $5); }
-    | INSERT INTO table_name '(' column_list ')' VALUES '(' value_column_list ')' { assign_table_name(command, $3); assign_column_list(command, $5); assign_value_column(command, $9); }
+    : INSERT INTO table_name VALUES '(' column_value_list ')' {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_table_name($$, $3);
+                assign_column_list($$, NULL);
+                assign_column_value_list($$, $5);
+            }
+        }
+    | INSERT INTO table_name '(' column_list ')' VALUES '(' column_value_list ')' {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_table_name($$, $3);
+                assign_column_list($$, $5);
+                assign_column_value_list($$, $9);
+            }
+        }
     ;
 
 update_stmt
-    : UPDATE table_name SET assign_expr WHERE condition { assign_table_name(command, $2); assign_assign_expr(command, $4); assign_condition(command, $6); }
+    : UPDATE table_name SET assign_expr_list WHERE condition {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_table_name($$, $2);
+                assign_assign_expr_list($$, $4);
+                assign_condition($$, $6);
+            }
+        }
     ;
 
 delete_stmt
-    : DELETE FROM table_name WHERE condition { assign_table_name(command, $3); assign_condition(command, $5); }
+    : DELETE FROM table_name WHERE condition {
+            $$ = create_command(database);
+            if($$ != NULL){
+                assign_table_name($$, $3);
+                assign_condition($$, $5);
+            }
+        }
     ;
 
 column_type_list
@@ -97,8 +167,8 @@ column_list
     | name
     ;
 
-value_column_list
-    : value_column_list ',' name
+column_value_list
+    : column_value_list ',' name
     | name
     ;
 
@@ -118,7 +188,7 @@ condition
     :
     ;
 
-assign_expr
+assign_expr_list
     : { /* 解决不了，需要语义分析 */ }
     ;
 
@@ -130,3 +200,8 @@ void yyerror(const char *s){
 }
 
 #include "lex.yy.c"
+
+int main(int argc, char *argv[]){
+    yyparse();
+    return 0;
+}

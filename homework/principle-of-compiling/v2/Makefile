@@ -2,10 +2,16 @@
 
 LDLIBS := $(LDLIBS) -ly
 
-sql: lex.l parse.y common.c
-	flex lex.l
+all: common.c parse.tab.c
+	$(CC) -o $@ $^
+
+parse.tab.c: lex.yy.c parse.y
 	bison parse.y
-	$(CC) -o $@ parse.tab.c common.c $(LDLIBS)
+
+lex.yy.c: lex.l
+	flex $<
+
+common.o: common.c
 
 clean:
-	rm -rf *.tab.c *.yy.c sql
+	rm -rf *.tab.c *.yy.c *.o
