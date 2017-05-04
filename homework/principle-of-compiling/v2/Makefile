@@ -1,9 +1,10 @@
 .PYONY: all clean
 
-LDLIBS := $(LDLIBS) -ly
+LDFLAGS := $(LDFLAGS) -g
+LDLIBS := $(LDLIBS) -ly -lmxml
 
-all: common.c parse.tab.c
-	$(CC) -o $@ $^
+all: common.c xml.c parse.tab.c
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 parse.tab.c: lex.yy.c parse.y
 	bison parse.y

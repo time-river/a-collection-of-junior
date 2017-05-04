@@ -2,13 +2,16 @@
 %option noyywrap
 
 %top{
-#define LEX_DEBUG(type, string)  {}
+#define LEX_DEBUG(type, string)  { printf("LINE %d: (%s, %s)\n", yylineno, (type), (string)); }
 }
 
 DATATYPE        (?i:float|int|string)
 /* 字母开头，数字与字母的组合 */
 ID              ([[:alpha:]][[:alpha:][:digit:]]*)
 OPERATOR        ";"|"("|")"
+INT             ([[:digit:]]+)
+FLOAT           ([[:digit:]]+\.[[:digit:]]+)
+STRING          \"([^\\\"\t\r\n]|\\.)*\"|'([^\\\'\t\r\n]|\\.)*'
 
 %%
 
@@ -34,8 +37,11 @@ OPERATOR        ";"|"("|")"
 (?i:where)      { LEX_DEBUG("keyword", yytext); return WHERE; }
 (?i:values)     { LEX_DEBUG("keyword", yytext); return VALUES; }
 {DATATYPE}      { LEX_DEBUG("DATATYPE", yytext); yylval.string = yytext; return DATATYPE; }
-{ID}            { LEX_DEBUG("ID", yytext); yylval.string = yytext; return ID; }
+{ID}            { LEX_DEBUG("ID", yytext); yylval.string = strdup(yytext); return ID; } /* not use strdup, bug in create table ... */
 {OPERATOR}      { LEX_DEBUG("OPERATOR", yytext); return yytext[0]; }
+{INT}           { LEX_DEBUG("INT", yytext); yylval.numi = atoi(yytext); return NUMI; }
+{FLOAT}         { LEX_DEBUG("FLOAT", yytext); yylval.numf = strtof(yytext, NULL); return NUMF; }
+{STRING}        { LEX_DEBUG("STRING", yytext); yylval.string = yytext; return STR; }
 
 . {
     printf("Line %d: illegal character %s\n",
