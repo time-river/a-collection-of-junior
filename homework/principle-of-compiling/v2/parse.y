@@ -69,6 +69,7 @@ create_stmt
                 assign_create_opt($$, DATABASE_OPT);
                 assign_database_name($$, $3);
             }
+            free($3);
         }
     | CREATE TABLE table_name '(' column_type_list')' { 
             $$ = create_query(database);
@@ -80,6 +81,7 @@ create_stmt
                 assign_table_name($$, $3);
                 assign_column_type_list($$, $5);
             }
+            free($3);
         }
     | CREATE TABLE table_name {
             $$ = create_query(database);
@@ -88,6 +90,7 @@ create_stmt
                 assign_table_name($$, $3);
                 assign_column_type_list($$, NULL);
             }
+            free($3);
         }
     ;
 
@@ -96,11 +99,13 @@ drop_stmt
             $$ = create_query(database);
             if($$ != NULL)
                 assign_database_name($$, $3);
+            free($3);
         }
     | DROP TABLE table_name         {
             $$ = create_query(database);
             if($$ != NULL)
                 assign_table_name($$, $3);
+            free($3);
         }
     ;
 
@@ -118,6 +123,7 @@ use_stmt
             $$ = create_query(ROOT);
             if($$ != NULL)
                 assign_database_name($$, $2);
+            free($2);
         }
     ;
 
@@ -131,6 +137,7 @@ select_stmt
             if($$ != NULL){
                 assign_table_name($$, $4);
             }
+            free($4);
         }
     | SELECT column_list FROM table_name    {
             $$ = create_query(database);
@@ -138,6 +145,7 @@ select_stmt
                 assign_column_list($$, $2);
                 assign_table_name($$, $4);
             }
+            free($4);
         }
     | SELECT '*' FROM table_name WHERE condition    {
             $$ = create_query(database);
@@ -145,6 +153,7 @@ select_stmt
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
             }
+            free($4);
         }
     | SELECT column_list FROM table_name WHERE condition    {
             $$ = create_query(database);
@@ -153,6 +162,7 @@ select_stmt
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
             }
+            free($4);
         }
     ;
 
@@ -164,6 +174,7 @@ insert_stmt
                 assign_column_list($$, NULL);
                 assign_column_value_list($$, $6);
             }
+            free($3);
         }
     | INSERT INTO table_name '(' column_list ')' VALUES '(' column_value_list ')' {
             $$ = create_query(database);
@@ -172,6 +183,7 @@ insert_stmt
                 assign_column_list($$, $5);
                 assign_column_value_list($$, $9);
             }
+            free($3);
         }
     ;
 
@@ -183,6 +195,7 @@ update_stmt
                 assign_assign_expr_list($$, $4);
                 assign_condition($$, $6);
             }
+            free($3);
         }
     ;
 
@@ -193,6 +206,7 @@ delete_stmt
                 assign_table_name($$, $3);
                 assign_condition($$, $5);
             }
+            free($3);
         }
     ;
 
@@ -206,6 +220,8 @@ column_type_list
             }
             else
                 $$ = $1;
+            free($3);
+            free($4); // avoid memory leak
         }
     | column DATATYPE   {
             struct column_type_t *node = NULL;
@@ -213,6 +229,8 @@ column_type_list
             if(node != NULL)
                 insque(node, node);
             $$ = node;
+            free($1);
+            free($2); // avoid memory leak
         }
     ;
 
@@ -226,6 +244,7 @@ column_list
             }
             else
                 $$ = $1;
+            free($3);
         }
     | column  {
             struct column_t *node = NULL;
@@ -233,6 +252,7 @@ column_list
             if(node != NULL)
                 insque(node, node);
             $$ = node;
+            free($1);
         }
     ;
 
@@ -246,6 +266,7 @@ column_value_list
             }
             else
                 $$ = $1;
+            free($3);
         }
     | column_value_list ',' column '=' NUMF {
             struct column_value_t *node = NULL;
@@ -256,6 +277,7 @@ column_value_list
             }
             else
                 $$ = $1;
+            free($3);
         }
     | column_value_list ',' column '=' STR  {
             struct column_value_t *node = NULL;
@@ -266,6 +288,8 @@ column_value_list
             }
             else
                 $$ = $1;
+            free($3);
+            free($5);
         }
     | column '=' NUMI   {
             struct column_value_t *node = NULL;
@@ -273,6 +297,7 @@ column_value_list
             if(node != NULL)
                 insque(node, node);
             $$ = node;
+            free($1);
         }
     | column '=' NUMF   {
             struct column_value_t *node = NULL;
@@ -280,6 +305,7 @@ column_value_list
             if(node != NULL)
                 insque(node, node);
             $$ = node;
+            free($1);
         }
     | column '=' STR    {
             struct column_value_t *node = NULL;
@@ -287,6 +313,8 @@ column_value_list
             if(node != NULL)
                 insque(node, node);
             $$ = node;
+            free($1);
+            free($3);
         }
     ;
 

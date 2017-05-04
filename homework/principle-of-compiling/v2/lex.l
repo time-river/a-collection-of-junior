@@ -36,12 +36,12 @@ STRING          \"([^\\\"\t\r\n]|\\.)*\"|'([^\\\'\t\r\n]|\\.)*'
 (?i:update)     { LEX_DEBUG("keyword", yytext); return UPDATE; }
 (?i:where)      { LEX_DEBUG("keyword", yytext); return WHERE; }
 (?i:values)     { LEX_DEBUG("keyword", yytext); return VALUES; }
-{DATATYPE}      { LEX_DEBUG("DATATYPE", yytext); yylval.string = yytext; return DATATYPE; }
+{DATATYPE}      { LEX_DEBUG("DATATYPE", yytext); yylval.string = strdup(yytext); return DATATYPE; }
 {ID}            { LEX_DEBUG("ID", yytext); yylval.string = strdup(yytext); return ID; } /* not use strdup, bug in create table ... */
 {OPERATOR}      { LEX_DEBUG("OPERATOR", yytext); return yytext[0]; }
 {INT}           { LEX_DEBUG("INT", yytext); yylval.numi = atoi(yytext); return NUMI; }
 {FLOAT}         { LEX_DEBUG("FLOAT", yytext); yylval.numf = strtof(yytext, NULL); return NUMF; }
-{STRING}        { LEX_DEBUG("STRING", yytext); yylval.string = yytext; return STR; }
+{STRING}        { LEX_DEBUG("STRING", yytext); yylval.string = strdup(yytext); return STR; }
 
 . {
     printf("Line %d: illegal character %s\n",
