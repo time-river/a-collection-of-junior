@@ -14,4 +14,4 @@ lex.yy.c: lex.l
 common.o: common.c
 
 clean:
-	rm -rf *.tab.c *.yy.c *.o
+	rm -rf *.tab.c *.yy.c *.o all

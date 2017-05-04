@@ -35,8 +35,9 @@ char *database = NULL;
 %%
 
 start
-    : start lines ';' { hub($2); }
+    : start lines ';' { hub($2); free_command($2); }
     | start ';' { fprintf(stdout, "ERROR: No query specified\n"); }
+    | error ';' /* Error Recovery: On error, skip until ';' is read.  */
     | /* empty */
     ;
 

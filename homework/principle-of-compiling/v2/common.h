@@ -11,7 +11,7 @@
 #include <sys/types.h>
 #include <sys/queue.h>
 
-#define ROOT "/tmp/sql"
+#define ROOT "/tmp/river-sql"
 
 enum stmt_t{
     CREATE_STMT,

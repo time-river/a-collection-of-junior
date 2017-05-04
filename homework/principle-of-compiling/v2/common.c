@@ -49,7 +49,7 @@ struct command_t *create_command(char *database_name){
         if(command == NULL){
             fprintf(stderr, "Malloc error: %s\n", strerror(errno));
         }
-        command->database_name = database_name;
+        command->database_name = strdup(database_name);
         command->table_name = NULL;
         /* other init */
     }
@@ -58,6 +58,8 @@ struct command_t *create_command(char *database_name){
 }
 
 void free_command(struct command_t *command){
+    free(command->database_name);
+    free(command->table_name);
     free(command);
 
     return;
