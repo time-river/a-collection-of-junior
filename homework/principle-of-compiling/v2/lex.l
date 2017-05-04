@@ -2,7 +2,7 @@
 %option noyywrap
 
 %top{
-#define LEX_DEBUG(type, string)  {} 
+#define LEX_DEBUG(type, string)  {}
 }
 
 DATATYPE        (?i:float|int|string)
@@ -33,8 +33,8 @@ OPERATOR        ";"|"("|")"
 (?i:update)     { LEX_DEBUG("keyword", yytext); return UPDATE; }
 (?i:where)      { LEX_DEBUG("keyword", yytext); return WHERE; }
 (?i:values)     { LEX_DEBUG("keyword", yytext); return VALUES; }
-{DATATYPE}      { LEX_DEBUG("DATATYPE", yytext); yylval = yytext; return DATATYPE; }
-{ID}            { LEX_DEBUG("ID", yytext); yylval = yytext; return ID; }
+{DATATYPE}      { LEX_DEBUG("DATATYPE", yytext); yylval.string = yytext; return DATATYPE; }
+{ID}            { LEX_DEBUG("ID", yytext); yylval.string = yytext; return ID; }
 {OPERATOR}      { LEX_DEBUG("OPERATOR", yytext); return yytext[0]; }
 
 . {

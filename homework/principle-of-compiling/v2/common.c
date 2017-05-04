@@ -38,7 +38,7 @@ void init(void){
     return;
 }
 
-struct command_t *create_command(const char *database_name){
+struct command_t *create_command(char *database_name){
     struct command_t *command = NULL;
     
     if(database_name == NULL){
@@ -49,7 +49,7 @@ struct command_t *create_command(const char *database_name){
         if(command == NULL){
             fprintf(stderr, "Malloc error: %s\n", strerror(errno));
         }
-        command->database_name = NULL;
+        command->database_name = database_name;
         command->table_name = NULL;
         /* other init */
     }

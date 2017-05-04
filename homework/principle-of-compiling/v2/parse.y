@@ -5,7 +5,6 @@
 #include "common.h"
 
 #define YYERROR_VERBOSE
-#define YYSTYPE void *
 
 int yylex(void);
 void yyerror(const char *s);
@@ -13,9 +12,23 @@ void yyerror(const char *s);
 char *database = NULL;
 %}
 
-%token CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
-%token DATABASE DATABASES FROM INTO SET TABLE TABLES USE WHERE VALUES
-%token ID DATATYPE
+%union {
+    int   numi;
+    float numf;
+    char *string;
+    struct command_t *command;
+}
+
+
+%token <string>  CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
+%token <string>  DATABASE DATABASES FROM INTO SET TABLE TABLES USE WHERE VALUES
+%token <string>  ID DATATYPE
+%type  <command> lines create_stmt drop_stmt show_stmt use_stmt exit_stmt
+%type  <command> select_stmt insert_stmt update_stmt delete_stmt
+%type  <string>  database_name table_name name
+
+%type  <string>  column_type_list column_list column_value_list assign_expr_list
+%type  <string>  condition
 
 %start start
 
@@ -28,15 +41,15 @@ start
     ;
 
 lines
-    : create_stmt   { ((struct command_t *)$1)->stmt = CREATE_STMT; $$ = $1; }
-    | drop_stmt     { ((struct command_t *)$1)->stmt = DROP_STMT;   $$ = $1; }
-    | show_stmt     { ((struct command_t *)$1)->stmt = SHOW_STMT;   $$ = $1; }
-    | use_stmt      { ((struct command_t *)$1)->stmt = USE_STMT;    $$ = $1; }
-    | exit_stmt     { ((struct command_t *)$1)->stmt = EXIT_STMT;   $$ = $1; }
-    | select_stmt   { ((struct command_t *)$1)->stmt = SELECT_STMT; $$ = $1; }
-    | insert_stmt   { ((struct command_t *)$1)->stmt = INSERT_STMT; $$ = $1; }
-    | update_stmt   { ((struct command_t *)$1)->stmt = UPDATE_STMT; $$ = $1; }
-    | delete_stmt   { ((struct command_t *)$1)->stmt = DELETE_STMT; $$ = $1; }
+    : create_stmt   { $1->stmt = CREATE_STMT; $$ = $1; }
+    | drop_stmt     { $1->stmt = DROP_STMT;   $$ = $1; }
+    | show_stmt     { $1->stmt = SHOW_STMT;   $$ = $1; }
+    | use_stmt      { $1->stmt = USE_STMT;    $$ = $1; }
+    | exit_stmt     { $1->stmt = EXIT_STMT;   $$ = $1; }
+    | select_stmt   { $1->stmt = SELECT_STMT; $$ = $1; }
+    | insert_stmt   { $1->stmt = INSERT_STMT; $$ = $1; }
+    | update_stmt   { $1->stmt = UPDATE_STMT; $$ = $1; }
+    | delete_stmt   { $1->stmt = DELETE_STMT; $$ = $1; }
     ;
 
 create_stmt
@@ -68,8 +81,12 @@ drop_stmt
     ;
 
 show_stmt
-    : SHOW DATABASES
-    | SHOW TABLES
+    : SHOW DATABASES { $$ = create_command(ROOT); }
+    | SHOW TABLES {
+            $$ = create_command(database);
+            if($$ != NULL)
+                assign_database_name($$, database);
+        }
     ;
 
 use_stmt
@@ -88,7 +105,6 @@ select_stmt
     : SELECT '*' FROM table_name    {
             $$ = create_command(database);
             if($$ != NULL){
-                assign_column_list($$, $2);
                 assign_table_name($$, $4);
             }
         }
@@ -102,7 +118,6 @@ select_stmt
     | SELECT '*' FROM table_name WHERE condition    {
             $$ = create_command(database);
             if($$ != NULL){
-                assign_column_list($$, $2);
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
             }
@@ -123,7 +138,7 @@ insert_stmt
             if($$ != NULL){
                 assign_table_name($$, $3);
                 assign_column_list($$, NULL);
-                assign_column_value_list($$, $5);
+                assign_column_value_list($$, $6);
             }
         }
     | INSERT INTO table_name '(' column_list ')' VALUES '(' column_value_list ')' {
@@ -185,7 +200,7 @@ name
     ;
 
 condition
-    :
+    : ID
     ;
 
 assign_expr_list

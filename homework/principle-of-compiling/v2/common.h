@@ -69,7 +69,7 @@ struct condition_t {
 };
 
 void init(void);
-struct command_t *create_command(const char *database_name);
+struct command_t *create_command(char *database_name);
 void free_command(struct command_t *command);
 void hub(const struct command_t *command);
 void use_stmt(const char *database_name);
