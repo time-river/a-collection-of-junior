@@ -90,6 +90,7 @@ void hub(const struct query_t *query){
                 create_stmt(query);
                 break;
             case DROP_STMT:
+                drop_stmt(query);
                 break;
             case SHOW_STMT:
                 show_stmt(query);
@@ -160,6 +161,36 @@ void create_stmt(const struct query_t *query){
 }
 
 void drop_stmt(const struct query_t *query){
+    char path[BUFSIZ] = {0};
+    char command[BUFSIZ] = {0};
+
+    if(query->database_name != NULL && query->table_name == NULL){
+        snprintf(path, sizeof(path)-1, "%s/%s", ROOT, query->database_name);
+        if(access(path, F_OK&07) == 0){
+            snprintf(command, sizeof(command)-1, "rm -rf %s", path);
+        }
+        else
+            fprintf(stderr, "ERROR: Can't drop database '%s'; database doesn't exist\n", query->database_name);
+    }
+    else if(query->database_name != NULL && query->table_name != NULL){
+        snprintf(path, sizeof(path)-1, "%s/%s/%s", ROOT, query->database_name, query->table_name);
+        if(access(path, F_OK&07) == 0){
+            snprintf(command, sizeof(command)-1, "rm -rf %s", path);
+        }
+        else
+            fprintf(stderr, "ERROR: Unknown table '%s.%s'\n", query->database_name, query->table_name);
+    }
+    else{
+        fprintf(stderr, "%s LINE %d: ERROR unknow error.\n", __FILE__, __LINE__);
+    }
+    if(strlen(command) != 0){
+        if(system(command) != 0)
+            fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        else
+            fprintf(stdout, "Query OK, 0 rows affected\n");
+    }
+    
+    return;
 }
 
 void show_stmt(const struct query_t *query){

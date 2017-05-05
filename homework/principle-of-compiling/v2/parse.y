@@ -96,7 +96,7 @@ create_stmt
 
 drop_stmt
     : DROP DATABASE database_name   {
-            $$ = create_query(database);
+            $$ = create_query(ROOT);
             if($$ != NULL)
                 assign_database_name($$, $3);
             free($3);
