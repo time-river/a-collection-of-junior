@@ -53,7 +53,7 @@ struct query_t *create_query(char *database_name){
         query->database_name = strdup(database_name);
         query->table_name = NULL;
         query->column_type = NULL;
-        query->column_value = NULL;
+        query->value = NULL;
         query->condition = NULL;
     }
 
@@ -105,6 +105,7 @@ void hub(const struct query_t *query){
             case SELECT_STMT:
                 break;
             case INSERT_STMT:
+                insert_stmt(query);
                 break;
             case UPDATE_STMT:
                 break;
@@ -143,9 +144,6 @@ void create_stmt(const struct query_t *query){
                     fprintf(stderr, "ERROR: Can't create table '%s'; table exists\n", query->database_name);
                 }
                 else{
-                    printf("database: %s\n", query->database_name);
-                    printf("table: %s\n", query->table_name);
-                    printf("path: %s\n", path);
                     file = fopen(path, "w");
                     if(file == NULL)
                         fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
@@ -213,13 +211,13 @@ void show_stmt(const struct query_t *query){
             fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
     }
     else
-        fprintf(stderr, "ERROR: You have an error in your SQL syntax\n");
+        fprintf(stderr, "ERROR: Unknow error\n");
     return;
 }
 
 void use_stmt(const struct query_t *query){
     char path[BUFSIZ] = {0};
-    snprintf(path, sizeof(path)-1, "%s/%s", ROOT, query->database_name);
+    snprintf(path, sizeof(path)-1, "%s/%s", ROOT, query->database_name, query->table_name);
 
     if(access(path, (R_OK|W_OK|X_OK)&07) != 0){
         fprintf(stderr, "ERROR: Access denied for user to database '%s'\n", query->database_name);
@@ -230,6 +228,30 @@ void use_stmt(const struct query_t *query){
         database = strdup(query->database_name);
         fprintf(stdout, "Database changed\n");
     }
+    return;
+}
+
+void insert_stmt(const struct query_t *query){
+    char path[BUFSIZ] = {0};
+    FILE *fp = NULL;
+
+    snprintf(path, sizeof(path)-1, "%s/%s/%s", ROOT, query->database_name, query->table_name);
+
+    if(access(path, F_OK&07) != 0)
+        fprintf(stderr, "Table '%s.%s' doesn't exist\n", query->database_name, query->table_name);
+    else{
+        if(query->value == NULL)
+            fprintf(stderr, "You have an error in your SQL syntax\n");
+        else{
+            fp = fopen(path, "r+");
+            if(fp == NULL)
+                fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+            else{
+                fclose(fp);
+            }
+        }
+    }
+
     return;
 }
 
@@ -265,13 +287,14 @@ void assign_column_list(struct query_t *query, struct column_t *column){
     return;
 }
 
-void assign_column_value_list(struct query_t *query, struct column_value_t *column_value){
-    query->column_value = column_value;
+void assign_value_list(struct query_t *query, struct value_t *value){
+    query->value = value;
     return;
 }
 
-void assign_assign_expr_list(struct query_t *query, struct assign_expr_t assign_expr){
-
+void assign_assign_expr_list(struct query_t *query, struct assign_expr_t *assign_expr){
+    query->assign_expr = assign_expr;
+    return;
 }
 
 void assign_condition(){
@@ -343,10 +366,35 @@ void free_column(struct column_t *node){
     return;
 }
 
-struct column_value_t *create_column_value(char *column, void *value_ptr, enum datatype_t datatype){
-    struct column_value_t *node = NULL;
+struct value_t *create_value(void *value_ptr, enum datatype_t datatype){
+    struct value_t *node = NULL;
 
-    node = (struct column_value_t *)malloc(sizeof(struct column_value_t));
+    node = (struct value_t *)malloc(sizeof(struct value_t));
+    if(node == NULL)
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+    else{
+        node->prev = node;
+        node->next = node;
+        node->datatype = datatype;
+        _assign_value(&(node->value), value_ptr, datatype);    
+    }
+
+    return node;
+}
+
+void free_value(struct value_t *node){
+    if(node != NULL){
+        if(node->datatype == STRING && node->value.string != NULL)
+           free(node->value.string); 
+    }
+    free(node);
+    return;
+}
+
+struct assign_expr_t *create_assign_expr(char *column, void *value_ptr, enum datatype_t datatype){
+    struct assign_expr_t *node = NULL;
+
+    node = (struct assign_expr_t *)malloc(sizeof(struct assign_expr_t));
     if(node == NULL)
             fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
     else{
@@ -354,22 +402,12 @@ struct column_value_t *create_column_value(char *column, void *value_ptr, enum d
         node->next = node;
         node->datatype = datatype;
         node->column = strdup(column);
-        switch(datatype){
-            case FLOAT:
-                node->value.numf = *((float *)value_ptr);
-                break;
-            case INT:
-                node->value.numi = *((int *)value_ptr);
-                break;
-            case STRING:
-                node->value.string = strdup((char *)value_ptr);
-                break;
-        }
+        _assign_value(&(node->value), value_ptr, datatype);
     }
     return node;
 }
 
-void free_column_value(struct column_value_t *node){
+void free_assign_expr(struct assign_expr_t *node){
     if(node != NULL){
         if(node->column != NULL)
             free(node->column);
@@ -377,4 +415,21 @@ void free_column_value(struct column_value_t *node){
             free(node->value.string);
         free(node);
     }
+}
+
+void _assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatype){
+    switch(datatype){
+        case FLOAT:
+            node->numf = *((float *)value_ptr);
+            break;
+        case INT:
+            node->numi = *((int *)value_ptr);
+            break;
+        case STRING:
+            node->string = strdup((char *)value_ptr);
+            break;
+    }
+}
+
+struct condition_t *create_condition(){
 }

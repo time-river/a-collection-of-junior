@@ -1,7 +1,7 @@
 .PYONY: all clean
 
 LDFLAGS := $(LDFLAGS) -g
-LDLIBS := $(LDLIBS) -ly -lmxml
+LDLIBS := $(LDLIBS) -ly -lmxml -lm
 
 all: common.c xml.c parse.tab.c
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)

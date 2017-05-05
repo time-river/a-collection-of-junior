@@ -1,6 +1,7 @@
 %{
 #include "common.h"
 
+#define YYDEBUG 1
 #define YYERROR_VERBOSE
 
 int yylex(void);
@@ -17,24 +18,33 @@ char *database = NULL;
     struct query_t *query;
     struct column_type_t *column_type;
     struct column_t *column;
-    struct column_value_t *column_value;
+    struct value_t *value;
+    struct condition_t *condition;
 }
 
-
-%token <string>  CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
-%token <string>  DATABASE DATABASES FROM INTO SET TABLE TABLES USE WHERE VALUES
-%token <string>  ID DATATYPE STR
-%token <numi>    NUMI
-%token <numf>    NUMF
+%token CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
+%token DATABASE DATABASES FROM INTO SET TABLE TABLES USE WHERE VALUES
+%token <string> ID DATATYPE STR
+%token <numi>   NUMI
+%token <numf>   NUMF
 %type  <query> lines create_stmt drop_stmt show_stmt use_stmt exit_stmt
 %type  <query> select_stmt insert_stmt update_stmt delete_stmt
-%type  <string>  database_name table_name column name
+%type  <string> database_name table_name column name
 %type  <column_type> column_type_list
 %type  <column>  column_list
-%type  <column_value> column_value_list
+%type  <value> value_list
+%type  <numi> expr_int
+%type  <numf> expr_float
 
 %type  <string>  assign_expr_list
-%type  <string>  condition
+%type  <condition>  condition
+
+%destructor { free($$); } DATATYPE STR
+%destructor { free($$); } database_name table_name column
+
+%left   '+' '-'
+%left   '*' '/'
+%right  UMINUS
 
 %start start
 
@@ -42,7 +52,7 @@ char *database = NULL;
 
 start
     : start lines ';' { hub($2); free_query($2); }
-    | start ';' { fprintf(stdout, "ERROR: No query specified\n"); }
+    | start ';' { fprintf(stderr, "ERROR: No query specified\n"); }
     | error ';' { yyerrok; } /* Error Recovery: On error, skip until ';' is read.  */
     | /* empty */
     ;
@@ -63,25 +73,17 @@ create_stmt
     : CREATE DATABASE database_name {
             $$ = create_query(ROOT);
             if($$ != NULL){
-                printf("create: %s --\n", $1);
-                printf("talbe: %s --\n", $2);
-                printf("table_name: %s --\n", $3);
                 assign_create_opt($$, DATABASE_OPT);
                 assign_database_name($$, $3);
             }
-            free($3);
         }
     | CREATE TABLE table_name '(' column_type_list')' { 
             $$ = create_query(database);
             if($$ != NULL){
                 assign_create_opt($$, TABLE_OPT);
-                printf("create: %s --\n", $1);
-                printf("talbe: %s --\n", $2);
-                printf("table_name: %s --\n", $3);
                 assign_table_name($$, $3);
                 assign_column_type_list($$, $5);
             }
-            free($3);
         }
     | CREATE TABLE table_name {
             $$ = create_query(database);
@@ -90,7 +92,6 @@ create_stmt
                 assign_table_name($$, $3);
                 assign_column_type_list($$, NULL);
             }
-            free($3);
         }
     ;
 
@@ -99,13 +100,11 @@ drop_stmt
             $$ = create_query(ROOT);
             if($$ != NULL)
                 assign_database_name($$, $3);
-            free($3);
         }
     | DROP TABLE table_name         {
             $$ = create_query(database);
             if($$ != NULL)
                 assign_table_name($$, $3);
-            free($3);
         }
     ;
 
@@ -123,7 +122,6 @@ use_stmt
             $$ = create_query(ROOT);
             if($$ != NULL)
                 assign_database_name($$, $2);
-            free($2);
         }
     ;
 
@@ -137,7 +135,6 @@ select_stmt
             if($$ != NULL){
                 assign_table_name($$, $4);
             }
-            free($4);
         }
     | SELECT column_list FROM table_name    {
             $$ = create_query(database);
@@ -145,7 +142,6 @@ select_stmt
                 assign_column_list($$, $2);
                 assign_table_name($$, $4);
             }
-            free($4);
         }
     | SELECT '*' FROM table_name WHERE condition    {
             $$ = create_query(database);
@@ -153,7 +149,6 @@ select_stmt
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
             }
-            free($4);
         }
     | SELECT column_list FROM table_name WHERE condition    {
             $$ = create_query(database);
@@ -162,28 +157,25 @@ select_stmt
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
             }
-            free($4);
         }
     ;
 
 insert_stmt
-    : INSERT INTO table_name VALUES '(' column_value_list ')' {
+    : INSERT INTO table_name VALUES '(' value_list ')' {
             $$ = create_query(database);
             if($$ != NULL){
                 assign_table_name($$, $3);
                 assign_column_list($$, NULL);
-                assign_column_value_list($$, $6);
+                assign_value_list($$, $6);
             }
-            free($3);
         }
-    | INSERT INTO table_name '(' column_list ')' VALUES '(' column_value_list ')' {
+    | INSERT INTO table_name '(' column_list ')' VALUES '(' value_list ')' {
             $$ = create_query(database);
             if($$ != NULL){
                 assign_table_name($$, $3);
                 assign_column_list($$, $5);
-                assign_column_value_list($$, $9);
+                assign_value_list($$, $9);
             }
-            free($3);
         }
     ;
 
@@ -195,7 +187,6 @@ update_stmt
                 assign_assign_expr_list($$, $4);
                 assign_condition($$, $6);
             }
-            free($3);
         }
     ;
 
@@ -206,7 +197,6 @@ delete_stmt
                 assign_table_name($$, $3);
                 assign_condition($$, $5);
             }
-            free($3);
         }
     ;
 
@@ -215,13 +205,11 @@ column_type_list
             struct column_type_t *node = NULL;
             node = create_column_type($3, $4);
             if(node != NULL){
-                insque(node, $1);
+                insque(node, $1); // bug, 重复命名问题
                 $$ = node;
             }
             else
                 $$ = $1;
-            free($3);
-            free($4); // avoid memory leak
         }
     | column DATATYPE   {
             struct column_type_t *node = NULL;
@@ -229,8 +217,6 @@ column_type_list
             if(node != NULL)
                 insque(node, node);
             $$ = node;
-            free($1);
-            free($2); // avoid memory leak
         }
     ;
 
@@ -244,7 +230,6 @@ column_list
             }
             else
                 $$ = $1;
-            free($3);
         }
     | column  {
             struct column_t *node = NULL;
@@ -252,69 +237,60 @@ column_list
             if(node != NULL)
                 insque(node, node);
             $$ = node;
-            free($1);
         }
     ;
 
-column_value_list
-    : column_value_list ',' column '=' NUMI {
-            struct column_value_t *node = NULL;
-            node = create_column_value($3, &$5, INT);
+value_list
+    : value_list ',' expr_int {
+            struct value_t *node = NULL;
+            node = create_value(&$3, INT);
             if(node != NULL){
                 insque(node, $1);
                 $$ = node;
             }
             else
                 $$ = $1;
-            free($3);
         }
-    | column_value_list ',' column '=' NUMF {
-            struct column_value_t *node = NULL;
-            node = create_column_value($3, &$5, FLOAT);
+    | value_list ',' expr_float {
+            struct value_t *node = NULL;
+            node = create_value(&$3, FLOAT);
             if(node != NULL){
                 insque(node, $1);
                 $$ = node;
             }
             else
                 $$ = $1;
-            free($3);
         }
-    | column_value_list ',' column '=' STR  {
-            struct column_value_t *node = NULL;
-            node = create_column_value($3, $5, STRING);
+    | value_list ',' STR  {
+            struct value_t *node = NULL;
+            node = create_value($3, STRING);
             if(node != NULL){
                 insque(node, $1);
                 $$ = node;
             }
             else
                 $$ = $1;
-            free($3);
-            free($5);
         }
-    | column '=' NUMI   {
-            struct column_value_t *node = NULL;
-            node = create_column_value($1, &$3, INT);
+    | expr_int   {
+            struct value_t *node = NULL;
+            node = create_value(&$1, INT);
             if(node != NULL)
                 insque(node, node);
             $$ = node;
-            free($1);
         }
-    | column '=' NUMF   {
-            struct column_value_t *node = NULL;
-            node = create_column_value($1, &$3, FLOAT);
+    | expr_float   {
+            struct value_t *node = NULL;
+            node = create_value(&$1, FLOAT);
             if(node != NULL)
                 insque(node, node);
             $$ = node;
-            free($1);
         }
-    | column '=' STR    {
-            struct column_value_t *node = NULL;
-            node = create_column_value($1, $3, STRING);
+    | STR    {
+            struct value_t *node = NULL;
+            node = create_value($1, STRING);
             if(node != NULL)
                 insque(node, node);
             $$ = node;
-            free($1);
-            free($3);
         }
     ;
 
@@ -335,13 +311,92 @@ name
     ;
 
 condition
-    : ID
+    :   { $$ = create_condition(); } 
     ;
 
 assign_expr_list
-    : { /* 解决不了，需要语义分析 */ }
+    : assign_expr_list ',' column '=' expr_float {
+            struct assign_expr_t *node = NULL;
+            node = create_assign_expr($3, &$5, FLOAT);
+            if(node != NULL)
+                insque(node, $1);
+            $$ = node;
+        }
+    | assign_expr_list ',' column '=' expr_int   {
+            struct assign_expr_t *node = NULL;
+            node = create_assign_expr($3, &$5, INT);
+            if(node != NULL)
+                insque(node, $1);
+            $$ = node;
+        }
+    | assign_expr_list ',' column '=' STR   {
+            struct assign_expr_t *node = NULL;
+            node = create_assign_expr($3, $5, STRING);
+            if(node != NULL)
+                insque(node, $1);
+            $$ = node;
+        }
+    | column '=' expr_float {
+            struct assign_expr_t *node = NULL;
+            node = create_assign_expr($1, &$3, FLOAT);
+            if(node != NULL)
+                insque(node, node);
+            $$ = node;
+        }
+    | column '=' expr_int   {
+            struct assign_expr_t *node = NULL;
+            node = create_assign_expr($1, &$3, INT);
+            if(node != NULL)
+                insque(node, node);
+            $$ = node;
+        }
+    | column '=' STR    {
+            struct assign_expr_t *node = NULL;
+            node = create_assign_expr($1, $3, STRING);
+            if(node != NULL)
+                insque(node, node);
+            $$ = node;
+        }
     ;
 
+expr_float
+    : NUMF                        { $$ = $1; }
+    | NUMI                        { $$ = (float)$1; }
+    | expr_float '+' expr_float   { $$ = $1 + $3; }
+    | expr_float '-' expr_float   { $$ = $1 - $3; }
+    | expr_float '*' expr_float   { $$ = $1 * $3; }
+    | expr_float '/' expr_float   { 
+            if($3)
+                $$ = $1 / $3;
+            else{
+                $$ = 1.0f;
+                fprintf(stderr, "ERROR: division by zero\n");
+            }
+        }
+    | '(' expr_float ')'          { $$ = $2; }
+    | '-' expr_float %prec UMINUS { $$ = -$2; }
+    | '+' expr_float %prec UMINUS { $$ = $2; }
+    | expr_float '^' expr_float   { $$ = powf($1, $3); }
+    ;
+
+expr_int
+    : NUMI
+    | expr_int '+' expr_int   { $$ = $1 + $3; }
+    | expr_int '-' expr_int   { $$ = $1 - $3; }
+    | expr_int '*' expr_int   { $$ = $1 * $3; }
+    | expr_int '/' expr_int   { 
+            if($3)
+                $$ = $1 / $3;
+            else{
+                $$ = 1;
+                fprintf(stderr, "ERROR: division by zero\n");
+            }
+        }
+    | '(' expr_int ')'          { $$ = $2; }
+    | '-' expr_int %prec UMINUS { $$ = -$2; }
+    | '+' expr_int %prec UMINUS { $$ = $2; }
+    | expr_int '^' expr_int     { $$ = (int)pow($1, $3); }
+    ;
 %%
 
 void yyerror(const char *s){

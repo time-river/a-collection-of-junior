@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <math.h>
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -11,7 +12,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "xml.h"
 
 #define ROOT "/tmp/river-sql"
 
@@ -39,8 +39,9 @@ struct query_t {
     char *table_name;
     struct column_type_t *column_type;
     struct column_t *column;
-    struct column_value_t *column_value;
+    struct value_t *value;
     struct condition_t *condition;
+    struct assign_expr_t *assign_expr;
 };
 
 enum datatype_t {
@@ -62,22 +63,25 @@ struct column_t {
     char *column;
 };
 
-union value_t {
+union _value_t {
     int numi;
     float numf;
     char *string;
 };
 
-struct column_value_t {
-    struct column_value_t *prev;
-    struct column_value_t *next;
+struct value_t {
+    struct value_t *prev;
+    struct value_t *next;
     enum datatype_t datatype;
-    char *column;
-    union value_t value;
+    union _value_t value;
 };
 
 struct assign_expr_t {
-
+    struct value_t *prev;
+    struct value_t *next;
+    char *column;
+    enum datatype_t datatype;
+    union _value_t value;
 };
 
 struct condition_t {
@@ -92,21 +96,27 @@ void create_stmt(const struct query_t *query);
 void drop_stmt(const struct query_t *query);
 void show_stmt(const struct query_t *query);
 void use_stmt(const struct query_t *query);
+void insert_stmt(const struct query_t *query);
 void assign_create_opt(struct query_t *query, enum create_opt_t opt);
 void assign_database_name(struct query_t *query, char *database_name);
 void assign_table_name(struct query_t *query, char *table_name);
-void assign_column_type_list();
-void assign_column_list();
-void assign_column_value_list();
-void assign_assign_expr_list();
+void assign_column_type_list(struct query_t *query, struct column_type_t * column_type);
+void assign_column_list(struct query_t *query, struct column_t *column);
+void assign_value_list(struct query_t *query, struct value_t *value);
+void assign_assign_expr_list(struct query_t *query, struct assign_expr_t *assign_expr);
 void assign_condition();
 
 struct column_type_t *create_column_type(char *column, char *datatype);
 void free_column_type(struct column_type_t *node);
 struct column_t *create_column(char *column);
 void free_column(struct column_t *node);
-struct column_value_t *create_column_value(char *column, void *value_ptr, enum datatype_t datatype);
-void free_column_value(struct column_value_t *node);
+struct value_t *create_value(void *value_ptr, enum datatype_t datatype);
+void free_value(struct value_t *node);
+struct assign_expr_t *create_assign_expr(char *column, void *value_ptr, enum datatype_t datatype);
+void free_assign_expr(struct assign_expr_t *node);
+struct condition_t *create_condition();
 
 extern char *database;
+
+#include "xml.h"
 #endif
