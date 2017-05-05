@@ -4,6 +4,7 @@ void create_xml(const struct query_t *query, FILE *fp){
     char path[BUFSIZ] = {0};
     mxml_node_t *xml = NULL;
     mxml_node_t *table = NULL;
+    mxml_node_t *row = NULL;
     mxml_node_t *group = NULL;
     mxml_node_t * data= NULL;
     struct column_type_t *node = query->column_type;
@@ -11,15 +12,18 @@ void create_xml(const struct query_t *query, FILE *fp){
     xml = mxmlNewXML("1.0");
 
     table = mxmlNewElement(xml, "table");
+    row = mxmlNewElement(table, "row");
+
     node = node->prev; // make node became first node
+        // circular queue, the value whether is NULL  has already been checked
     do {
-        group = mxmlNewElement(table, "row");
+        group = mxmlNewElement(row, "group");
             data = mxmlNewElement(group, "column");
             mxmlNewText(data, 0, node->column);
             data = mxmlNewElement(group, "datatype");
             mxmlNewInteger(data, node->datatype);
         node = node->prev;
-    } while(node != query->column_type);
+    } while(node != NULL && node != query->column_type->prev);
 
     snprintf(path, sizeof(BUFSIZ)-1, "%s/%s/%s", ROOT, query->database_name, query->table_name);
     if(access(path, F_OK&07) == 0){
@@ -32,5 +36,6 @@ void create_xml(const struct query_t *query, FILE *fp){
             fprintf(stdout, "Query OK, 0 rows affected\n");
     }
 
+    mxmlDelete(xml);
     return;
 }

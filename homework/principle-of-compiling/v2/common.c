@@ -61,11 +61,23 @@ struct query_t *create_query(char *database_name){
 }
 
 void free_query(struct query_t *query){
+    struct column_type_t *column_type = NULL;
+
     if(query != NULL){
         if(query->database_name != NULL)
             free(query->database_name);
         if(query->table_name != NULL)
             free(query->table_name);
+        if(query->column_type != NULL){
+            int i=0;
+            while(query->column_type->next != query->column_type) {
+                column_type = query->column_type;
+                query->column_type = column_type->next;
+                remque(column_type);
+                free_column_type(column_type);
+            }
+            free_column_type(query->column_type);
+        }
         free(query);
     }
     return;
@@ -147,6 +159,9 @@ void create_stmt(const struct query_t *query){
     return;
 }
 
+void drop_stmt(const struct query_t *query){
+}
+
 void show_stmt(const struct query_t *query){
     char path[BUFSIZ] = {0};
     char command[BUFSIZ] = {0};
@@ -154,13 +169,15 @@ void show_stmt(const struct query_t *query){
     if(strcmp(query->database_name, ROOT) == 0){
         snprintf(path, sizeof(path)-1, "%s", ROOT);
         fprintf(stdout, "Database:\n");
+        snprintf(command, sizeof(command)-1, "ls -l %s | grep '^d' | awk  '{ print $9 }'", path);
     }
     else{
         snprintf(path, sizeof(path)-1, "%s/%s", ROOT, query->database_name);
-        fprintf(stdout, "Tables_in_%s\n\n", query->database_name);
+        fprintf(stdout, "Tables_in_'%s'\n", query->database_name);
+        snprintf(command, sizeof(command)-1, "ls -l %s | grep '^-' | awk  '{ print $9 }'", path);
     }
     if(access(path, F_OK&07) == 0){
-        snprintf(command, sizeof(command)-1, "ls -l %s | grep '^d' | awk  '{ print $9 }'", path);
+        printf("path: %s\n", path);
         if(system(command) != 0)
             fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
     }

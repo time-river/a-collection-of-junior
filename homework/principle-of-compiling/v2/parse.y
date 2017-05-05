@@ -43,7 +43,7 @@ char *database = NULL;
 start
     : start lines ';' { hub($2); free_query($2); }
     | start ';' { fprintf(stdout, "ERROR: No query specified\n"); }
-    | error ';' /* Error Recovery: On error, skip until ';' is read.  */
+    | error ';' { yyerrok; } /* Error Recovery: On error, skip until ';' is read.  */
     | /* empty */
     ;
 

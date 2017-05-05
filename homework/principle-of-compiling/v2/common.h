@@ -89,6 +89,7 @@ struct query_t *create_query(char *database_name);
 void free_query(struct query_t *query);
 void hub(const struct query_t *query);
 void create_stmt(const struct query_t *query);
+void drop_stmt(const struct query_t *query);
 void show_stmt(const struct query_t *query);
 void use_stmt(const struct query_t *query);
 void assign_create_opt(struct query_t *query, enum create_opt_t opt);
