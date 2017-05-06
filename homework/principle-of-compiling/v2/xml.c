@@ -9,18 +9,17 @@ void create_xml(const struct query_t *query, FILE *fp){
 
     xml = mxmlNewXML("1.0");
 
-    table = mxmlNewElement(xml, "table");
-    row = mxmlNewElement(table, "row");
+    table = mxmlNewElement(xml, query->table_name);
+    row = mxmlNewElement(table, "meters");
 
-    node = node->prev; // make node became first node
-            // circular queue, the value whether is NULL  has already been checked
     // meters: <column_name>datatype</column_name>
     // data:   <column_name>value</column_name>
+            // circular queue, the value whether is NULL  has already been checked
     do {
         meter = mxmlNewElement(row, node->column);
         mxmlNewInteger(meter, node->datatype);
         node = node->prev;
-    } while(node != NULL && node != query->column_type->prev);
+    } while(node != NULL && node != query->column_type);
 
     if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
         fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
@@ -37,56 +36,138 @@ void insert_xml(const struct query_t *query, FILE *fp){
     mxml_node_t *meters = NULL;
     mxml_node_t *row = NULL;
     mxml_node_t *node = NULL;
-    struct column_t *column_node = query->column;
-    struct value_t  *value_node  = query->value;
+    struct column_t *column_node = query->column, *first_c = NULL;
+    struct value_t  *value_node  = query->value, *first_v = NULL, *insert_value = NULL;
+    struct column_type_t *column_type = NULL, *first_ct = NULL;
     int iresult = 0;
-    char *column = NULL;
-    enum datatype_t datatype;
 
     xml = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
-    table = mxmlGetNextSibling(xml);
-    meters = mxmlGetNextSibling(table);
+    if(xml == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        return;
+    }
 
-    if((row = xml_match_check(meters, column_node, value_node)) == NULL){
+    table = mxmlFindElement(xml, xml, query->table_name, NULL, NULL,MXML_DESCEND);
+    if(table == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+    meters = mxmlGetFirstChild(table);  // 第一个孩子一定是表头
+    if(meters == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+
+    row = mxmlNewElement(MXML_NO_PARENT, "row");
+    if((column_type = xml_match_check(meters, column_node, value_node)) == NULL){
         fprintf(stderr, "Column count doesn't match value count\n");
+        iresult = 1;
     }
     else{
         /* 1. 遍历
          *  2. 类型检查
          */
-        value_node = value_node->prev;
         if(column_node == NULL){
-            node = mxmlGetFirstChild(row);
             do {
-                if(mxmlGetInteger(node) != value_node->datatype){
-                    fprintf(stderr, "ERROR: value type is not matched\n");
+#ifdef DEBUG_XML
+                fprintf(stdout, "node name: %s, node datatype: %d\n",
+                        column_type->column, column_type->datatype);
+                switch(value_node->datatype){
+                    case FLOAT:
+                        fprintf(stdout, "value data: %f value datatype: %d\n",
+                                value_node->value.numf, value_node->datatype);
+                        break;
+                    case INT:
+                        fprintf(stdout, "value data: %d value datatype: %d\n",
+                                value_node->value.numi, value_node->datatype);
+                        break;
+                    case STRING:
+                        fprintf(stdout, "value data: %s value datatype: %d\n",
+                                value_node->value.string, value_node->datatype);
+                        break;
+                }
+#endif
+                if((column_type->datatype != value_node->datatype) &&
+                        (column_type->datatype != FLOAT || value_node->datatype != INT)){
+                // (value_node->datatype == node_datatype) ||
+                //      (node_datatype == FLOAT && value_node->datatype == INT)
+                // 允许 INT 转换成 FLOAT
+                    xml_datatype_not_match(column_type->column, value_node);
                     iresult = 1;
                     break;
                 }
-                node = mxmlWalkNext(node, row, MXML_DESCEND);
+                if(column_type->datatype == FLOAT && value_node->datatype == INT){
+                    value_node->datatype = column_type->datatype;
+                    value_node->value.numf = value_node->value.numi;
+                }
+                xml_insert_item(row, column_type->column, value_node);
+                column_type = column_type->prev;
                 value_node = value_node->prev;
-            } while(node != NULL
+            } while(column_type != NULL
                     && value_node != NULL
-                    && value_node != query->column_type->prev);
+                    && value_node != query->value);
         }
-        else{
-            node = mxmlGetFirstChild(row);
-            column_node = column_node->prev;
-            do {
-                node = mxmlFindPath(row, column_node->column);
-                if(node == NULL){
-                    fprintf(stderr, "ERROR: column does not exist\n");
-                    iresult = 1;
+        else{// 超级傻逼的方法...
+            first_ct = column_type;
+            first_c = column_node;
+            first_v = value_node;
+            // all column is in column_type ?
+            do{
+                iresult = 1;
+                column_type = first_ct;
+                do{
+                    if(strcmp(column_node->column, column_type->column) == 0){
+                        iresult = 0;
+                        break;
+                    }
+                    column_type = column_type->prev;
+                }while(column_type != NULL && column_type != first_ct); 
+                if(iresult == 1){
+                    fprintf(stderr, "ERROR: Unknow column %s\n", column_node->column);
                     break;
                 }
-                if(mxmlGetInteger(node) != value_node->datatype){
-                    fprintf(stderr, "ERROR: value type is not matched\n");
-                    iresult = 1;
-                    break;
-                }
-                column_node = column_node->prev;
-                value_node = value_node->prev;
-            } while(node != NULL);
+                else
+                    column_node = column_node->prev;
+            }while(column_node != NULL && column_node != first_c);
+
+            if(iresult != 1){ // all column is in column_type
+                column_type = first_ct;
+                do {
+                    column_node = first_c;
+                    value_node = first_v;
+                    insert_value = NULL;
+
+                    do{
+                        if(strcmp(column_type->column, column_node->column) == 0){
+                            if((column_type->datatype != value_node->datatype) &&
+                                    (column_type->datatype != FLOAT || value_node->datatype != INT)){
+                            // (value_node->datatype == node_datatype) ||
+                            //      (node_datatype == FLOAT && value_node->datatype == INT)
+                            // 允许 INT 转换成 FLOAT
+                                xml_datatype_not_match(column_type->column, value_node);
+                                iresult = 1;
+                                break;
+                            }
+                            if(column_type->datatype == FLOAT && value_node->datatype == INT){
+                                value_node->datatype = column_type->datatype;
+                                value_node->value.numf = value_node->value.numi;
+                            }
+                            insert_value = value_node;
+                            break;
+                        }
+                        column_node = column_node->prev;
+                        value_node = value_node->prev;
+                    }while(column_node != NULL && column_node != first_c);
+
+                    if(iresult == 1){
+                        break;
+                    }
+                    xml_insert_item(row, column_type->column, insert_value);
+                    column_type = column_type->prev;
+                } while(column_type != NULL && column_type != first_ct);
+            }
         }
     }
 
@@ -102,6 +183,7 @@ void insert_xml(const struct query_t *query, FILE *fp){
     else
         mxmlDelete(row);
 
+    free_column_type_list(column_type);
     mxmlDelete(xml);
     return;
 }
@@ -110,67 +192,114 @@ void xml_insert_item(mxml_node_t *row, char *column, struct value_t *value_node)
     mxml_node_t *data = NULL;
 
     data = mxmlNewElement(row, column);
-    xml_assign_data(data, value_node->value, value_node->datatype);
+    if(value_node != NULL)
+        xml_assign_data(data, value_node->value, value_node->datatype);
     return; 
 }
 
-void xml_assign_data(mxml_node_t *data, union _value_t value, enum datatype_t datatype){
+void xml_assign_data(mxml_node_t *parent, union _value_t value, enum datatype_t datatype){
     switch(datatype){
         case FLOAT:
-            mxmlNewReal(data, value.numf);
+            mxmlNewReal(parent, value.numf);
             break;
         case INT:
-            mxmlNewInteger(data, value.numi);
+            mxmlNewInteger(parent, value.numi);
             break;
         case STRING:
-            mxmlNewText(data, 0, value.string);
+            mxmlNewText(parent, 0, value.string);
             break;
     }
     return;
 }
 
+void xml_datatype_not_match(const char *name, struct value_t *node){
+    switch(node->datatype){
+        case FLOAT:
+            fprintf(stderr, "ERROR: value '%f', %s's type is not matched\n", node->value.numf, name);
+            break;
+        case INT:
+            fprintf(stderr, "ERROR: value '%d', %s's type is not matched\n", node->value.numi, name);
+            break;
+        case STRING:
+            fprintf(stderr, "ERROR: value '%s', %s's type is not matched\n", node->value.string, name);
+            break;
+    }
+}
 /* the number:
  *   columns == values
  *  or
  *   values == meters
  */
-mxml_node_t *xml_match_check(const mxml_node_t *meters,
-        const struct column_t *columns, const struct value_t *values){
-    int flag = 1;
+struct column_type_t *xml_match_check(mxml_node_t *meters,
+        struct column_t *columns, struct value_t *values){
     int meter_count = 0, column_count = 0, value_count = 0;
-    mxml_node_t *meter = NULL, *row = NULL, *node = NULL;
     struct column_t *column = columns;
     struct value_t *value = values;
+    struct column_type_t *column_type_list = NULL, *column_type = NULL;
 
-    row = mxmlNewElement(MXML_NO_PARENT, "row");
+    column_type = column_type_list = xml_get_column_type(meters);
 
-    for(meter_count=1, meter = mxmlGetFirstChild(meters);
-            meter!=NULL; meter=mxmlWalkNext(meter, meters, MXML_DESCEND)){
-        // temp data format: <column_name>datatype</column>
-        node = mxmlNewElement(row, mxmlGetText(mxmlGetFirstChild(meter), 0));
-        mxmlNewInteger(node, mxmlGetInteger(mxmlGetLastChild(meter)));
-    }
-    while(++value_count){
-        if(value == values)
-            break;
-        value = value->prev;
-    }
-    while(++column_count){
-        if(column == columns)
-            break;
-        column = column->prev;
-    }
-    if(column == NULL && value_count == meter_count){ // value == meters ?
-        flag = 0; // match
-    }
-    else if(value_count == column_count){
-        flag = 0; // match
-    }
-    else{
-        flag = 1; // not match
-        mxmlDelete(row);
-        row = NULL;
+    if(column_type_list != NULL)
+        do{
+            meter_count++;
+            column_type = column_type->prev;
+        } while(column_type != NULL && column_type != column_type_list);
+
+    if(values != NULL)
+        do{
+            value_count++;
+            value = value->next;
+        } while(value != NULL && value != values);
+
+    if(columns != NULL)
+        do{
+            column_count++;
+            column = column->next;
+        } while(column != NULL && column != columns);
+
+#ifdef DEBUG_XML
+    fprintf(stdout, "meter_count: %d, column_count: %d, value_count: %d\n",
+            meter_count, column_count, value_count);
+#endif
+
+    if(!(columns == NULL && value_count == meter_count) // value == meters ?
+            && !(value_count == column_count)){
+        free_column_type_list(column_type_list);
+        column_type_list = NULL;
     }
 
-    return row;
+    return column_type_list;
+}
+
+struct column_type_t *xml_get_column_type(mxml_node_t *meters){
+    // 返回第一个元素
+    mxml_node_t *meter = NULL;
+    struct column_type_t *node = NULL, *prev = NULL;
+    const char *column = NULL;
+    enum datatype_t datatype;
+
+    for(meter=mxmlGetFirstChild(meters);
+            meter!=NULL; meter=mxmlGetNextSibling(meter)){
+        column = mxmlGetElement(meter);
+        datatype = *mxmlGetText(mxmlGetFirstChild(meter), 0) - '0';
+                // mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK)
+        node = create_column_type(column, datatype_to_char(datatype));
+        if(prev == NULL)
+            insque(node, node);
+        else
+            insque(node, prev);
+        prev = node;
+    }
+    return node->prev;
+}
+
+char *datatype_to_char(enum datatype_t datatype){
+    switch(datatype){
+        case 0:
+            return "float";
+        case 1:
+            return "int";
+        case 2:
+            return "string";
+    }
 }

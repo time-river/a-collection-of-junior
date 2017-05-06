@@ -2,7 +2,7 @@
 %option noyywrap
 
 %top{
-#ifdef DEBUG
+#ifdef DEBUG_LEX
 #define LEX_DEBUG(type, string)  { printf("LINE %d: (%s, %s)\n",\
                                         yylineno, (type), (string)); }
 #else
@@ -13,7 +13,7 @@
 DATATYPE        (?i:float|int|string)
 /* 字母开头，数字与字母的组合 */
 ID              ([[:alpha:]][[:alpha:][:digit:]]*)
-OPERATOR        ","|";"|"("|")"|"+"|"-"|"*"|"/"|"%"|"="
+OPERATOR        ","|";"|"("|")"|"+"|"-"|"*"|"/"|"%"|"="|"^"
 INT             ([[:digit:]]+)
 FLOAT           ([[:digit:]]+\.[[:digit:]]+)
 STRING          \"([^\\\"\t\r\n]|\\.)*\"|'([^\\\'\t\r\n]|\\.)*'

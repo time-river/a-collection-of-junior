@@ -45,9 +45,9 @@ struct query_t {
 };
 
 enum datatype_t {
-    FLOAT,
-    INT,
-    STRING
+    FLOAT = 0,
+    INT = 1,
+    STRING = 2
 };
 
 struct column_type_t {
@@ -77,8 +77,8 @@ struct value_t {
 };
 
 struct assign_expr_t {
-    struct value_t *prev;
-    struct value_t *next;
+    struct assign_expr_t *prev;
+    struct assign_expr_t *next;
     char *column;
     enum datatype_t datatype;
     union _value_t value;
@@ -106,8 +106,11 @@ void assign_value_list(struct query_t *query, struct value_t *value);
 void assign_assign_expr_list(struct query_t *query, struct assign_expr_t *assign_expr);
 void assign_condition();
 
-struct column_type_t *create_column_type(char *column, char *datatype);
+void assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatype);
+
+struct column_type_t *create_column_type(const char *column, char *datatype);
 void free_column_type(struct column_type_t *node);
+void free_column_type_list(struct column_type_t *node);
 struct column_t *create_column(char *column);
 void free_column(struct column_t *node);
 struct value_t *create_value(void *value_ptr, enum datatype_t datatype);

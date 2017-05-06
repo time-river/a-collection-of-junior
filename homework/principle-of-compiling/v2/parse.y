@@ -1,7 +1,6 @@
 %{
 #include "common.h"
 
-#define YYDEBUG 1
 #define YYERROR_VERBOSE
 
 int yylex(void);
@@ -9,6 +8,7 @@ void yyerror(const char *s);
 
 char *database = NULL;
 // yyval is global variable, can it be known the first use in some condition? Maybe yes.
+
 %}
 
 %union {
@@ -19,6 +19,7 @@ char *database = NULL;
     struct column_type_t *column_type;
     struct column_t *column;
     struct value_t *value;
+    struct assign_expr_t *assign_expr;
     struct condition_t *condition;
 }
 
@@ -35,8 +36,7 @@ char *database = NULL;
 %type  <value> value_list
 %type  <numi> expr_int
 %type  <numf> expr_float
-
-%type  <string>  assign_expr_list
+%type  <assign_expr>  assign_expr_list
 %type  <condition>  condition
 
 %destructor { free($$); } DATATYPE STR
@@ -45,6 +45,7 @@ char *database = NULL;
 %left   '+' '-'
 %left   '*' '/'
 %right  UMINUS
+%right  '^'
 
 %start start
 
@@ -361,10 +362,15 @@ assign_expr_list
 
 expr_float
     : NUMF                        { $$ = $1; }
-    | NUMI                        { $$ = (float)$1; }
     | expr_float '+' expr_float   { $$ = $1 + $3; }
+    | expr_float '+' expr_int     { $$ = $1 + (float)$3; }
+    | expr_int   '+' expr_float   { $$ = (float)$1 - $3; }
     | expr_float '-' expr_float   { $$ = $1 - $3; }
+    | expr_float '-' expr_int     { $$ = $1 + (float)$3; }
+    | expr_int   '-' expr_float   { $$ = (float)$1 - $3; }
     | expr_float '*' expr_float   { $$ = $1 * $3; }
+    | expr_float '*' expr_int     { $$ = $1 * (float)$3; }
+    | expr_int   '*' expr_float   { $$ = (float)$1 * $3; } 
     | expr_float '/' expr_float   { 
             if($3)
                 $$ = $1 / $3;
@@ -373,10 +379,29 @@ expr_float
                 fprintf(stderr, "ERROR: division by zero\n");
             }
         }
+    | expr_float '/' expr_int     { 
+            if($3)
+                $$ = $1 / (float)$3;
+            else{
+                $$ = 1.0f;
+                fprintf(stderr, "ERROR: division by zero\n");
+            }
+        }
+    | expr_int '/' expr_float     { 
+            if($3)
+                $$ = (float)$1 / $3;
+            else{
+                $$ = 1.0f;
+                fprintf(stderr, "ERROR: division by zero\n");
+            }
+        }
     | '(' expr_float ')'          { $$ = $2; }
     | '-' expr_float %prec UMINUS { $$ = -$2; }
     | '+' expr_float %prec UMINUS { $$ = $2; }
-    | expr_float '^' expr_float   { $$ = powf($1, $3); }
+    | expr_float '^' expr_float   { $$ = powf($1,$3); }
+    | expr_float '^' expr_int     { $$ = powf($1,(float)$3); }
+    | expr_int   '^' expr_float   { $$ = powf((float)$1, $3); }
+    | expr_int   '^' expr_int     { $$ = powf((float)$1, (float)$3); }
     ;
 
 expr_int
@@ -395,7 +420,6 @@ expr_int
     | '(' expr_int ')'          { $$ = $2; }
     | '-' expr_int %prec UMINUS { $$ = -$2; }
     | '+' expr_int %prec UMINUS { $$ = $2; }
-    | expr_int '^' expr_int     { $$ = (int)pow($1, $3); }
     ;
 %%
 

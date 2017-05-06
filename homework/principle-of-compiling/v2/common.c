@@ -61,22 +61,13 @@ struct query_t *create_query(char *database_name){
 }
 
 void free_query(struct query_t *query){
-    struct column_type_t *column_type = NULL;
-
     if(query != NULL){
         if(query->database_name != NULL)
             free(query->database_name);
         if(query->table_name != NULL)
             free(query->table_name);
         if(query->column_type != NULL){
-            int i=0;
-            while(query->column_type->next != query->column_type) {
-                column_type = query->column_type;
-                query->column_type = column_type->next;
-                remque(column_type);
-                free_column_type(column_type);
-            }
-            free_column_type(query->column_type);
+            free_column_type_list(query->column_type);
         }
         free(query);
     }
@@ -206,7 +197,6 @@ void show_stmt(const struct query_t *query){
         snprintf(command, sizeof(command)-1, "ls -l %s | grep '^-' | awk  '{ print $9 }'", path);
     }
     if(access(path, F_OK&07) == 0){
-        printf("path: %s\n", path);
         if(system(command) != 0)
             fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
     }
@@ -217,7 +207,7 @@ void show_stmt(const struct query_t *query){
 
 void use_stmt(const struct query_t *query){
     char path[BUFSIZ] = {0};
-    snprintf(path, sizeof(path)-1, "%s/%s", ROOT, query->database_name, query->table_name);
+    snprintf(path, sizeof(path)-1, "%s/%s", ROOT, query->database_name);
 
     if(access(path, (R_OK|W_OK|X_OK)&07) != 0){
         fprintf(stderr, "ERROR: Access denied for user to database '%s'\n", query->database_name);
@@ -247,6 +237,7 @@ void insert_stmt(const struct query_t *query){
             if(fp == NULL)
                 fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
             else{
+                insert_xml(query, fp);
                 fclose(fp);
             }
         }
@@ -278,22 +269,34 @@ void assign_table_name(struct query_t *query, char *table_name){
 }
 
 void assign_column_type_list(struct query_t *query, struct column_type_t * column_type){
-    query->column_type = column_type;
+    if(column_type != NULL)
+        query->column_type = column_type->prev; // the head of the queue
+    else
+        query->column_type = NULL;
     return;
 }
 
 void assign_column_list(struct query_t *query, struct column_t *column){
-    query->column = column;
+    if(column != NULL)
+        query->column = column->prev;
+    else
+        query->column = NULL;
     return;
 }
 
 void assign_value_list(struct query_t *query, struct value_t *value){
-    query->value = value;
+    if(value != NULL)
+        query->value = value->prev;
+    else
+        query->value = NULL;
     return;
 }
 
 void assign_assign_expr_list(struct query_t *query, struct assign_expr_t *assign_expr){
-    query->assign_expr = assign_expr;
+    if(assign_expr != NULL)
+        query->assign_expr = assign_expr->prev;
+    else
+        query->assign_expr = NULL;
     return;
 }
 
@@ -305,7 +308,7 @@ void assign_condition(){
  * e ->next d ->next c ->next b ->next a ->next e
  * e ->prev a ->prev b ->prev c ->prev d ->prev e
  */
-struct column_type_t *create_column_type(char *column, char *datatype){
+struct column_type_t *create_column_type(const char *column, char *datatype){
     struct column_type_t *node = NULL;
     char *str = NULL;
 
@@ -339,6 +342,20 @@ void free_column_type(struct column_type_t *node){
         free(node);
     }
     return;
+}
+
+void free_column_type_list(struct column_type_t *node){
+    struct column_type_t *column_type = NULL;
+
+    if(node != NULL){
+        while(node->next != node) {
+            column_type = node;
+            node = column_type->next;
+            remque(column_type);
+            free_column_type(column_type);
+        }
+        free_column_type(node);
+    }
 }
 
 struct column_t *create_column(char *column){
@@ -376,7 +393,7 @@ struct value_t *create_value(void *value_ptr, enum datatype_t datatype){
         node->prev = node;
         node->next = node;
         node->datatype = datatype;
-        _assign_value(&(node->value), value_ptr, datatype);    
+        assign_value(&(node->value), value_ptr, datatype); 
     }
 
     return node;
@@ -402,7 +419,7 @@ struct assign_expr_t *create_assign_expr(char *column, void *value_ptr, enum dat
         node->next = node;
         node->datatype = datatype;
         node->column = strdup(column);
-        _assign_value(&(node->value), value_ptr, datatype);
+        assign_value(&(node->value), value_ptr, datatype);
     }
     return node;
 }
@@ -417,7 +434,7 @@ void free_assign_expr(struct assign_expr_t *node){
     }
 }
 
-void _assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatype){
+void assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatype){
     switch(datatype){
         case FLOAT:
             node->numf = *((float *)value_ptr);
@@ -432,4 +449,5 @@ void _assign_value(union _value_t *node, void *value_ptr, enum datatype_t dataty
 }
 
 struct condition_t *create_condition(){
+    return NULL;
 }
