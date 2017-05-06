@@ -178,7 +178,7 @@ void insert_xml(const struct query_t *query, FILE *fp){
         if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
             fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
         else
-            fprintf(stdout, "Query OK, 0 rows affected\n");
+            fprintf(stdout, "Query OK, 1 rows affected\n");
     }
     else
         mxmlDelete(row);

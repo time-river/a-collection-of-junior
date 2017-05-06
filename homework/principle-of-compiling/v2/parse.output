@@ -1,3 +1,12 @@
+Terminals unused in grammar
+
+   NOT
+
+
+State 79 conflicts: 2 shift/reduce
+State 80 conflicts: 2 shift/reduce
+
+
 Grammar
 
     0 $accept: start $end
@@ -33,15 +42,15 @@ Grammar
 
    23 select_stmt: SELECT '*' FROM table_name
    24            | SELECT column_list FROM table_name
-   25            | SELECT '*' FROM table_name WHERE condition
-   26            | SELECT column_list FROM table_name WHERE condition
+   25            | SELECT '*' FROM table_name WHERE condition_expr
+   26            | SELECT column_list FROM table_name WHERE condition_expr
 
    27 insert_stmt: INSERT INTO table_name VALUES '(' value_list ')'
    28            | INSERT INTO table_name '(' column_list ')' VALUES '(' value_list ')'
 
-   29 update_stmt: UPDATE table_name SET assign_expr_list WHERE condition
+   29 update_stmt: UPDATE table_name SET assign_expr_list WHERE condition_expr
 
-   30 delete_stmt: DELETE FROM table_name WHERE condition
+   30 delete_stmt: DELETE FROM table_name WHERE condition_expr
 
    31 column_type_list: column_type_list ',' column DATATYPE
    32                 | column DATATYPE
@@ -51,72 +60,104 @@ Grammar
 
    35 value_list: value_list ',' expr_int
    36           | value_list ',' expr_float
-   37           | value_list ',' STR
+   37           | value_list ',' expr_string
    38           | expr_int
    39           | expr_float
-   40           | STR
+   40           | expr_string
 
-   41 database_name: name
+   41 assign_expr_list: assign_expr_list ',' column '=' expr_float
+   42                 | assign_expr_list ',' column '=' expr_int
+   43                 | assign_expr_list ',' column '=' expr_string
+   44                 | column '=' expr_float
+   45                 | column '=' expr_int
+   46                 | column '=' expr_string
 
-   42 table_name: name
+   47 condition_expr: condition_expr_leaf YY_AND condition_expr_leaf
+   48               | condition_expr_leaf YY_OR condition_expr_leaf
+   49               | YY_NOT condition_expr_leaf
+   50               | condition_expr YY_AND condition_expr
+   51               | condition_expr YY_OR condition_expr
+   52               | YY_NOT condition_expr
+   53               | '(' condition_expr ')'
 
-   43 column: name
+   54 condition_expr_leaf: column YY_G expr_float
+   55                    | column YY_GE expr_float
+   56                    | column YY_IS expr_float
+   57                    | column YY_L expr_float
+   58                    | column YY_LE expr_float
+   59                    | column YY_NE expr_float
+   60                    | column YY_G expr_int
+   61                    | column YY_GE expr_int
+   62                    | column YY_IS expr_int
+   63                    | column YY_L expr_int
+   64                    | column YY_LE expr_int
+   65                    | column YY_NE expr_int
+   66                    | column YY_G expr_string
+   67                    | column YY_GE expr_string
+   68                    | column YY_IS expr_string
+   69                    | column YY_L expr_string
+   70                    | column YY_LE expr_string
+   71                    | column YY_NE expr_string
 
-   44 name: ID
+   72 expr_float: NUMF
+   73           | expr_float '+' expr_float
+   74           | expr_float '+' expr_int
+   75           | expr_int '+' expr_float
+   76           | expr_float '-' expr_float
+   77           | expr_float '-' expr_int
+   78           | expr_int '-' expr_float
+   79           | expr_float '*' expr_float
+   80           | expr_float '*' expr_int
+   81           | expr_int '*' expr_float
+   82           | expr_float '/' expr_float
+   83           | expr_float '/' expr_int
+   84           | expr_int '/' expr_float
+   85           | expr_float '%' expr_float
+   86           | expr_int '%' expr_float
+   87           | expr_float '%' expr_int
+   88           | '(' expr_float ')'
+   89           | '-' expr_float
+   90           | '+' expr_float
+   91           | expr_float '^' expr_float
+   92           | expr_float '^' expr_int
+   93           | expr_int '^' expr_float
+   94           | expr_int '^' expr_int
 
-   45 condition: %empty
+   95 expr_int: NUMI
+   96         | expr_int '+' expr_int
+   97         | expr_int '-' expr_int
+   98         | expr_int '*' expr_int
+   99         | expr_int '/' expr_int
+  100         | expr_int '%' expr_int
+  101         | '(' expr_int ')'
+  102         | '-' expr_int
+  103         | '+' expr_int
 
-   46 assign_expr_list: assign_expr_list ',' column '=' expr_float
-   47                 | assign_expr_list ',' column '=' expr_int
-   48                 | assign_expr_list ',' column '=' STR
-   49                 | column '=' expr_float
-   50                 | column '=' expr_int
-   51                 | column '=' STR
+  104 expr_string: YY_STRING
 
-   52 expr_float: NUMF
-   53           | expr_float '+' expr_float
-   54           | expr_float '+' expr_int
-   55           | expr_int '+' expr_float
-   56           | expr_float '-' expr_float
-   57           | expr_float '-' expr_int
-   58           | expr_int '-' expr_float
-   59           | expr_float '*' expr_float
-   60           | expr_float '*' expr_int
-   61           | expr_int '*' expr_float
-   62           | expr_float '/' expr_float
-   63           | expr_float '/' expr_int
-   64           | expr_int '/' expr_float
-   65           | '(' expr_float ')'
-   66           | '-' expr_float
-   67           | '+' expr_float
-   68           | expr_float '^' expr_float
-   69           | expr_float '^' expr_int
-   70           | expr_int '^' expr_float
-   71           | expr_int '^' expr_int
+  105 database_name: name
 
-   72 expr_int: NUMI
-   73         | expr_int '+' expr_int
-   74         | expr_int '-' expr_int
-   75         | expr_int '*' expr_int
-   76         | expr_int '/' expr_int
-   77         | '(' expr_int ')'
-   78         | '-' expr_int
-   79         | '+' expr_int
+  106 table_name: name
+
+  107 column: name
+
+  108 name: ID
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 15 27 28 65 77
-')' (41) 15 27 28 65 77
-'*' (42) 23 25 59 60 61 75
-'+' (43) 53 54 55 67 73 79
-',' (44) 31 33 35 36 37 46 47 48
-'-' (45) 56 57 58 66 74 78
-'/' (47) 62 63 64 76
+'%' (37) 85 86 87 100
+'(' (40) 15 27 28 53 88 101
+')' (41) 15 27 28 53 88 101
+'*' (42) 23 25 79 80 81 98
+'+' (43) 73 74 75 90 96 103
+',' (44) 31 33 35 36 37 41 42 43
+'-' (45) 76 77 78 89 97 102
+'/' (47) 82 83 84 99
 ';' (59) 1 2 3
-'=' (61) 46 47 48 49 50 51
-'^' (94) 68 69 70 71
+'=' (61) 41 42 43 44 45 46
+'^' (94) 91 92 93 94
 error (256) 3
 CREATE (258) 14 15 16
 DELETE (259) 30
@@ -136,65 +177,82 @@ TABLES (272) 20
 USE (273) 21
 WHERE (274) 25 26 29 30
 VALUES (275) 27 28
-ID (276) 44
-DATATYPE (277) 31 32
-STR (278) 37 40 48 51
-NUMI (279) 72
-NUMF (280) 52
-UMINUS (281)
+YY_G (276) 54 60 66
+YY_GE (277) 55 61 67
+YY_L (278) 57 63 69
+YY_LE (279) 58 64 70
+YY_IS (280) 56 62 68
+YY_NE (281) 59 65 71
+YY_AND (282) 47 50
+YY_OR (283) 48 51
+YY_NOT (284) 49 52
+ID (285) 108
+DATATYPE (286) 31 32
+YY_STRING (287) 104
+NUMI (288) 95
+NUMF (289) 72
+UMINUS (290)
+NOT (291)
 
 
 Nonterminals, with rules where they appear
 
-$accept (37)
+$accept (48)
     on left: 0
-start (38)
+start (49)
     on left: 1 2 3 4, on right: 0 1 2
-lines (39)
+lines (50)
     on left: 5 6 7 8 9 10 11 12 13, on right: 1
-create_stmt (40)
+create_stmt (51)
     on left: 14 15 16, on right: 5
-drop_stmt (41)
+drop_stmt (52)
     on left: 17 18, on right: 6
-show_stmt (42)
+show_stmt (53)
     on left: 19 20, on right: 7
-use_stmt (43)
+use_stmt (54)
     on left: 21, on right: 8
-exit_stmt (44)
+exit_stmt (55)
     on left: 22, on right: 9
-select_stmt (45)
+select_stmt (56)
     on left: 23 24 25 26, on right: 10
-insert_stmt (46)
+insert_stmt (57)
     on left: 27 28, on right: 11
-update_stmt (47)
+update_stmt (58)
     on left: 29, on right: 12
-delete_stmt (48)
+delete_stmt (59)
     on left: 30, on right: 13
-column_type_list (49)
+column_type_list (60)
     on left: 31 32, on right: 15 31
-column_list (50)
+column_list (61)
     on left: 33 34, on right: 24 26 28 33
-value_list (51)
+value_list (62)
     on left: 35 36 37 38 39 40, on right: 27 28 35 36 37
-database_name (52)
-    on left: 41, on right: 14 17 21
-table_name (53)
-    on left: 42, on right: 15 16 18 23 24 25 26 27 28 29 30
-column (54)
-    on left: 43, on right: 31 32 33 34 46 47 48 49 50 51
-name (55)
-    on left: 44, on right: 41 42 43
-condition (56)
-    on left: 45, on right: 25 26 29 30
-assign_expr_list (57)
-    on left: 46 47 48 49 50 51, on right: 29 46 47 48
-expr_float (58)
-    on left: 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69
-    70 71, on right: 36 39 46 49 53 54 55 56 57 58 59 60 61 62 63 64
-    65 66 67 68 69 70
-expr_int (59)
-    on left: 72 73 74 75 76 77 78 79, on right: 35 38 47 50 54 55 57
-    58 60 61 63 64 69 70 71 73 74 75 76 77 78 79
+assign_expr_list (63)
+    on left: 41 42 43 44 45 46, on right: 29 41 42 43
+condition_expr (64)
+    on left: 47 48 49 50 51 52 53, on right: 25 26 29 30 50 51 52 53
+condition_expr_leaf (65)
+    on left: 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71,
+    on right: 47 48 49
+expr_float (66)
+    on left: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89
+    90 91 92 93 94, on right: 36 39 41 44 54 55 56 57 58 59 73 74 75
+    76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93
+expr_int (67)
+    on left: 95 96 97 98 99 100 101 102 103, on right: 35 38 42 45
+    60 61 62 63 64 65 74 75 77 78 80 81 83 84 86 87 92 93 94 96 97
+    98 99 100 101 102 103
+expr_string (68)
+    on left: 104, on right: 37 40 43 46 66 67 68 69 70 71
+database_name (69)
+    on left: 105, on right: 14 17 21
+table_name (70)
+    on left: 106, on right: 15 16 18 23 24 25 26 27 28 29 30
+column (71)
+    on left: 107, on right: 31 32 33 34 41 42 43 44 45 46 54 55 56
+    57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
+name (72)
+    on left: 108, on right: 105 106 107
 
 
 State 0
@@ -281,7 +339,7 @@ State 5
 
 State 6
 
-   30 delete_stmt: DELETE . FROM table_name WHERE condition
+   30 delete_stmt: DELETE . FROM table_name WHERE condition_expr
 
     FROM  shift, and go to state 27
 
@@ -314,8 +372,8 @@ State 10
 
    23 select_stmt: SELECT . '*' FROM table_name
    24            | SELECT . column_list FROM table_name
-   25            | SELECT . '*' FROM table_name WHERE condition
-   26            | SELECT . column_list FROM table_name WHERE condition
+   25            | SELECT . '*' FROM table_name WHERE condition_expr
+   26            | SELECT . column_list FROM table_name WHERE condition_expr
 
     ID   shift, and go to state 31
     '*'  shift, and go to state 32
@@ -336,7 +394,7 @@ State 11
 
 State 12
 
-   29 update_stmt: UPDATE . table_name SET assign_expr_list WHERE condition
+   29 update_stmt: UPDATE . table_name SET assign_expr_list WHERE condition_expr
 
     ID  shift, and go to state 31
 
@@ -454,7 +512,7 @@ State 26
 
 State 27
 
-   30 delete_stmt: DELETE FROM . table_name WHERE condition
+   30 delete_stmt: DELETE FROM . table_name WHERE condition_expr
 
     ID  shift, and go to state 31
 
@@ -495,15 +553,15 @@ State 30
 
 State 31
 
-   44 name: ID .
+  108 name: ID .
 
-    $default  reduce using rule 44 (name)
+    $default  reduce using rule 108 (name)
 
 
 State 32
 
    23 select_stmt: SELECT '*' . FROM table_name
-   25            | SELECT '*' . FROM table_name WHERE condition
+   25            | SELECT '*' . FROM table_name WHERE condition_expr
 
     FROM  shift, and go to state 49
 
@@ -511,7 +569,7 @@ State 32
 State 33
 
    24 select_stmt: SELECT column_list . FROM table_name
-   26            | SELECT column_list . FROM table_name WHERE condition
+   26            | SELECT column_list . FROM table_name WHERE condition_expr
    33 column_list: column_list . ',' column
 
     FROM  shift, and go to state 50
@@ -527,9 +585,9 @@ State 34
 
 State 35
 
-   43 column: name .
+  107 column: name .
 
-    $default  reduce using rule 43 (column)
+    $default  reduce using rule 107 (column)
 
 
 State 36
@@ -548,16 +606,16 @@ State 37
 
 State 38
 
-   29 update_stmt: UPDATE table_name . SET assign_expr_list WHERE condition
+   29 update_stmt: UPDATE table_name . SET assign_expr_list WHERE condition_expr
 
     SET  shift, and go to state 52
 
 
 State 39
 
-   42 table_name: name .
+  106 table_name: name .
 
-    $default  reduce using rule 42 (table_name)
+    $default  reduce using rule 106 (table_name)
 
 
 State 40
@@ -569,9 +627,9 @@ State 40
 
 State 41
 
-   41 database_name: name .
+  105 database_name: name .
 
-    $default  reduce using rule 41 (database_name)
+    $default  reduce using rule 105 (database_name)
 
 
 State 42
@@ -600,7 +658,7 @@ State 44
 
 State 45
 
-   30 delete_stmt: DELETE FROM table_name . WHERE condition
+   30 delete_stmt: DELETE FROM table_name . WHERE condition_expr
 
     WHERE  shift, and go to state 54
 
@@ -631,7 +689,7 @@ State 48
 State 49
 
    23 select_stmt: SELECT '*' FROM . table_name
-   25            | SELECT '*' FROM . table_name WHERE condition
+   25            | SELECT '*' FROM . table_name WHERE condition_expr
 
     ID  shift, and go to state 31
 
@@ -642,7 +700,7 @@ State 49
 State 50
 
    24 select_stmt: SELECT column_list FROM . table_name
-   26            | SELECT column_list FROM . table_name WHERE condition
+   26            | SELECT column_list FROM . table_name WHERE condition_expr
 
     ID  shift, and go to state 31
 
@@ -662,13 +720,13 @@ State 51
 
 State 52
 
-   29 update_stmt: UPDATE table_name SET . assign_expr_list WHERE condition
+   29 update_stmt: UPDATE table_name SET . assign_expr_list WHERE condition_expr
 
     ID  shift, and go to state 31
 
-    column            go to state 60
+    assign_expr_list  go to state 60
+    column            go to state 61
     name              go to state 35
-    assign_expr_list  go to state 61
 
 
 State 53
@@ -684,18 +742,23 @@ State 53
 
 State 54
 
-   30 delete_stmt: DELETE FROM table_name WHERE . condition
+   30 delete_stmt: DELETE FROM table_name WHERE . condition_expr
 
-    $default  reduce using rule 45 (condition)
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
 
-    condition  go to state 64
+    condition_expr       go to state 66
+    condition_expr_leaf  go to state 67
+    column               go to state 68
+    name                 go to state 35
 
 
 State 55
 
    27 insert_stmt: INSERT INTO table_name VALUES . '(' value_list ')'
 
-    '('  shift, and go to state 65
+    '('  shift, and go to state 69
 
 
 State 56
@@ -704,7 +767,7 @@ State 56
 
     ID  shift, and go to state 31
 
-    column_list  go to state 66
+    column_list  go to state 70
     column       go to state 34
     name         go to state 35
 
@@ -712,9 +775,9 @@ State 56
 State 57
 
    23 select_stmt: SELECT '*' FROM table_name .
-   25            | SELECT '*' FROM table_name . WHERE condition
+   25            | SELECT '*' FROM table_name . WHERE condition_expr
 
-    WHERE  shift, and go to state 67
+    WHERE  shift, and go to state 71
 
     $default  reduce using rule 23 (select_stmt)
 
@@ -722,9 +785,9 @@ State 57
 State 58
 
    24 select_stmt: SELECT column_list FROM table_name .
-   26            | SELECT column_list FROM table_name . WHERE condition
+   26            | SELECT column_list FROM table_name . WHERE condition_expr
 
-    WHERE  shift, and go to state 68
+    WHERE  shift, and go to state 72
 
     $default  reduce using rule 24 (select_stmt)
 
@@ -738,22 +801,22 @@ State 59
 
 State 60
 
-   49 assign_expr_list: column . '=' expr_float
-   50                 | column . '=' expr_int
-   51                 | column . '=' STR
+   29 update_stmt: UPDATE table_name SET assign_expr_list . WHERE condition_expr
+   41 assign_expr_list: assign_expr_list . ',' column '=' expr_float
+   42                 | assign_expr_list . ',' column '=' expr_int
+   43                 | assign_expr_list . ',' column '=' expr_string
 
-    '='  shift, and go to state 69
+    WHERE  shift, and go to state 73
+    ','    shift, and go to state 74
 
 
 State 61
 
-   29 update_stmt: UPDATE table_name SET assign_expr_list . WHERE condition
-   46 assign_expr_list: assign_expr_list . ',' column '=' expr_float
-   47                 | assign_expr_list . ',' column '=' expr_int
-   48                 | assign_expr_list . ',' column '=' STR
+   44 assign_expr_list: column . '=' expr_float
+   45                 | column . '=' expr_int
+   46                 | column . '=' expr_string
 
-    WHERE  shift, and go to state 70
-    ','    shift, and go to state 71
+    '='  shift, and go to state 75
 
 
 State 62
@@ -761,1218 +824,2122 @@ State 62
    15 create_stmt: CREATE TABLE table_name '(' column_type_list . ')'
    31 column_type_list: column_type_list . ',' column DATATYPE
 
-    ')'  shift, and go to state 72
-    ','  shift, and go to state 73
+    ','  shift, and go to state 76
+    ')'  shift, and go to state 77
 
 
 State 63
 
    32 column_type_list: column . DATATYPE
 
-    DATATYPE  shift, and go to state 74
+    DATATYPE  shift, and go to state 78
 
 
 State 64
 
-   30 delete_stmt: DELETE FROM table_name WHERE condition .
+   49 condition_expr: YY_NOT . condition_expr_leaf
+   52               | YY_NOT . condition_expr
 
-    $default  reduce using rule 30 (delete_stmt)
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
+
+    condition_expr       go to state 79
+    condition_expr_leaf  go to state 80
+    column               go to state 68
+    name                 go to state 35
 
 
 State 65
 
-   27 insert_stmt: INSERT INTO table_name VALUES '(' . value_list ')'
+   53 condition_expr: '(' . condition_expr ')'
 
-    STR   shift, and go to state 75
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
 
-    value_list  go to state 81
-    expr_float  go to state 82
-    expr_int    go to state 83
+    condition_expr       go to state 81
+    condition_expr_leaf  go to state 67
+    column               go to state 68
+    name                 go to state 35
 
 
 State 66
 
-   28 insert_stmt: INSERT INTO table_name '(' column_list . ')' VALUES '(' value_list ')'
-   33 column_list: column_list . ',' column
+   30 delete_stmt: DELETE FROM table_name WHERE condition_expr .
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   51               | condition_expr . YY_OR condition_expr
 
-    ')'  shift, and go to state 84
-    ','  shift, and go to state 51
+    YY_AND  shift, and go to state 82
+    YY_OR   shift, and go to state 83
+
+    $default  reduce using rule 30 (delete_stmt)
 
 
 State 67
 
-   25 select_stmt: SELECT '*' FROM table_name WHERE . condition
+   47 condition_expr: condition_expr_leaf . YY_AND condition_expr_leaf
+   48               | condition_expr_leaf . YY_OR condition_expr_leaf
 
-    $default  reduce using rule 45 (condition)
-
-    condition  go to state 85
+    YY_AND  shift, and go to state 84
+    YY_OR   shift, and go to state 85
 
 
 State 68
 
-   26 select_stmt: SELECT column_list FROM table_name WHERE . condition
+   54 condition_expr_leaf: column . YY_G expr_float
+   55                    | column . YY_GE expr_float
+   56                    | column . YY_IS expr_float
+   57                    | column . YY_L expr_float
+   58                    | column . YY_LE expr_float
+   59                    | column . YY_NE expr_float
+   60                    | column . YY_G expr_int
+   61                    | column . YY_GE expr_int
+   62                    | column . YY_IS expr_int
+   63                    | column . YY_L expr_int
+   64                    | column . YY_LE expr_int
+   65                    | column . YY_NE expr_int
+   66                    | column . YY_G expr_string
+   67                    | column . YY_GE expr_string
+   68                    | column . YY_IS expr_string
+   69                    | column . YY_L expr_string
+   70                    | column . YY_LE expr_string
+   71                    | column . YY_NE expr_string
 
-    $default  reduce using rule 45 (condition)
-
-    condition  go to state 86
+    YY_G   shift, and go to state 86
+    YY_GE  shift, and go to state 87
+    YY_L   shift, and go to state 88
+    YY_LE  shift, and go to state 89
+    YY_IS  shift, and go to state 90
+    YY_NE  shift, and go to state 91
 
 
 State 69
 
-   49 assign_expr_list: column '=' . expr_float
-   50                 | column '=' . expr_int
-   51                 | column '=' . STR
+   27 insert_stmt: INSERT INTO table_name VALUES '(' . value_list ')'
 
-    STR   shift, and go to state 87
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
 
-    expr_float  go to state 88
-    expr_int    go to state 89
+    value_list   go to state 98
+    expr_float   go to state 99
+    expr_int     go to state 100
+    expr_string  go to state 101
 
 
 State 70
 
-   29 update_stmt: UPDATE table_name SET assign_expr_list WHERE . condition
+   28 insert_stmt: INSERT INTO table_name '(' column_list . ')' VALUES '(' value_list ')'
+   33 column_list: column_list . ',' column
 
-    $default  reduce using rule 45 (condition)
-
-    condition  go to state 90
+    ','  shift, and go to state 51
+    ')'  shift, and go to state 102
 
 
 State 71
 
-   46 assign_expr_list: assign_expr_list ',' . column '=' expr_float
-   47                 | assign_expr_list ',' . column '=' expr_int
-   48                 | assign_expr_list ',' . column '=' STR
+   25 select_stmt: SELECT '*' FROM table_name WHERE . condition_expr
 
-    ID  shift, and go to state 31
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
 
-    column  go to state 91
-    name    go to state 35
+    condition_expr       go to state 103
+    condition_expr_leaf  go to state 67
+    column               go to state 68
+    name                 go to state 35
 
 
 State 72
+
+   26 select_stmt: SELECT column_list FROM table_name WHERE . condition_expr
+
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
+
+    condition_expr       go to state 104
+    condition_expr_leaf  go to state 67
+    column               go to state 68
+    name                 go to state 35
+
+
+State 73
+
+   29 update_stmt: UPDATE table_name SET assign_expr_list WHERE . condition_expr
+
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
+
+    condition_expr       go to state 105
+    condition_expr_leaf  go to state 67
+    column               go to state 68
+    name                 go to state 35
+
+
+State 74
+
+   41 assign_expr_list: assign_expr_list ',' . column '=' expr_float
+   42                 | assign_expr_list ',' . column '=' expr_int
+   43                 | assign_expr_list ',' . column '=' expr_string
+
+    ID  shift, and go to state 31
+
+    column  go to state 106
+    name    go to state 35
+
+
+State 75
+
+   44 assign_expr_list: column '=' . expr_float
+   45                 | column '=' . expr_int
+   46                 | column '=' . expr_string
+
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
+
+    expr_float   go to state 107
+    expr_int     go to state 108
+    expr_string  go to state 109
+
+
+State 76
+
+   31 column_type_list: column_type_list ',' . column DATATYPE
+
+    ID  shift, and go to state 31
+
+    column  go to state 110
+    name    go to state 35
+
+
+State 77
 
    15 create_stmt: CREATE TABLE table_name '(' column_type_list ')' .
 
     $default  reduce using rule 15 (create_stmt)
 
 
-State 73
-
-   31 column_type_list: column_type_list ',' . column DATATYPE
-
-    ID  shift, and go to state 31
-
-    column  go to state 92
-    name    go to state 35
-
-
-State 74
+State 78
 
    32 column_type_list: column DATATYPE .
 
     $default  reduce using rule 32 (column_type_list)
 
 
-State 75
-
-   40 value_list: STR .
-
-    $default  reduce using rule 40 (value_list)
-
-
-State 76
-
-   72 expr_int: NUMI .
-
-    $default  reduce using rule 72 (expr_int)
-
-
-State 77
-
-   52 expr_float: NUMF .
-
-    $default  reduce using rule 52 (expr_float)
-
-
-State 78
-
-   67 expr_float: '+' . expr_float
-   79 expr_int: '+' . expr_int
-
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
-
-    expr_float  go to state 93
-    expr_int    go to state 94
-
-
 State 79
 
-   66 expr_float: '-' . expr_float
-   78 expr_int: '-' . expr_int
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   51               | condition_expr . YY_OR condition_expr
+   52               | YY_NOT condition_expr .
 
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    YY_AND  shift, and go to state 82
+    YY_OR   shift, and go to state 83
 
-    expr_float  go to state 95
-    expr_int    go to state 96
+    YY_AND    [reduce using rule 52 (condition_expr)]
+    YY_OR     [reduce using rule 52 (condition_expr)]
+    $default  reduce using rule 52 (condition_expr)
 
 
 State 80
 
-   65 expr_float: '(' . expr_float ')'
-   77 expr_int: '(' . expr_int ')'
+   47 condition_expr: condition_expr_leaf . YY_AND condition_expr_leaf
+   48               | condition_expr_leaf . YY_OR condition_expr_leaf
+   49               | YY_NOT condition_expr_leaf .
 
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    YY_AND  shift, and go to state 84
+    YY_OR   shift, and go to state 85
 
-    expr_float  go to state 97
-    expr_int    go to state 98
+    YY_AND    [reduce using rule 49 (condition_expr)]
+    YY_OR     [reduce using rule 49 (condition_expr)]
+    $default  reduce using rule 49 (condition_expr)
 
 
 State 81
 
-   27 insert_stmt: INSERT INTO table_name VALUES '(' value_list . ')'
-   35 value_list: value_list . ',' expr_int
-   36           | value_list . ',' expr_float
-   37           | value_list . ',' STR
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   51               | condition_expr . YY_OR condition_expr
+   53               | '(' condition_expr . ')'
 
-    ')'  shift, and go to state 99
-    ','  shift, and go to state 100
+    YY_AND  shift, and go to state 82
+    YY_OR   shift, and go to state 83
+    ')'     shift, and go to state 111
 
 
 State 82
 
-   39 value_list: expr_float .
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
+   50 condition_expr: condition_expr YY_AND . condition_expr
 
-    '+'  shift, and go to state 101
-    '-'  shift, and go to state 102
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
 
-    $default  reduce using rule 39 (value_list)
+    condition_expr       go to state 112
+    condition_expr_leaf  go to state 67
+    column               go to state 68
+    name                 go to state 35
 
 
 State 83
 
-   38 value_list: expr_int .
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
+   51 condition_expr: condition_expr YY_OR . condition_expr
 
-    '+'  shift, and go to state 106
-    '-'  shift, and go to state 107
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
+    YY_NOT  shift, and go to state 64
+    ID      shift, and go to state 31
+    '('     shift, and go to state 65
 
-    $default  reduce using rule 38 (value_list)
+    condition_expr       go to state 113
+    condition_expr_leaf  go to state 67
+    column               go to state 68
+    name                 go to state 35
 
 
 State 84
 
-   28 insert_stmt: INSERT INTO table_name '(' column_list ')' . VALUES '(' value_list ')'
+   47 condition_expr: condition_expr_leaf YY_AND . condition_expr_leaf
 
-    VALUES  shift, and go to state 111
+    ID  shift, and go to state 31
+
+    condition_expr_leaf  go to state 114
+    column               go to state 68
+    name                 go to state 35
 
 
 State 85
 
-   25 select_stmt: SELECT '*' FROM table_name WHERE condition .
+   48 condition_expr: condition_expr_leaf YY_OR . condition_expr_leaf
 
-    $default  reduce using rule 25 (select_stmt)
+    ID  shift, and go to state 31
+
+    condition_expr_leaf  go to state 115
+    column               go to state 68
+    name                 go to state 35
 
 
 State 86
 
-   26 select_stmt: SELECT column_list FROM table_name WHERE condition .
+   54 condition_expr_leaf: column YY_G . expr_float
+   60                    | column YY_G . expr_int
+   66                    | column YY_G . expr_string
 
-    $default  reduce using rule 26 (select_stmt)
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
+
+    expr_float   go to state 116
+    expr_int     go to state 117
+    expr_string  go to state 118
 
 
 State 87
 
-   51 assign_expr_list: column '=' STR .
+   55 condition_expr_leaf: column YY_GE . expr_float
+   61                    | column YY_GE . expr_int
+   67                    | column YY_GE . expr_string
 
-    $default  reduce using rule 51 (assign_expr_list)
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
+
+    expr_float   go to state 119
+    expr_int     go to state 120
+    expr_string  go to state 121
 
 
 State 88
 
-   49 assign_expr_list: column '=' expr_float .
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
+   57 condition_expr_leaf: column YY_L . expr_float
+   63                    | column YY_L . expr_int
+   69                    | column YY_L . expr_string
 
-    '+'  shift, and go to state 101
-    '-'  shift, and go to state 102
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
 
-    $default  reduce using rule 49 (assign_expr_list)
+    expr_float   go to state 122
+    expr_int     go to state 123
+    expr_string  go to state 124
 
 
 State 89
 
-   50 assign_expr_list: column '=' expr_int .
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
+   58 condition_expr_leaf: column YY_LE . expr_float
+   64                    | column YY_LE . expr_int
+   70                    | column YY_LE . expr_string
 
-    '+'  shift, and go to state 106
-    '-'  shift, and go to state 107
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
 
-    $default  reduce using rule 50 (assign_expr_list)
+    expr_float   go to state 125
+    expr_int     go to state 126
+    expr_string  go to state 127
 
 
 State 90
 
-   29 update_stmt: UPDATE table_name SET assign_expr_list WHERE condition .
+   56 condition_expr_leaf: column YY_IS . expr_float
+   62                    | column YY_IS . expr_int
+   68                    | column YY_IS . expr_string
 
-    $default  reduce using rule 29 (update_stmt)
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
+
+    expr_float   go to state 128
+    expr_int     go to state 129
+    expr_string  go to state 130
 
 
 State 91
 
-   46 assign_expr_list: assign_expr_list ',' column . '=' expr_float
-   47                 | assign_expr_list ',' column . '=' expr_int
-   48                 | assign_expr_list ',' column . '=' STR
+   59 condition_expr_leaf: column YY_NE . expr_float
+   65                    | column YY_NE . expr_int
+   71                    | column YY_NE . expr_string
 
-    '='  shift, and go to state 112
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
+
+    expr_float   go to state 131
+    expr_int     go to state 132
+    expr_string  go to state 133
 
 
 State 92
 
-   31 column_type_list: column_type_list ',' column . DATATYPE
+  104 expr_string: YY_STRING .
 
-    DATATYPE  shift, and go to state 113
+    $default  reduce using rule 104 (expr_string)
 
 
 State 93
 
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   67           | '+' expr_float .
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
+   95 expr_int: NUMI .
 
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 67 (expr_float)
+    $default  reduce using rule 95 (expr_int)
 
 
 State 94
 
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-   79         | '+' expr_int .
+   72 expr_float: NUMF .
 
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 79 (expr_int)
+    $default  reduce using rule 72 (expr_float)
 
 
 State 95
 
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   66           | '-' expr_float .
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
+   90 expr_float: '+' . expr_float
+  103 expr_int: '+' . expr_int
 
-    '^'  shift, and go to state 105
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    $default  reduce using rule 66 (expr_float)
+    expr_float  go to state 134
+    expr_int    go to state 135
 
 
 State 96
 
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-   78         | '-' expr_int .
+   89 expr_float: '-' . expr_float
+  102 expr_int: '-' . expr_int
 
-    '^'  shift, and go to state 110
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    $default  reduce using rule 78 (expr_int)
+    expr_float  go to state 136
+    expr_int    go to state 137
 
 
 State 97
 
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   65           | '(' expr_float . ')'
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
+   88 expr_float: '(' . expr_float ')'
+  101 expr_int: '(' . expr_int ')'
 
-    '+'  shift, and go to state 101
-    '-'  shift, and go to state 102
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
-    ')'  shift, and go to state 114
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
+
+    expr_float  go to state 138
+    expr_int    go to state 139
 
 
 State 98
 
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-   77         | '(' expr_int . ')'
+   27 insert_stmt: INSERT INTO table_name VALUES '(' value_list . ')'
+   35 value_list: value_list . ',' expr_int
+   36           | value_list . ',' expr_float
+   37           | value_list . ',' expr_string
 
-    '+'  shift, and go to state 106
-    '-'  shift, and go to state 107
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
-    ')'  shift, and go to state 115
+    ','  shift, and go to state 140
+    ')'  shift, and go to state 141
 
 
 State 99
+
+   39 value_list: expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 39 (value_list)
+
+
+State 100
+
+   38 value_list: expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 38 (value_list)
+
+
+State 101
+
+   40 value_list: expr_string .
+
+    $default  reduce using rule 40 (value_list)
+
+
+State 102
+
+   28 insert_stmt: INSERT INTO table_name '(' column_list ')' . VALUES '(' value_list ')'
+
+    VALUES  shift, and go to state 154
+
+
+State 103
+
+   25 select_stmt: SELECT '*' FROM table_name WHERE condition_expr .
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   51               | condition_expr . YY_OR condition_expr
+
+    YY_AND  shift, and go to state 82
+    YY_OR   shift, and go to state 83
+
+    $default  reduce using rule 25 (select_stmt)
+
+
+State 104
+
+   26 select_stmt: SELECT column_list FROM table_name WHERE condition_expr .
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   51               | condition_expr . YY_OR condition_expr
+
+    YY_AND  shift, and go to state 82
+    YY_OR   shift, and go to state 83
+
+    $default  reduce using rule 26 (select_stmt)
+
+
+State 105
+
+   29 update_stmt: UPDATE table_name SET assign_expr_list WHERE condition_expr .
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   51               | condition_expr . YY_OR condition_expr
+
+    YY_AND  shift, and go to state 82
+    YY_OR   shift, and go to state 83
+
+    $default  reduce using rule 29 (update_stmt)
+
+
+State 106
+
+   41 assign_expr_list: assign_expr_list ',' column . '=' expr_float
+   42                 | assign_expr_list ',' column . '=' expr_int
+   43                 | assign_expr_list ',' column . '=' expr_string
+
+    '='  shift, and go to state 155
+
+
+State 107
+
+   44 assign_expr_list: column '=' expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 44 (assign_expr_list)
+
+
+State 108
+
+   45 assign_expr_list: column '=' expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 45 (assign_expr_list)
+
+
+State 109
+
+   46 assign_expr_list: column '=' expr_string .
+
+    $default  reduce using rule 46 (assign_expr_list)
+
+
+State 110
+
+   31 column_type_list: column_type_list ',' column . DATATYPE
+
+    DATATYPE  shift, and go to state 156
+
+
+State 111
+
+   53 condition_expr: '(' condition_expr ')' .
+
+    $default  reduce using rule 53 (condition_expr)
+
+
+State 112
+
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   50               | condition_expr YY_AND condition_expr .
+   51               | condition_expr . YY_OR condition_expr
+
+    $default  reduce using rule 50 (condition_expr)
+
+
+State 113
+
+   50 condition_expr: condition_expr . YY_AND condition_expr
+   51               | condition_expr . YY_OR condition_expr
+   51               | condition_expr YY_OR condition_expr .
+
+    $default  reduce using rule 51 (condition_expr)
+
+
+State 114
+
+   47 condition_expr: condition_expr_leaf YY_AND condition_expr_leaf .
+
+    $default  reduce using rule 47 (condition_expr)
+
+
+State 115
+
+   48 condition_expr: condition_expr_leaf YY_OR condition_expr_leaf .
+
+    $default  reduce using rule 48 (condition_expr)
+
+
+State 116
+
+   54 condition_expr_leaf: column YY_G expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 54 (condition_expr_leaf)
+
+
+State 117
+
+   60 condition_expr_leaf: column YY_G expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 60 (condition_expr_leaf)
+
+
+State 118
+
+   66 condition_expr_leaf: column YY_G expr_string .
+
+    $default  reduce using rule 66 (condition_expr_leaf)
+
+
+State 119
+
+   55 condition_expr_leaf: column YY_GE expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 55 (condition_expr_leaf)
+
+
+State 120
+
+   61 condition_expr_leaf: column YY_GE expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 61 (condition_expr_leaf)
+
+
+State 121
+
+   67 condition_expr_leaf: column YY_GE expr_string .
+
+    $default  reduce using rule 67 (condition_expr_leaf)
+
+
+State 122
+
+   57 condition_expr_leaf: column YY_L expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 57 (condition_expr_leaf)
+
+
+State 123
+
+   63 condition_expr_leaf: column YY_L expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 63 (condition_expr_leaf)
+
+
+State 124
+
+   69 condition_expr_leaf: column YY_L expr_string .
+
+    $default  reduce using rule 69 (condition_expr_leaf)
+
+
+State 125
+
+   58 condition_expr_leaf: column YY_LE expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 58 (condition_expr_leaf)
+
+
+State 126
+
+   64 condition_expr_leaf: column YY_LE expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 64 (condition_expr_leaf)
+
+
+State 127
+
+   70 condition_expr_leaf: column YY_LE expr_string .
+
+    $default  reduce using rule 70 (condition_expr_leaf)
+
+
+State 128
+
+   56 condition_expr_leaf: column YY_IS expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 56 (condition_expr_leaf)
+
+
+State 129
+
+   62 condition_expr_leaf: column YY_IS expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 62 (condition_expr_leaf)
+
+
+State 130
+
+   68 condition_expr_leaf: column YY_IS expr_string .
+
+    $default  reduce using rule 68 (condition_expr_leaf)
+
+
+State 131
+
+   59 condition_expr_leaf: column YY_NE expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 59 (condition_expr_leaf)
+
+
+State 132
+
+   65 condition_expr_leaf: column YY_NE expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 65 (condition_expr_leaf)
+
+
+State 133
+
+   71 condition_expr_leaf: column YY_NE expr_string .
+
+    $default  reduce using rule 71 (condition_expr_leaf)
+
+
+State 134
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   90           | '+' expr_float .
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 90 (expr_float)
+
+
+State 135
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+  103         | '+' expr_int .
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 103 (expr_int)
+
+
+State 136
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   89           | '-' expr_float .
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 89 (expr_float)
+
+
+State 137
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+  102         | '-' expr_int .
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 102 (expr_int)
+
+
+State 138
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   88           | '(' expr_float . ')'
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+    ')'  shift, and go to state 157
+
+
+State 139
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+  101         | '(' expr_int . ')'
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+    ')'  shift, and go to state 158
+
+
+State 140
+
+   35 value_list: value_list ',' . expr_int
+   36           | value_list ',' . expr_float
+   37           | value_list ',' . expr_string
+
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
+
+    expr_float   go to state 159
+    expr_int     go to state 160
+    expr_string  go to state 161
+
+
+State 141
 
    27 insert_stmt: INSERT INTO table_name VALUES '(' value_list ')' .
 
     $default  reduce using rule 27 (insert_stmt)
 
 
-State 100
+State 142
 
-   35 value_list: value_list ',' . expr_int
-   36           | value_list ',' . expr_float
-   37           | value_list ',' . STR
+   73 expr_float: expr_float '+' . expr_float
+   74           | expr_float '+' . expr_int
 
-    STR   shift, and go to state 116
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    expr_float  go to state 117
-    expr_int    go to state 118
+    expr_float  go to state 162
+    expr_int    go to state 163
 
 
-State 101
+State 143
 
-   53 expr_float: expr_float '+' . expr_float
-   54           | expr_float '+' . expr_int
+   76 expr_float: expr_float '-' . expr_float
+   77           | expr_float '-' . expr_int
 
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    expr_float  go to state 119
-    expr_int    go to state 120
-
-
-State 102
-
-   56 expr_float: expr_float '-' . expr_float
-   57           | expr_float '-' . expr_int
-
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
-
-    expr_float  go to state 121
-    expr_int    go to state 122
+    expr_float  go to state 164
+    expr_int    go to state 165
 
 
-State 103
+State 144
 
-   59 expr_float: expr_float '*' . expr_float
-   60           | expr_float '*' . expr_int
+   79 expr_float: expr_float '*' . expr_float
+   80           | expr_float '*' . expr_int
 
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    expr_float  go to state 123
-    expr_int    go to state 124
-
-
-State 104
-
-   62 expr_float: expr_float '/' . expr_float
-   63           | expr_float '/' . expr_int
-
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
-
-    expr_float  go to state 125
-    expr_int    go to state 126
+    expr_float  go to state 166
+    expr_int    go to state 167
 
 
-State 105
+State 145
 
-   68 expr_float: expr_float '^' . expr_float
-   69           | expr_float '^' . expr_int
+   82 expr_float: expr_float '/' . expr_float
+   83           | expr_float '/' . expr_int
 
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    expr_float  go to state 127
-    expr_int    go to state 128
-
-
-State 106
-
-   55 expr_float: expr_int '+' . expr_float
-   73 expr_int: expr_int '+' . expr_int
-
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
-
-    expr_float  go to state 129
-    expr_int    go to state 130
+    expr_float  go to state 168
+    expr_int    go to state 169
 
 
-State 107
+State 146
 
-   58 expr_float: expr_int '-' . expr_float
-   74 expr_int: expr_int '-' . expr_int
+   85 expr_float: expr_float '%' . expr_float
+   87           | expr_float '%' . expr_int
 
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    expr_float  go to state 131
-    expr_int    go to state 132
-
-
-State 108
-
-   61 expr_float: expr_int '*' . expr_float
-   75 expr_int: expr_int '*' . expr_int
-
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
-
-    expr_float  go to state 133
-    expr_int    go to state 134
+    expr_float  go to state 170
+    expr_int    go to state 171
 
 
-State 109
+State 147
 
-   64 expr_float: expr_int '/' . expr_float
-   76 expr_int: expr_int '/' . expr_int
+   91 expr_float: expr_float '^' . expr_float
+   92           | expr_float '^' . expr_int
 
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
 
-    expr_float  go to state 135
-    expr_int    go to state 136
-
-
-State 110
-
-   70 expr_float: expr_int '^' . expr_float
-   71           | expr_int '^' . expr_int
-
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
-
-    expr_float  go to state 137
-    expr_int    go to state 138
+    expr_float  go to state 172
+    expr_int    go to state 173
 
 
-State 111
+State 148
+
+   75 expr_float: expr_int '+' . expr_float
+   96 expr_int: expr_int '+' . expr_int
+
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
+
+    expr_float  go to state 174
+    expr_int    go to state 175
+
+
+State 149
+
+   78 expr_float: expr_int '-' . expr_float
+   97 expr_int: expr_int '-' . expr_int
+
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
+
+    expr_float  go to state 176
+    expr_int    go to state 177
+
+
+State 150
+
+   81 expr_float: expr_int '*' . expr_float
+   98 expr_int: expr_int '*' . expr_int
+
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
+
+    expr_float  go to state 178
+    expr_int    go to state 179
+
+
+State 151
+
+   84 expr_float: expr_int '/' . expr_float
+   99 expr_int: expr_int '/' . expr_int
+
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
+
+    expr_float  go to state 180
+    expr_int    go to state 181
+
+
+State 152
+
+   86 expr_float: expr_int '%' . expr_float
+  100 expr_int: expr_int '%' . expr_int
+
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
+
+    expr_float  go to state 182
+    expr_int    go to state 183
+
+
+State 153
+
+   93 expr_float: expr_int '^' . expr_float
+   94           | expr_int '^' . expr_int
+
+    NUMI  shift, and go to state 93
+    NUMF  shift, and go to state 94
+    '+'   shift, and go to state 95
+    '-'   shift, and go to state 96
+    '('   shift, and go to state 97
+
+    expr_float  go to state 184
+    expr_int    go to state 185
+
+
+State 154
 
    28 insert_stmt: INSERT INTO table_name '(' column_list ')' VALUES . '(' value_list ')'
 
-    '('  shift, and go to state 139
+    '('  shift, and go to state 186
 
 
-State 112
+State 155
 
-   46 assign_expr_list: assign_expr_list ',' column '=' . expr_float
-   47                 | assign_expr_list ',' column '=' . expr_int
-   48                 | assign_expr_list ',' column '=' . STR
+   41 assign_expr_list: assign_expr_list ',' column '=' . expr_float
+   42                 | assign_expr_list ',' column '=' . expr_int
+   43                 | assign_expr_list ',' column '=' . expr_string
 
-    STR   shift, and go to state 140
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
 
-    expr_float  go to state 141
-    expr_int    go to state 142
+    expr_float   go to state 187
+    expr_int     go to state 188
+    expr_string  go to state 189
 
 
-State 113
+State 156
 
    31 column_type_list: column_type_list ',' column DATATYPE .
 
     $default  reduce using rule 31 (column_type_list)
 
 
-State 114
+State 157
 
-   65 expr_float: '(' expr_float ')' .
+   88 expr_float: '(' expr_float ')' .
 
-    $default  reduce using rule 65 (expr_float)
-
-
-State 115
-
-   77 expr_int: '(' expr_int ')' .
-
-    $default  reduce using rule 77 (expr_int)
+    $default  reduce using rule 88 (expr_float)
 
 
-State 116
+State 158
 
-   37 value_list: value_list ',' STR .
+  101 expr_int: '(' expr_int ')' .
 
-    $default  reduce using rule 37 (value_list)
+    $default  reduce using rule 101 (expr_int)
 
 
-State 117
+State 159
 
    36 value_list: value_list ',' expr_float .
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
 
-    '+'  shift, and go to state 101
-    '-'  shift, and go to state 102
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
 
     $default  reduce using rule 36 (value_list)
 
 
-State 118
+State 160
 
    35 value_list: value_list ',' expr_int .
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
 
-    '+'  shift, and go to state 106
-    '-'  shift, and go to state 107
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
 
     $default  reduce using rule 35 (value_list)
 
 
-State 119
-
-   53 expr_float: expr_float . '+' expr_float
-   53           | expr_float '+' expr_float .
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 53 (expr_float)
-
-
-State 120
-
-   54 expr_float: expr_float '+' expr_int .
-   55           | expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 54 (expr_float)
-
-
-State 121
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   56           | expr_float '-' expr_float .
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 56 (expr_float)
-
-
-State 122
-
-   55 expr_float: expr_int . '+' expr_float
-   57           | expr_float '-' expr_int .
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 57 (expr_float)
-
-
-State 123
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   59           | expr_float '*' expr_float .
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 59 (expr_float)
-
-
-State 124
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   60           | expr_float '*' expr_int .
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 60 (expr_float)
-
-
-State 125
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   62           | expr_float '/' expr_float .
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 62 (expr_float)
-
-
-State 126
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   63           | expr_float '/' expr_int .
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 63 (expr_float)
-
-
-State 127
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   68           | expr_float '^' expr_float .
-   69           | expr_float . '^' expr_int
-
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 68 (expr_float)
-
-
-State 128
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   69           | expr_float '^' expr_int .
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 69 (expr_float)
-
-
-State 129
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   55           | expr_int '+' expr_float .
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 55 (expr_float)
-
-
-State 130
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   73         | expr_int '+' expr_int .
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 73 (expr_int)
-
-
-State 131
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   58           | expr_int '-' expr_float .
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 58 (expr_float)
-
-
-State 132
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   74         | expr_int '-' expr_int .
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 74 (expr_int)
-
-
-State 133
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   61           | expr_int '*' expr_float .
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 61 (expr_float)
-
-
-State 134
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   75         | expr_int '*' expr_int .
-   76         | expr_int . '/' expr_int
-
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 75 (expr_int)
-
-
-State 135
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   64           | expr_int '/' expr_float .
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 64 (expr_float)
-
-
-State 136
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-   76         | expr_int '/' expr_int .
-
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 76 (expr_int)
-
-
-State 137
-
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
-   70           | expr_int '^' expr_float .
-
-    '^'  shift, and go to state 105
-
-    $default  reduce using rule 70 (expr_float)
-
-
-State 138
-
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   71           | expr_int '^' expr_int .
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 71 (expr_float)
-
-
-State 139
+State 161
+
+   37 value_list: value_list ',' expr_string .
+
+    $default  reduce using rule 37 (value_list)
+
+
+State 162
+
+   73 expr_float: expr_float . '+' expr_float
+   73           | expr_float '+' expr_float .
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 73 (expr_float)
+
+
+State 163
+
+   74 expr_float: expr_float '+' expr_int .
+   75           | expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 74 (expr_float)
+
+
+State 164
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   76           | expr_float '-' expr_float .
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 76 (expr_float)
+
+
+State 165
+
+   75 expr_float: expr_int . '+' expr_float
+   77           | expr_float '-' expr_int .
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 77 (expr_float)
+
+
+State 166
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   79           | expr_float '*' expr_float .
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 79 (expr_float)
+
+
+State 167
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   80           | expr_float '*' expr_int .
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 80 (expr_float)
+
+
+State 168
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   82           | expr_float '/' expr_float .
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 82 (expr_float)
+
+
+State 169
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   83           | expr_float '/' expr_int .
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 83 (expr_float)
+
+
+State 170
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   85           | expr_float '%' expr_float .
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 85 (expr_float)
+
+
+State 171
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   87           | expr_float '%' expr_int .
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 87 (expr_float)
+
+
+State 172
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   91           | expr_float '^' expr_float .
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 91 (expr_float)
+
+
+State 173
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   92           | expr_float '^' expr_int .
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 92 (expr_float)
+
+
+State 174
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   75           | expr_int '+' expr_float .
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 75 (expr_float)
+
+
+State 175
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   96         | expr_int '+' expr_int .
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 96 (expr_int)
+
+
+State 176
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   78           | expr_int '-' expr_float .
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 78 (expr_float)
+
+
+State 177
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   97         | expr_int '-' expr_int .
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 97 (expr_int)
+
+
+State 178
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   81           | expr_int '*' expr_float .
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 81 (expr_float)
+
+
+State 179
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   98         | expr_int '*' expr_int .
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 98 (expr_int)
+
+
+State 180
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   84           | expr_int '/' expr_float .
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 84 (expr_float)
+
+
+State 181
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+   99         | expr_int '/' expr_int .
+  100         | expr_int . '%' expr_int
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 99 (expr_int)
+
+
+State 182
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   86           | expr_int '%' expr_float .
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 86 (expr_float)
+
+
+State 183
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+  100         | expr_int '%' expr_int .
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 100 (expr_int)
+
+
+State 184
+
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
+   93           | expr_int '^' expr_float .
+
+    '^'  shift, and go to state 147
+
+    $default  reduce using rule 93 (expr_float)
+
+
+State 185
+
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   94           | expr_int '^' expr_int .
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 94 (expr_float)
+
+
+State 186
 
    28 insert_stmt: INSERT INTO table_name '(' column_list ')' VALUES '(' . value_list ')'
 
-    STR   shift, and go to state 75
-    NUMI  shift, and go to state 76
-    NUMF  shift, and go to state 77
-    '+'   shift, and go to state 78
-    '-'   shift, and go to state 79
-    '('   shift, and go to state 80
+    YY_STRING  shift, and go to state 92
+    NUMI       shift, and go to state 93
+    NUMF       shift, and go to state 94
+    '+'        shift, and go to state 95
+    '-'        shift, and go to state 96
+    '('        shift, and go to state 97
 
-    value_list  go to state 143
-    expr_float  go to state 82
-    expr_int    go to state 83
-
-
-State 140
-
-   48 assign_expr_list: assign_expr_list ',' column '=' STR .
-
-    $default  reduce using rule 48 (assign_expr_list)
+    value_list   go to state 190
+    expr_float   go to state 99
+    expr_int     go to state 100
+    expr_string  go to state 101
 
 
-State 141
+State 187
 
-   46 assign_expr_list: assign_expr_list ',' column '=' expr_float .
-   53 expr_float: expr_float . '+' expr_float
-   54           | expr_float . '+' expr_int
-   56           | expr_float . '-' expr_float
-   57           | expr_float . '-' expr_int
-   59           | expr_float . '*' expr_float
-   60           | expr_float . '*' expr_int
-   62           | expr_float . '/' expr_float
-   63           | expr_float . '/' expr_int
-   68           | expr_float . '^' expr_float
-   69           | expr_float . '^' expr_int
+   41 assign_expr_list: assign_expr_list ',' column '=' expr_float .
+   73 expr_float: expr_float . '+' expr_float
+   74           | expr_float . '+' expr_int
+   76           | expr_float . '-' expr_float
+   77           | expr_float . '-' expr_int
+   79           | expr_float . '*' expr_float
+   80           | expr_float . '*' expr_int
+   82           | expr_float . '/' expr_float
+   83           | expr_float . '/' expr_int
+   85           | expr_float . '%' expr_float
+   87           | expr_float . '%' expr_int
+   91           | expr_float . '^' expr_float
+   92           | expr_float . '^' expr_int
 
-    '+'  shift, and go to state 101
-    '-'  shift, and go to state 102
-    '*'  shift, and go to state 103
-    '/'  shift, and go to state 104
-    '^'  shift, and go to state 105
+    '+'  shift, and go to state 142
+    '-'  shift, and go to state 143
+    '*'  shift, and go to state 144
+    '/'  shift, and go to state 145
+    '%'  shift, and go to state 146
+    '^'  shift, and go to state 147
 
-    $default  reduce using rule 46 (assign_expr_list)
-
-
-State 142
-
-   47 assign_expr_list: assign_expr_list ',' column '=' expr_int .
-   55 expr_float: expr_int . '+' expr_float
-   58           | expr_int . '-' expr_float
-   61           | expr_int . '*' expr_float
-   64           | expr_int . '/' expr_float
-   70           | expr_int . '^' expr_float
-   71           | expr_int . '^' expr_int
-   73 expr_int: expr_int . '+' expr_int
-   74         | expr_int . '-' expr_int
-   75         | expr_int . '*' expr_int
-   76         | expr_int . '/' expr_int
-
-    '+'  shift, and go to state 106
-    '-'  shift, and go to state 107
-    '*'  shift, and go to state 108
-    '/'  shift, and go to state 109
-    '^'  shift, and go to state 110
-
-    $default  reduce using rule 47 (assign_expr_list)
+    $default  reduce using rule 41 (assign_expr_list)
 
 
-State 143
+State 188
+
+   42 assign_expr_list: assign_expr_list ',' column '=' expr_int .
+   75 expr_float: expr_int . '+' expr_float
+   78           | expr_int . '-' expr_float
+   81           | expr_int . '*' expr_float
+   84           | expr_int . '/' expr_float
+   86           | expr_int . '%' expr_float
+   93           | expr_int . '^' expr_float
+   94           | expr_int . '^' expr_int
+   96 expr_int: expr_int . '+' expr_int
+   97         | expr_int . '-' expr_int
+   98         | expr_int . '*' expr_int
+   99         | expr_int . '/' expr_int
+  100         | expr_int . '%' expr_int
+
+    '+'  shift, and go to state 148
+    '-'  shift, and go to state 149
+    '*'  shift, and go to state 150
+    '/'  shift, and go to state 151
+    '%'  shift, and go to state 152
+    '^'  shift, and go to state 153
+
+    $default  reduce using rule 42 (assign_expr_list)
+
+
+State 189
+
+   43 assign_expr_list: assign_expr_list ',' column '=' expr_string .
+
+    $default  reduce using rule 43 (assign_expr_list)
+
+
+State 190
 
    28 insert_stmt: INSERT INTO table_name '(' column_list ')' VALUES '(' value_list . ')'
    35 value_list: value_list . ',' expr_int
    36           | value_list . ',' expr_float
-   37           | value_list . ',' STR
+   37           | value_list . ',' expr_string
 
-    ')'  shift, and go to state 144
-    ','  shift, and go to state 100
+    ','  shift, and go to state 140
+    ')'  shift, and go to state 191
 
 
-State 144
+State 191
 
    28 insert_stmt: INSERT INTO table_name '(' column_list ')' VALUES '(' value_list ')' .
 

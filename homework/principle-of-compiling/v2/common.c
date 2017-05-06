@@ -300,7 +300,7 @@ void assign_assign_expr_list(struct query_t *query, struct assign_expr_t *assign
     return;
 }
 
-void assign_condition(){
+void assign_condition(struct query_t *query, struct condition_expr_t *condition){
 }
 
 /* circular queue
@@ -448,6 +448,71 @@ void assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatyp
     }
 }
 
-struct condition_t *create_condition(){
+struct condition_expr_leaf_t *create_condition_expr_leaf(char *column,
+        enum logic_t logic, void *value_ptr, enum datatype_t datatype){
+    struct condition_expr_leaf_t *node = NULL;
+    
+    node = (struct condition_expr_leaf_t *)malloc(sizeof(struct condition_expr_leaf_t));
+    if(node == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+    }
+    else{
+        node->column = strdup(column);
+        node->logic = logic;
+        node->datatype = datatype;
+        assign_value(&(node->value), value_ptr, datatype);
+    }
+    return node;
+}
+
+void free_condition_expr_leaf(struct condition_expr_leaf_t *node){
+    if(node != NULL){
+        if(node->column != NULL)
+            free(node->column);
+        if(node->datatype == STRING && node->value.string != NULL)
+            free(node->value.string);
+        free(node);
+    }
+}
+
+struct codition_expr_t *create_condition_expr(void *data, enum condition_type_t type){
+    struct condition_expr_t *node = NULL;
+    enum condition_type_t *value = NULL;
+
+    node = (struct condition_expr_t *)malloc(sizeof(struct condition_expr_t));
+    if(node == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+    }
+    else{
+        node->prev = node;
+        node->next = node;
+        node->type = type;
+        switch(type){
+            case LOGIC:
+                value = (enum condition_type_t *)malloc(sizeof(enum condition_type_t));
+                if(value == NULL){
+                    fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+                    free_condition_expr(node);
+                    node = NULL;
+                }
+                else{
+                    *value = *(enum condition_type_t *)data;
+                    node->data = value;
+                }
+                break;
+            default:
+                node->data = data;
+                break;
+        }
+    }
     return NULL;
+}
+
+void free_condition_expr(struct condition_expr_t *node){
+    if(node != NULL){
+        if(node->type == LOGIC && node->data != NULL)
+            free(node->data);
+        free(node);
+    }
+    return;
 }

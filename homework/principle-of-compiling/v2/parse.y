@@ -3,6 +3,21 @@
 
 #define YYERROR_VERBOSE
 
+#define NODE_IN_QUEUE(node, prev, return)   \
+            if((node) != NULL){   \
+                if((prev) != NULL)  \
+                    insque((node), (prev)); // bug, 重复命名问题  \
+                else    \
+                    insque((node), (node)); \
+                (return) = (node);  \
+            }   \
+            else    \
+                (return) = (prev);
+#define NODE_INIT_QUEUE(node, return)   \
+            if((node) != NULL)    \
+                insque((node), (node)); \
+            (return) = (node);
+
 int yylex(void);
 void yyerror(const char *s);
 
@@ -20,32 +35,42 @@ char *database = NULL;
     struct column_t *column;
     struct value_t *value;
     struct assign_expr_t *assign_expr;
-    struct condition_t *condition;
+    struct condition_expr_leaf_t *condition_expr_leaf;
+    struct condition_expr_t *condition_expr;
 }
 
 %token CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
 %token DATABASE DATABASES FROM INTO SET TABLE TABLES USE WHERE VALUES
-%token <string> ID DATATYPE STR
+%token YY_G YY_GE YY_L YY_LE YY_IS YY_NE YY_AND YY_OR YY_NOT
+%token <string> ID DATATYPE YY_STRING
 %token <numi>   NUMI
 %token <numf>   NUMF
 %type  <query> lines create_stmt drop_stmt show_stmt use_stmt exit_stmt
 %type  <query> select_stmt insert_stmt update_stmt delete_stmt
 %type  <string> database_name table_name column name
+%type  <numi> expr_int
+%type  <numf> expr_float
+%type  <string> expr_string
 %type  <column_type> column_type_list
 %type  <column>  column_list
 %type  <value> value_list
-%type  <numi> expr_int
-%type  <numf> expr_float
 %type  <assign_expr>  assign_expr_list
-%type  <condition>  condition
+%type  <condition_expr_leaf> condition_expr_leaf
+%type  <condition_expr>  condition_expr
 
-%destructor { free($$); } DATATYPE STR
+%destructor { free($$); } DATATYPE YY_STRING
 %destructor { free($$); } database_name table_name column
 
+%left   ','
+%right  '='
+%left   YY_AND YY_OR
+%left   YY_IS YY_NE
+%left   YY_G YY_GE YY_L YY_LE
 %left   '+' '-'
-%left   '*' '/'
+%left   '*' '/' '%'
 %right  UMINUS
 %right  '^'
+%right  NOT
 
 %start start
 
@@ -144,14 +169,14 @@ select_stmt
                 assign_table_name($$, $4);
             }
         }
-    | SELECT '*' FROM table_name WHERE condition    {
+    | SELECT '*' FROM table_name WHERE condition_expr    {
             $$ = create_query(database);
             if($$ != NULL){
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
             }
         }
-    | SELECT column_list FROM table_name WHERE condition    {
+    | SELECT column_list FROM table_name WHERE condition_expr    {
             $$ = create_query(database);
             if($$ != NULL){
                 assign_column_list($$, $2);
@@ -181,7 +206,7 @@ insert_stmt
     ;
 
 update_stmt
-    : UPDATE table_name SET assign_expr_list WHERE condition {
+    : UPDATE table_name SET assign_expr_list WHERE condition_expr {
             $$ = create_query(database);
             if($$ != NULL){
                 assign_table_name($$, $2);
@@ -192,7 +217,7 @@ update_stmt
     ;
 
 delete_stmt
-    : DELETE FROM table_name WHERE condition {
+    : DELETE FROM table_name WHERE condition_expr {
             $$ = create_query(database);
             if($$ != NULL){
                 assign_table_name($$, $3);
@@ -205,19 +230,12 @@ column_type_list
     : column_type_list ',' column DATATYPE {
             struct column_type_t *node = NULL;
             node = create_column_type($3, $4);
-            if(node != NULL){
-                insque(node, $1); // bug, 重复命名问题
-                $$ = node;
-            }
-            else
-                $$ = $1;
+            NODE_IN_QUEUE(node, $1, $$);
         }
     | column DATATYPE   {
             struct column_type_t *node = NULL;
             node = create_column_type($1, $2);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
     ;
 
@@ -225,19 +243,12 @@ column_list
     : column_list ',' column  {
             struct column_t *node = NULL;
             node = create_column($3);
-            if(node != NULL){
-                insque(node, $1);
-                $$ = node;
-            }
-            else
-                $$ = $1;
+            NODE_IN_QUEUE(node, $1, $$);
         }
     | column  {
             struct column_t *node = NULL;
             node = create_column($1);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
     ;
 
@@ -245,119 +256,113 @@ value_list
     : value_list ',' expr_int {
             struct value_t *node = NULL;
             node = create_value(&$3, INT);
-            if(node != NULL){
-                insque(node, $1);
-                $$ = node;
-            }
-            else
-                $$ = $1;
+            NODE_IN_QUEUE(node, $1, $$);
         }
     | value_list ',' expr_float {
             struct value_t *node = NULL;
             node = create_value(&$3, FLOAT);
-            if(node != NULL){
-                insque(node, $1);
-                $$ = node;
-            }
-            else
-                $$ = $1;
+            NODE_IN_QUEUE(node, $1, $$);
         }
-    | value_list ',' STR  {
+    | value_list ',' expr_string  {
             struct value_t *node = NULL;
             node = create_value($3, STRING);
-            if(node != NULL){
-                insque(node, $1);
-                $$ = node;
-            }
-            else
-                $$ = $1;
+            NODE_IN_QUEUE(node, $1, $$);
         }
     | expr_int   {
             struct value_t *node = NULL;
             node = create_value(&$1, INT);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
     | expr_float   {
             struct value_t *node = NULL;
             node = create_value(&$1, FLOAT);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
-    | STR    {
+    | expr_string   {
             struct value_t *node = NULL;
             node = create_value($1, STRING);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
-    ;
-
-database_name
-    : name  { $$ = $1; }
-    ;
-
-table_name
-    : name  { $$ = $1; }
-    ;
-
-column
-    : name  { $$ = $1; }
-    ;
-
-name
-    : ID    { $$ = $1; }
-    ;
-
-condition
-    :   { $$ = create_condition(); } 
     ;
 
 assign_expr_list
     : assign_expr_list ',' column '=' expr_float {
             struct assign_expr_t *node = NULL;
             node = create_assign_expr($3, &$5, FLOAT);
-            if(node != NULL)
-                insque(node, $1);
-            $$ = node;
+            NODE_IN_QUEUE(node, $1, $$);
         }
     | assign_expr_list ',' column '=' expr_int   {
             struct assign_expr_t *node = NULL;
             node = create_assign_expr($3, &$5, INT);
-            if(node != NULL)
-                insque(node, $1);
-            $$ = node;
+            NODE_IN_QUEUE(node, $1, $$);
         }
-    | assign_expr_list ',' column '=' STR   {
+    | assign_expr_list ',' column '=' expr_string   {
             struct assign_expr_t *node = NULL;
             node = create_assign_expr($3, $5, STRING);
-            if(node != NULL)
-                insque(node, $1);
-            $$ = node;
+            NODE_IN_QUEUE(node, $1, $$);
         }
     | column '=' expr_float {
             struct assign_expr_t *node = NULL;
             node = create_assign_expr($1, &$3, FLOAT);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
     | column '=' expr_int   {
             struct assign_expr_t *node = NULL;
             node = create_assign_expr($1, &$3, INT);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
-    | column '=' STR    {
+    | column '=' expr_string    {
             struct assign_expr_t *node = NULL;
             node = create_assign_expr($1, $3, STRING);
-            if(node != NULL)
-                insque(node, node);
-            $$ = node;
+            NODE_INIT_QUEUE(node, $$);
         }
+    ;
+
+condition_expr
+    : condition_expr YY_AND condition_expr {
+            struct condition_expr_t *node = NULL;
+            node = create_condition_expr(&AND, LOGIC);
+            NODE_IN_QUEUE($3, $1, $3);
+            NODE_IN_QUEUE(node, $3, $$);
+        } 
+    | condition_expr YY_OR  condition_expr {
+            struct condition_expr_t *node = NULL;
+            node = create_condition_expr(&OR, LOGIC);
+            NODE_IN_QUEUE($3, $1, $3);
+            NODE_IN_QUEUE(node, $3, $$);
+        }
+    | YY_NOT condition_expr                {
+            struct condition_expr_t *node = NULL;
+            node = create_condition_expr(&NOT, LOGIC);
+            NODE_IN_QUEUE(node, $2, $$);
+        }
+    | '(' condition_expr ')'    { $$ = $2; }
+    | condition_expr_leaf   {
+            struct condition_expr_t node = NULL;
+            node = create_condition_expr($1, CONDITION_LEAF);
+            NODE_INIT_QUEUE(node, $$);
+        }
+    ;
+
+condition_expr_leaf
+    : column YY_G  expr_float    { $$ = create_condition_leaf($1, G,  $3, FLOAT); }
+    | column YY_GE expr_float    { $$ = create_condition_leaf($1, GE, $3, FLOAT); }
+    | column YY_IS expr_float    { $$ = create_condition_leaf($1, IS, $3, FLOAT); }
+    | column YY_L  expr_float    { $$ = create_condition_leaf($1, L,  $3, FLOAT); }
+    | column YY_LE expr_float    { $$ = create_condition_leaf($1, LE, $3, FLOAT); }
+    | column YY_NE expr_float    { $$ = create_condition_leaf($1, NE, $3, FLOAT); }
+    | column YY_G  expr_int      { $$ = create_condition_leaf($1, G,  $3, INT); }
+    | column YY_GE expr_int      { $$ = create_condition_leaf($1, GE, $3, INT); }
+    | column YY_IS expr_int      { $$ = create_condition_leaf($1, IS, $3, INT); }
+    | column YY_L  expr_int      { $$ = create_condition_leaf($1, L,  $3, INT); }
+    | column YY_LE expr_int      { $$ = create_condition_leaf($1, LE, $3, INT); }
+    | column YY_NE expr_int      { $$ = create_condition_leaf($1, NE, $3, INT); }
+    | column YY_G  expr_string   { $$ = create_condition_leaf($1, G,  $3, STRING); }
+    | column YY_GE expr_string   { $$ = create_condition_leaf($1, GE, $3, STRING); }
+    | column YY_IS expr_string   { $$ = create_condition_leaf($1, IS, $3, STRING); }
+    | column YY_L  expr_string   { $$ = create_condition_leaf($1, L,  $3, STRING); }
+    | column YY_LE expr_string   { $$ = create_condition_leaf($1, LE, $3, STRING); }
+    | column YY_NE expr_string   { $$ = create_condition_leaf($1, NE, $3, STRING); }
     ;
 
 expr_float
@@ -395,6 +400,30 @@ expr_float
                 fprintf(stderr, "ERROR: division by zero\n");
             }
         }
+    | expr_float '%' expr_float   { 
+            if($3)
+                $$ = $1 % $3;
+            else{
+                $$ = 1.0f;
+                fprintf(stderr, "ERROR: modulo by zero\n");
+            }
+        }
+    | expr_int '%' expr_float      { 
+            if($3)
+                $$ = (float)$1 % $3;
+            else{
+                $$ = 1.0f;
+                fprintf(stderr, "ERROR: modulo by zero\n");
+            }
+        }
+    | expr_float '%' expr_int      { 
+            if($3)
+                $$ = $1 % (float)$3;
+            else{
+                $$ = 1.0f;
+                fprintf(stderr, "ERROR: modulo by zero\n");
+            }
+        }
     | '(' expr_float ')'          { $$ = $2; }
     | '-' expr_float %prec UMINUS { $$ = -$2; }
     | '+' expr_float %prec UMINUS { $$ = $2; }
@@ -417,9 +446,38 @@ expr_int
                 fprintf(stderr, "ERROR: division by zero\n");
             }
         }
+    | expr_int '%' expr_int   { 
+            if($3)
+                $$ = $1 % $3;
+            else{
+                $$ = 1;
+                fprintf(stderr, "ERROR: modulo by zero\n");
+            }
+        }
     | '(' expr_int ')'          { $$ = $2; }
     | '-' expr_int %prec UMINUS { $$ = -$2; }
     | '+' expr_int %prec UMINUS { $$ = $2; }
+        /* 不允许 int 类型的指数运算 */
+    ;
+
+expr_string
+    : YY_STRING   { $$ = $1; }
+    ;
+
+database_name
+    : name  { $$ = $1; }
+    ;
+
+table_name
+    : name  { $$ = $1; }
+    ;
+
+column
+    : name  { $$ = $1; }
+    ;
+
+name
+    : ID    { $$ = $1; }
     ;
 %%
 

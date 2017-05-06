@@ -41,12 +41,21 @@ STRING          \"([^\\\"\t\r\n]|\\.)*\"|'([^\\\'\t\r\n]|\\.)*'
 (?i:update)     { LEX_DEBUG("keyword", yytext); return UPDATE; }
 (?i:where)      { LEX_DEBUG("keyword", yytext); return WHERE; }
 (?i:values)     { LEX_DEBUG("keyword", yytext); return VALUES; }
-{DATATYPE}      { LEX_DEBUG("DATATYPE", yytext); yylval.string = strdup(yytext); return DATATYPE; }
-{ID}            { LEX_DEBUG("ID", yytext); yylval.string = strdup(yytext); return ID; } /* not use strdup, bug in create table ... */
-{OPERATOR}      { LEX_DEBUG("OPERATOR", yytext); return yytext[0]; }
-{INT}           { LEX_DEBUG("INT", yytext); yylval.numi = atoi(yytext); return NUMI; }
-{FLOAT}         { LEX_DEBUG("FLOAT", yytext); yylval.numf = strtof(yytext, NULL); return NUMF; }
-{STRING}        { LEX_DEBUG("STRING", yytext); yylval.string = strdup(yytext); return STR; }
+(">")           { LEX_DEBUG("operator", yytext); return YY_G; }
+(">=")          { LEX_DEBUG("operator", yytext); return YY_GE; }
+("<")           { LEX_DEBUG("operator", yytext); return YY_L; }
+("<=")          { LEX_DEBUG("operator", yytext); return YY_LE; }
+("!=")          { LEX_DEBUG("operator", yytext); return YY_NE; }
+("=="|(?i:is))  { LEX_DEBUG("operator", yytext); return YY_IS; }
+("&&"|(?i:and)) { LEX_DEBUG("operator", yytext); return YY_AND; }
+("||"|(?i:or))  { LEX_DEBUG("operator", yytext); return YY_OR; }
+("!"|(?:not))   { LEX_DEBUG("operator", yytext); return YY_NOT; }
+{DATATYPE}      { LEX_DEBUG("operator", yytext); yylval.string = strdup(yytext); return DATATYPE; }
+{ID}            { LEX_DEBUG("id", yytext); yylval.string = strdup(yytext); return ID; } /* not use strdup, bug in create table ... */
+{OPERATOR}      { LEX_DEBUG("operator", yytext); return yytext[0]; }
+{INT}           { LEX_DEBUG("int", yytext); yylval.numi = atoi(yytext); return NUMI; }
+{FLOAT}         { LEX_DEBUG("float", yytext); yylval.numf = strtof(yytext, NULL); return NUMF; }
+{STRING}        { LEX_DEBUG("string", yytext); yylval.string = strdup(yytext); return YY_STRING; }
 
 . {
     printf("Line %d: illegal character %s\n",
