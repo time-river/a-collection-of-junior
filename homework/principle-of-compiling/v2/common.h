@@ -98,7 +98,7 @@ enum logic_t{
 };
 
 struct condition_expr_leaf_t {
-    char   *column;
+    char *column;
     enum logic_t logic;
     enum datatype_t datatype;
     union _value_t value;
@@ -111,8 +111,8 @@ enum condition_type_t {
 };
 
 struct condition_expr_t {
-    void *prev;
-    void *next;
+    struct condition_expr_t *prev;
+    struct condition_expr_t *next;
     enum condition_type_t type;
     void *data;
 };
@@ -136,6 +136,7 @@ void assign_assign_expr_list(struct query_t *query, struct assign_expr_t *assign
 void assign_condition(struct query_t *query, struct condition_expr_t *condition);
 
 void assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatype);
+enum logic_t logic_atoi(char *logic);
 
 struct column_type_t *create_column_type(const char *column, char *datatype);
 void free_column_type(struct column_type_t *node);
@@ -146,8 +147,10 @@ struct value_t *create_value(void *value_ptr, enum datatype_t datatype);
 void free_value(struct value_t *node);
 struct assign_expr_t *create_assign_expr(char *column, void *value_ptr, enum datatype_t datatype);
 void free_assign_expr(struct assign_expr_t *node);
-struct condition_expr_leaf_t *create_condition_expr_leaf(char *column, enum logic_t logic, void *value_ptr, enum datatype_t datatype);
-struct codition_expr_t *create_condition_expr(void *data, enum condition_type_t type);
+struct condition_expr_leaf_t *create_condition_expr_leaf(char *column, char *logic, void *value_ptr, enum datatype_t datatype);
+void free_condition_expr_leaf(struct condition_expr_leaf_t *node);
+struct condition_expr_t *create_condition_expr(void *data, enum condition_type_t type);
+void free_condition_expr(struct condition_expr_t *node);
 
 extern char *database;
 

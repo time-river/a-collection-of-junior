@@ -448,8 +448,37 @@ void assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatyp
     }
 }
 
+enum logic_t logic_atoi(char *logic){
+    char *str = NULL;
+    enum logic_t value;
+
+    str = strdup(logic);
+    for(int i = 0; str[i] != '\0'; i++) // convert all to tolower
+        str[i] = tolower(str[i]);
+    if(strcmp(logic, "g") == 0)
+        value = G;
+    else if(strcmp(logic, "ge") == 0)
+        value = GE;
+    else if(strcmp(logic, "is") == 0)
+        value = IS;
+    else if(strcmp(logic, "l") == 0)
+        value = L;
+    else if(strcmp(logic, "le") == 0)
+        value = LE;
+    else if(strcmp(logic, "ne") == 0)
+        value = NE;
+    else if(strcmp(logic, "and") == 0)
+        value = AND;
+    else if(strcmp(logic, "or") == 0)
+        value = OR;
+    else if(strcmp(logic, "not") == 0)
+        value = NOT;
+    free(str);
+    return value;
+}
+
 struct condition_expr_leaf_t *create_condition_expr_leaf(char *column,
-        enum logic_t logic, void *value_ptr, enum datatype_t datatype){
+        char *logic, void *value_ptr, enum datatype_t datatype){
     struct condition_expr_leaf_t *node = NULL;
     
     node = (struct condition_expr_leaf_t *)malloc(sizeof(struct condition_expr_leaf_t));
@@ -458,7 +487,7 @@ struct condition_expr_leaf_t *create_condition_expr_leaf(char *column,
     }
     else{
         node->column = strdup(column);
-        node->logic = logic;
+        node->logic = logic_atoi(logic);
         node->datatype = datatype;
         assign_value(&(node->value), value_ptr, datatype);
     }
@@ -475,9 +504,9 @@ void free_condition_expr_leaf(struct condition_expr_leaf_t *node){
     }
 }
 
-struct codition_expr_t *create_condition_expr(void *data, enum condition_type_t type){
+struct condition_expr_t *create_condition_expr(void *data, enum condition_type_t type){
     struct condition_expr_t *node = NULL;
-    enum condition_type_t *value = NULL;
+    enum logic_t *value = NULL;
 
     node = (struct condition_expr_t *)malloc(sizeof(struct condition_expr_t));
     if(node == NULL){
@@ -489,14 +518,14 @@ struct codition_expr_t *create_condition_expr(void *data, enum condition_type_t 
         node->type = type;
         switch(type){
             case LOGIC:
-                value = (enum condition_type_t *)malloc(sizeof(enum condition_type_t));
+                value = (enum logic_t *)malloc(sizeof(enum condition_type_t));
                 if(value == NULL){
                     fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
                     free_condition_expr(node);
                     node = NULL;
                 }
                 else{
-                    *value = *(enum condition_type_t *)data;
+                    *value = logic_atoi(data);
                     node->data = value;
                 }
                 break;
@@ -505,7 +534,7 @@ struct codition_expr_t *create_condition_expr(void *data, enum condition_type_t 
                 break;
         }
     }
-    return NULL;
+    return node;
 }
 
 void free_condition_expr(struct condition_expr_t *node){

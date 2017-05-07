@@ -3,20 +3,26 @@
 
 #define YYERROR_VERBOSE
 
-#define NODE_IN_QUEUE(node, prev, return)   \
+#define NODE_IN_QUEUE(node, prev, return)  {\
             if((node) != NULL){   \
-                if((prev) != NULL)  \
-                    insque((node), (prev)); // bug, 重复命名问题  \
-                else    \
+                if((prev) != NULL){  \
+                    insque((node), (prev)); /* 解决 bug -- prev 可能为空 */ \
+                } \
+                else{    \
                     insque((node), (node)); \
+                } \
                 (return) = (node);  \
             }   \
-            else    \
-                (return) = (prev);
-#define NODE_INIT_QUEUE(node, return)   \
-            if((node) != NULL)    \
+            else{    \
+                (return) = (prev); \
+            } \
+        }
+#define NODE_INIT_QUEUE(node, return)   {\
+            if((node) != NULL){    \
                 insque((node), (node)); \
-            (return) = (node);
+            } \
+            (return) = (node); \
+        }
 
 int yylex(void);
 void yyerror(const char *s);
@@ -35,13 +41,13 @@ char *database = NULL;
     struct column_t *column;
     struct value_t *value;
     struct assign_expr_t *assign_expr;
-    struct condition_expr_leaf_t *condition_expr_leaf;
     struct condition_expr_t *condition_expr;
+    struct condition_expr_leaf_t *condition_expr_leaf;
 }
 
 %token CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
 %token DATABASE DATABASES FROM INTO SET TABLE TABLES USE WHERE VALUES
-%token YY_G YY_GE YY_L YY_LE YY_IS YY_NE YY_AND YY_OR YY_NOT
+%token <string> YY_GG YY_GE YY_LL YY_LE YY_IS YY_NE YY_AND YY_OR YY_NOT
 %token <string> ID DATATYPE YY_STRING
 %token <numi>   NUMI
 %token <numf>   NUMF
@@ -55,10 +61,10 @@ char *database = NULL;
 %type  <column>  column_list
 %type  <value> value_list
 %type  <assign_expr>  assign_expr_list
-%type  <condition_expr_leaf> condition_expr_leaf
 %type  <condition_expr>  condition_expr
+%type  <condition_expr_leaf> condition_expr_leaf
 
-%destructor { free($$); } DATATYPE YY_STRING
+%destructor { free($$); } DATATYPE YY_STRING YY_GG YY_GE YY_LL YY_LE YY_IS YY_NE YY_AND YY_OR YY_NOT
 %destructor { free($$); } database_name table_name column
 
 %left   ','
@@ -70,7 +76,7 @@ char *database = NULL;
 %left   '*' '/' '%'
 %right  UMINUS
 %right  '^'
-%right  NOT
+%right  YY_NOT
 
 %start start
 
@@ -321,48 +327,48 @@ assign_expr_list
 condition_expr
     : condition_expr YY_AND condition_expr {
             struct condition_expr_t *node = NULL;
-            node = create_condition_expr(&AND, LOGIC);
+            node = create_condition_expr($2, LOGIC);
             NODE_IN_QUEUE($3, $1, $3);
             NODE_IN_QUEUE(node, $3, $$);
         } 
     | condition_expr YY_OR  condition_expr {
             struct condition_expr_t *node = NULL;
-            node = create_condition_expr(&OR, LOGIC);
+            node = create_condition_expr($2, LOGIC);
             NODE_IN_QUEUE($3, $1, $3);
             NODE_IN_QUEUE(node, $3, $$);
         }
     | YY_NOT condition_expr                {
             struct condition_expr_t *node = NULL;
-            node = create_condition_expr(&NOT, LOGIC);
+            node = create_condition_expr($1, LOGIC);
             NODE_IN_QUEUE(node, $2, $$);
         }
     | '(' condition_expr ')'    { $$ = $2; }
     | condition_expr_leaf   {
-            struct condition_expr_t node = NULL;
+            struct condition_expr_t *node = NULL;
             node = create_condition_expr($1, CONDITION_LEAF);
             NODE_INIT_QUEUE(node, $$);
         }
     ;
 
 condition_expr_leaf
-    : column YY_G  expr_float    { $$ = create_condition_leaf($1, G,  $3, FLOAT); }
-    | column YY_GE expr_float    { $$ = create_condition_leaf($1, GE, $3, FLOAT); }
-    | column YY_IS expr_float    { $$ = create_condition_leaf($1, IS, $3, FLOAT); }
-    | column YY_L  expr_float    { $$ = create_condition_leaf($1, L,  $3, FLOAT); }
-    | column YY_LE expr_float    { $$ = create_condition_leaf($1, LE, $3, FLOAT); }
-    | column YY_NE expr_float    { $$ = create_condition_leaf($1, NE, $3, FLOAT); }
-    | column YY_G  expr_int      { $$ = create_condition_leaf($1, G,  $3, INT); }
-    | column YY_GE expr_int      { $$ = create_condition_leaf($1, GE, $3, INT); }
-    | column YY_IS expr_int      { $$ = create_condition_leaf($1, IS, $3, INT); }
-    | column YY_L  expr_int      { $$ = create_condition_leaf($1, L,  $3, INT); }
-    | column YY_LE expr_int      { $$ = create_condition_leaf($1, LE, $3, INT); }
-    | column YY_NE expr_int      { $$ = create_condition_leaf($1, NE, $3, INT); }
-    | column YY_G  expr_string   { $$ = create_condition_leaf($1, G,  $3, STRING); }
-    | column YY_GE expr_string   { $$ = create_condition_leaf($1, GE, $3, STRING); }
-    | column YY_IS expr_string   { $$ = create_condition_leaf($1, IS, $3, STRING); }
-    | column YY_L  expr_string   { $$ = create_condition_leaf($1, L,  $3, STRING); }
-    | column YY_LE expr_string   { $$ = create_condition_leaf($1, LE, $3, STRING); }
-    | column YY_NE expr_string   { $$ = create_condition_leaf($1, NE, $3, STRING); }
+    : column YY_GG expr_float    { $$ = create_condition_expr_leaf($1, $2, &$3, FLOAT); }
+    | column YY_GE expr_float    { $$ = create_condition_expr_leaf($1, $2, &$3, FLOAT); }
+    | column YY_IS expr_float    { $$ = create_condition_expr_leaf($1, $2, &$3, FLOAT); }
+    | column YY_LL expr_float    { $$ = create_condition_expr_leaf($1, $2, &$3, FLOAT); }
+    | column YY_LE expr_float    { $$ = create_condition_expr_leaf($1, $2, &$3, FLOAT); }
+    | column YY_NE expr_float    { $$ = create_condition_expr_leaf($1, $2, &$3, FLOAT); }
+    | column YY_GG expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
+    | column YY_GE expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
+    | column YY_IS expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
+    | column YY_LL expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
+    | column YY_LE expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
+    | column YY_NE expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
+    | column YY_GG expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
+    | column YY_GE expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
+    | column YY_IS expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
+    | column YY_LL expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
+    | column YY_LE expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
+    | column YY_NE expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
     ;
 
 expr_float
@@ -398,30 +404,6 @@ expr_float
             else{
                 $$ = 1.0f;
                 fprintf(stderr, "ERROR: division by zero\n");
-            }
-        }
-    | expr_float '%' expr_float   { 
-            if($3)
-                $$ = $1 % $3;
-            else{
-                $$ = 1.0f;
-                fprintf(stderr, "ERROR: modulo by zero\n");
-            }
-        }
-    | expr_int '%' expr_float      { 
-            if($3)
-                $$ = (float)$1 % $3;
-            else{
-                $$ = 1.0f;
-                fprintf(stderr, "ERROR: modulo by zero\n");
-            }
-        }
-    | expr_float '%' expr_int      { 
-            if($3)
-                $$ = $1 % (float)$3;
-            else{
-                $$ = 1.0f;
-                fprintf(stderr, "ERROR: modulo by zero\n");
             }
         }
     | '(' expr_float ')'          { $$ = $2; }
@@ -481,11 +463,6 @@ name
     ;
 %%
 
-void yyerror(const char *s){
-    fprintf(stderr, "Error: %s\n", s);
-    return;
-}
-
 #include "lex.yy.c"
 
 int main(int argc, char *argv[]){
@@ -493,3 +470,9 @@ int main(int argc, char *argv[]){
     yyparse();
     return 0;
 }
+
+void yyerror(const char *s){
+    fprintf(stderr, "Error: %s\n", s);
+    return;
+}
+
