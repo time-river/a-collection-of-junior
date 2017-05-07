@@ -19,3 +19,5 @@ insert into tb (f) values (7-1.0);
 insert into tb (f) values (8*1.0);
 insert into tb (f) values (9/1.0);
 insert into tb (f) values (2^4);
+select * from tb;
+select i, f from tb;

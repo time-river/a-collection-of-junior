@@ -272,7 +272,7 @@ struct column_type_t *xml_match_check(mxml_node_t *meters,
 }
 
 struct column_type_t *xml_get_column_type(mxml_node_t *meters){
-    // 返回第一个元素
+    // 返回第一个元素, 不可能返回 NULL -- 语法保证
     mxml_node_t *meter = NULL;
     struct column_type_t *node = NULL, *prev = NULL;
     const char *column = NULL;
@@ -302,4 +302,101 @@ char *datatype_to_char(enum datatype_t datatype){
         case 2:
             return "string";
     }
+}
+
+void select_xml(const struct query_t *query, FILE *fp){
+    mxml_node_t *xml = NULL;
+    mxml_node_t *table = NULL;
+    mxml_node_t *meters = NULL;
+    mxml_node_t *row = NULL;
+    mxml_node_t *node = NULL;
+    struct column_type_t *column_type = NULL, *first_ct = NULL; 
+    struct column_t *column, *first_c = NULL;
+    const char *node_name;
+    int iresult = 0;
+
+    first_c = column = query->column;
+
+    xml = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
+    if(xml == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        return;
+    }
+
+    table = mxmlFindElement(xml, xml, query->table_name, NULL, NULL,MXML_DESCEND);
+    if(table == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+    meters = mxmlGetFirstChild(table);  // 第一个孩子一定是表头
+    if(meters == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+
+    first_ct = column_type = xml_get_column_type(meters);
+
+    if(query->condition == NULL){ // no WHERE subsentence
+        if(query->column == NULL){ // output all
+            for(row=mxmlGetNextSibling(meters);
+                        row!=NULL; row=mxmlGetNextSibling(row)){
+                for(node=mxmlGetFirstChild(row);
+                        node!=NULL; node=mxmlGetNextSibling(node))
+                    xml_row_output(node);
+                putchar('\n');
+            }
+        }
+        else{
+            do{
+                iresult = 0; // 0 代表没有找到
+                column_type = first_ct;
+                do{
+                    if(strcmp(column_type->column, column->column) == 0){
+                        iresult = 1;
+                        break;
+                    }
+                    column_type = column_type->prev; 
+                }while(column_type != NULL && column_type != first_ct);
+                if(iresult != 1)
+                    break;
+                column = column->prev;
+            } while(column != NULL && column != first_c);
+            if(iresult != 1)
+               fprintf(stderr, "ERROR: You have an error in your SQL syntax\n");
+            else {
+                for(row=mxmlGetNextSibling(meters);
+                        row!=NULL; row=mxmlGetNextSibling(row)){
+                    for(node=mxmlGetFirstChild(row);
+                            node!=NULL; node=mxmlGetNextSibling(node)){
+                        node_name = mxmlGetElement(node);
+                        column = first_c;
+                        do{
+                            if(strcmp(column->column, mxmlGetElement(node)) == 0){
+                                xml_row_output(node);
+                                break;
+                            }
+                            column = column->prev;
+                        }while(column != NULL && column != first_c);
+                    }
+                    putchar('\n');
+                }
+            }
+        }
+    }
+    else{
+    }
+
+    return;
+}
+
+void xml_row_output(mxml_node_t *node){
+    const char *column = NULL;
+    const char *text = NULL;
+
+    column = mxmlGetElement(node);
+    text = mxmlGetText(mxmlGetFirstChild(node), 0);
+    fprintf(stdout, "%-5s:  %-5s  |", column, text == NULL ? "" : text);
+    return;
 }

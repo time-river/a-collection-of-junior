@@ -125,6 +125,7 @@ void create_stmt(const struct query_t *query);
 void drop_stmt(const struct query_t *query);
 void show_stmt(const struct query_t *query);
 void use_stmt(const struct query_t *query);
+void select_stmt(const struct query_t *query);
 void insert_stmt(const struct query_t *query);
 void assign_create_opt(struct query_t *query, enum create_opt_t opt);
 void assign_database_name(struct query_t *query, char *database_name);

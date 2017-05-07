@@ -53,8 +53,10 @@ struct query_t *create_query(char *database_name){
         query->database_name = strdup(database_name);
         query->table_name = NULL;
         query->column_type = NULL;
+        query->column = NULL;
         query->value = NULL;
         query->condition = NULL;
+        query->assign_expr = NULL;
     }
 
     return query;
@@ -94,6 +96,7 @@ void hub(const struct query_t *query){
                 exit(EXIT_SUCCESS);
                 break;
             case SELECT_STMT:
+                select_stmt(query);
                 break;
             case INSERT_STMT:
                 insert_stmt(query);
@@ -219,6 +222,26 @@ void use_stmt(const struct query_t *query){
         fprintf(stdout, "Database changed\n");
     }
     return;
+}
+
+void select_stmt(const struct query_t *query){
+    char path[BUFSIZ];
+    FILE *fp = NULL;
+
+    snprintf(path, sizeof(path)-1, "%s/%s/%s", ROOT, query->database_name, query->table_name);
+
+    if(access(path, F_OK&0x7) != 0)
+        fprintf(stderr, "Table '%s.%s' doesn't exist\n", query->database_name, query->table_name);
+    else{
+        fp = fopen(path, "r");
+        if(fp == NULL){
+            fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        }
+        else{
+            select_xml(query, fp);
+            fclose(fp);
+        }
+    }
 }
 
 void insert_stmt(const struct query_t *query){

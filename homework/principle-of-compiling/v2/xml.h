@@ -14,4 +14,7 @@ struct column_type_t *xml_match_check(mxml_node_t *meters,
 struct column_type_t *xml_get_column_type(mxml_node_t *meters);
 char *datatype_to_char(enum datatype_t datatype);
 
+void select_xml(const struct query_t *query, FILE *fp);
+void xml_row_output(mxml_node_t *node);
+
 #endif
