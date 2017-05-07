@@ -35,6 +35,7 @@ void init(void){
     }
 
     database = NULL;
+    nextinstr = 0;
     return;
 }
 
@@ -68,9 +69,14 @@ void free_query(struct query_t *query){
             free(query->database_name);
         if(query->table_name != NULL)
             free(query->table_name);
-        if(query->column_type != NULL){
+        if(query->column_type != NULL)
             free_column_type_list(query->column_type);
-        }
+        if(query->column != NULL)
+            free_column_list(query->column);
+        if(query->value != NULL)
+            free_value_list(query->value);
+        if(query->assign_expr != NULL)
+            free_assign_expr(query->assign_expr);
         free(query);
     }
     return;
@@ -107,6 +113,7 @@ void hub(const struct query_t *query){
                 break;
         }
 
+    nextinstr = 0;
     return;
 }
 
@@ -406,6 +413,21 @@ void free_column(struct column_t *node){
     return;
 }
 
+void free_column_list(struct column_t *node){
+    struct column_t *column = NULL;
+
+    if(node != NULL){
+        while(node->next != node) {
+            column = node;
+            node = column->next;
+            remque(column);
+            free_column(column);
+        }
+        free_column(node);
+    }
+    return;
+}
+
 struct value_t *create_value(void *value_ptr, enum datatype_t datatype){
     struct value_t *node = NULL;
 
@@ -428,6 +450,21 @@ void free_value(struct value_t *node){
            free(node->value.string); 
     }
     free(node);
+    return;
+}
+
+void free_value_list(struct value_t *node){
+    struct value_t *value = NULL;
+
+    if(node != NULL){
+        while(node->next != node) {
+            value = node;
+            node = value->next;
+            remque(value);
+            free_value(value);
+        }
+        free_value(node);
+    }
     return;
 }
 
@@ -455,6 +492,21 @@ void free_assign_expr(struct assign_expr_t *node){
             free(node->value.string);
         free(node);
     }
+}
+
+void free_assign_expr_list(struct assign_expr_t *node){
+    struct assign_expr_t *assign_expr = NULL;
+
+    if(node != NULL){
+        while(node->next != node) {
+            assign_expr = node;
+            node = assign_expr->next;
+            remque(assign_expr);
+            free_assign_expr(assign_expr);
+        }
+        free_assign_expr(node);
+    }
+    return;
 }
 
 void assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatype){
@@ -525,46 +577,4 @@ void free_condition_expr_leaf(struct condition_expr_leaf_t *node){
             free(node->value.string);
         free(node);
     }
-}
-
-struct condition_expr_t *create_condition_expr(void *data, enum condition_type_t type){
-    struct condition_expr_t *node = NULL;
-    enum logic_t *value = NULL;
-
-    node = (struct condition_expr_t *)malloc(sizeof(struct condition_expr_t));
-    if(node == NULL){
-        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
-    }
-    else{
-        node->prev = node;
-        node->next = node;
-        node->type = type;
-        switch(type){
-            case LOGIC:
-                value = (enum logic_t *)malloc(sizeof(enum condition_type_t));
-                if(value == NULL){
-                    fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
-                    free_condition_expr(node);
-                    node = NULL;
-                }
-                else{
-                    *value = logic_atoi(data);
-                    node->data = value;
-                }
-                break;
-            default:
-                node->data = data;
-                break;
-        }
-    }
-    return node;
-}
-
-void free_condition_expr(struct condition_expr_t *node){
-    if(node != NULL){
-        if(node->type == LOGIC && node->data != NULL)
-            free(node->data);
-        free(node);
-    }
-    return;
 }

@@ -49,9 +49,9 @@ STRING          \"([^\\\"\t\r\n]|\\.)*\"|'([^\\\'\t\r\n]|\\.)*'
 ("<=")          { LEX_DEBUG("operator", yytext); yylval.string = strdup("le");  return YY_LE; }
 ("!=")          { LEX_DEBUG("operator", yytext); yylval.string = strdup("ne");  return YY_NE; }
 ("=="|(?i:is))  { LEX_DEBUG("operator", yytext); yylval.string = strdup("is");  return YY_IS; }
-("&&"|(?i:and)) { LEX_DEBUG("operator", yytext); yylval.string = strdup("and"); return YY_AND; }
-("||"|(?i:or))  { LEX_DEBUG("operator", yytext); yylval.string = strdup("or");  return YY_OR; }
-("!"|(?:not))   { LEX_DEBUG("operator", yytext); yylval.string = strdup("not"); return YY_NOT; }
+("&&"|(?i:and)) { LEX_DEBUG("operator", yytext); return YY_AND; }
+("||"|(?i:or))  { LEX_DEBUG("operator", yytext); return YY_OR; }
+("!"|(?:not))   { LEX_DEBUG("operator", yytext); return YY_NOT; }
 {DATATYPE}      { LEX_DEBUG("operator", yytext); yylval.string = strdup(yytext); return DATATYPE; }
 {ID}            { LEX_DEBUG("id", yytext); yylval.string = strdup(yytext); return ID; } /* not use strdup, bug in create table ... */
 {INT}           { LEX_DEBUG("int", yytext); yylval.numi = atoi(yytext); return NUMI; }

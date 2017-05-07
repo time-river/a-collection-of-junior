@@ -40,8 +40,8 @@ struct query_t {
     struct column_type_t *column_type;
     struct column_t *column;
     struct value_t *value;
-    struct condition_t *condition;
     struct assign_expr_t *assign_expr;
+    struct condition_t *condition;
 };
 
 enum datatype_t {
@@ -104,29 +104,50 @@ struct condition_expr_leaf_t {
     union _value_t value;
 };
 
+struct condition_expr_t {
+    struct condition_expr_t *prev;
+    struct condition_expr_t *next;
+    struct list_t *truelist;
+    struct list_t *falselist;
+    int trueinstr; // 《编译原理》P264 布尔表达式的回填
+    int falseinstr;
+    struct condition_expr_leaf_t *leaf;
+};
+
+struct list_t {
+    struct list_t *prev;
+    struct list_t *next;
+    int instr;
+};
+
 enum condition_type_t {
     LOGIC,
     CONDITION,
     CONDITION_LEAF
 };
 
+/*
 struct condition_expr_t {
     struct condition_expr_t *prev;
     struct condition_expr_t *next;
     enum condition_type_t type;
     void *data;
-};
+};*/
 
 void init(void);
 struct query_t *create_query(char *database_name);
 void free_query(struct query_t *query);
 void hub(const struct query_t *query);
+
 void create_stmt(const struct query_t *query);
 void drop_stmt(const struct query_t *query);
 void show_stmt(const struct query_t *query);
 void use_stmt(const struct query_t *query);
 void select_stmt(const struct query_t *query);
 void insert_stmt(const struct query_t *query);
+void update_stmt(const struct query_t *query);
+void delete_stmt(const struct query_t *query);
+
 void assign_create_opt(struct query_t *query, enum create_opt_t opt);
 void assign_database_name(struct query_t *query, char *database_name);
 void assign_table_name(struct query_t *query, char *table_name);
@@ -142,18 +163,26 @@ enum logic_t logic_atoi(char *logic);
 struct column_type_t *create_column_type(const char *column, char *datatype);
 void free_column_type(struct column_type_t *node);
 void free_column_type_list(struct column_type_t *node);
+
 struct column_t *create_column(char *column);
 void free_column(struct column_t *node);
+void free_column_list(struct column_t *node);
+
 struct value_t *create_value(void *value_ptr, enum datatype_t datatype);
 void free_value(struct value_t *node);
+void free_value_list(struct value_t *node);
+
 struct assign_expr_t *create_assign_expr(char *column, void *value_ptr, enum datatype_t datatype);
 void free_assign_expr(struct assign_expr_t *node);
+void free_assign_expr_list(struct assign_expr_t *node);
+
 struct condition_expr_leaf_t *create_condition_expr_leaf(char *column, char *logic, void *value_ptr, enum datatype_t datatype);
 void free_condition_expr_leaf(struct condition_expr_leaf_t *node);
-struct condition_expr_t *create_condition_expr(void *data, enum condition_type_t type);
-void free_condition_expr(struct condition_expr_t *node);
+
+int condition_test(struct condition_expr_leaf_t *node, const struct condition_expr_leaf_t *first);
 
 extern char *database;
+extern int nextinstr;
 
 #include "xml.h"
 #endif

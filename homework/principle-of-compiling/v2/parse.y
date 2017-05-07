@@ -28,6 +28,7 @@ int yylex(void);
 void yyerror(const char *s);
 
 char *database = NULL;
+int nextinstr = 0;
 // yyval is global variable, can it be known the first use in some condition? Maybe yes.
 
 %}
@@ -41,13 +42,14 @@ char *database = NULL;
     struct column_t *column;
     struct value_t *value;
     struct assign_expr_t *assign_expr;
-    struct condition_expr_t *condition_expr;
+    struct condition_expr *condition_expr;
     struct condition_expr_leaf_t *condition_expr_leaf;
 }
 
 %token CREATE DELETE DROP EXIT INSERT SELECT SHOW UPDATE
 %token DATABASE DATABASES FROM INTO SET TABLE TABLES USE WHERE VALUES
-%token <string> YY_GG YY_GE YY_LL YY_LE YY_IS YY_NE YY_AND YY_OR YY_NOT
+%token YY_AND YY_OR YY_NOT
+%token <string> YY_GG YY_GE YY_LL YY_LE YY_IS YY_NE
 %token <string> ID DATATYPE YY_STRING
 %token <numi>   NUMI
 %token <numf>   NUMF
@@ -61,10 +63,11 @@ char *database = NULL;
 %type  <column>  column_list
 %type  <value> value_list
 %type  <assign_expr>  assign_expr_list
-%type  <condition_expr>  condition_expr
+%type  <condition_expr> condition_expr
+%type  <numi>   M
 %type  <condition_expr_leaf> condition_expr_leaf
 
-%destructor { free($$); } DATATYPE YY_STRING YY_GG YY_GE YY_LL YY_LE YY_IS YY_NE YY_AND YY_OR YY_NOT
+%destructor { free($$); } DATATYPE YY_STRING YY_GG YY_GE YY_LL YY_LE YY_IS YY_NE
 %destructor { free($$); } database_name table_name column
 
 %left   ','
@@ -180,6 +183,8 @@ select_stmt
             if($$ != NULL){
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
+                $6.right = select_stmt;
+                $6.wrong = condition_test;
             }
         }
     | SELECT column_list FROM table_name WHERE condition_expr    {
@@ -188,6 +193,8 @@ select_stmt
                 assign_column_list($$, $2);
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
+                $6.right = select_stmt;
+                $6.wrong = condition_test;
             }
         }
     ;
@@ -218,6 +225,8 @@ update_stmt
                 assign_table_name($$, $2);
                 assign_assign_expr_list($$, $4);
                 assign_condition($$, $6);
+                $6.right = update_stmt;
+                $6.wrong = condition_test;
             }
         }
     ;
@@ -228,6 +237,8 @@ delete_stmt
             if($$ != NULL){
                 assign_table_name($$, $3);
                 assign_condition($$, $5);
+                $5.right = delete_stmt;
+                $5.wrong = condition_test;
             }
         }
     ;
@@ -325,29 +336,31 @@ assign_expr_list
     ;
 
 condition_expr
-    : condition_expr YY_AND condition_expr {
-            struct condition_expr_t *node = NULL;
-            node = create_condition_expr($2, LOGIC);
-            NODE_IN_QUEUE($3, $1, $3);
-            NODE_IN_QUEUE(node, $3, $$);
+    : condition_expr YY_OR M condition_expr  {
+            backpatch(&($1->falselist), $3);
+            $$.truelist = merge($1->truelist, $3->truelist);
+            $$.falselist = $3->falselist;
+        }
+    | condition_expr YY_AND M condition_expr {
+            backpatch(&($1->truelist), $3);
+            $$.truelist = $3->truelist;
+            $$.falselist = merge(B1->falselist, B2->falselist);
         } 
-    | condition_expr YY_OR  condition_expr {
-            struct condition_expr_t *node = NULL;
-            node = create_condition_expr($2, LOGIC);
-            NODE_IN_QUEUE($3, $1, $3);
-            NODE_IN_QUEUE(node, $3, $$);
-        }
     | YY_NOT condition_expr                {
-            struct condition_expr_t *node = NULL;
-            node = create_condition_expr($1, LOGIC);
-            NODE_IN_QUEUE(node, $2, $$);
+            $$.truelist = $2->falselist;
+            $$.falselist = $2->truelist;
         }
-    | '(' condition_expr ')'    { $$ = $2; }
+    | '(' condition_expr ')'    { $$ = *$2; }
     | condition_expr_leaf   {
-            struct condition_expr_t *node = NULL;
-            node = create_condition_expr($1, CONDITION_LEAF);
-            NODE_INIT_QUEUE(node, $$);
+            B.truelist = mklist(nextinstr++);
+            B.falselist = mklist(nextinstr++);
+            /* B.truelist = mklist(nextinstr) */
+            /* B.falselist = mklist(nextinstr+1) */
         }
+    ;
+
+M
+    : { $$ = nextinstr; }
     ;
 
 condition_expr_leaf
