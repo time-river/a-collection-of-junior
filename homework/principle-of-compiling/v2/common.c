@@ -330,9 +330,6 @@ void assign_assign_expr_list(struct query_t *query, struct assign_expr_t *assign
     return;
 }
 
-void assign_condition(struct query_t *query, struct condition_expr_t *condition){
-}
-
 /* circular queue
  * a b c d e
  * e ->next d ->next c ->next b ->next a ->next e
@@ -520,61 +517,5 @@ void assign_value(union _value_t *node, void *value_ptr, enum datatype_t datatyp
         case STRING:
             node->string = strdup((char *)value_ptr);
             break;
-    }
-}
-
-enum logic_t logic_atoi(char *logic){
-    char *str = NULL;
-    enum logic_t value;
-
-    str = strdup(logic);
-    for(int i = 0; str[i] != '\0'; i++) // convert all to tolower
-        str[i] = tolower(str[i]);
-    if(strcmp(logic, "g") == 0)
-        value = G;
-    else if(strcmp(logic, "ge") == 0)
-        value = GE;
-    else if(strcmp(logic, "is") == 0)
-        value = IS;
-    else if(strcmp(logic, "l") == 0)
-        value = L;
-    else if(strcmp(logic, "le") == 0)
-        value = LE;
-    else if(strcmp(logic, "ne") == 0)
-        value = NE;
-    else if(strcmp(logic, "and") == 0)
-        value = AND;
-    else if(strcmp(logic, "or") == 0)
-        value = OR;
-    else if(strcmp(logic, "not") == 0)
-        value = NOT;
-    free(str);
-    return value;
-}
-
-struct condition_expr_leaf_t *create_condition_expr_leaf(char *column,
-        char *logic, void *value_ptr, enum datatype_t datatype){
-    struct condition_expr_leaf_t *node = NULL;
-    
-    node = (struct condition_expr_leaf_t *)malloc(sizeof(struct condition_expr_leaf_t));
-    if(node == NULL){
-        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
-    }
-    else{
-        node->column = strdup(column);
-        node->logic = logic_atoi(logic);
-        node->datatype = datatype;
-        assign_value(&(node->value), value_ptr, datatype);
-    }
-    return node;
-}
-
-void free_condition_expr_leaf(struct condition_expr_leaf_t *node){
-    if(node != NULL){
-        if(node->column != NULL)
-            free(node->column);
-        if(node->datatype == STRING && node->value.string != NULL)
-            free(node->value.string);
-        free(node);
     }
 }

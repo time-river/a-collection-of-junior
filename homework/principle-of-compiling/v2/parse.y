@@ -1,7 +1,24 @@
 %{
 #include "common.h"
+#include "condition.h"
 
 #define YYERROR_VERBOSE
+
+#ifdef DEBUG_YACC
+#define YACC_DEBUG(list, type)    { \
+            struct list_t *node = NULL; \
+            printf("%s:", (type)); \
+            printf("\n  truelist: "); \
+            for(node=(list)->truelist; node!=NULL; node=node->next) \
+                printf("%d ", node->instr); \
+            printf("\n  falselist: "); \
+            for(node=(list)->falselist; node!=NULL; node=node->next) \
+                printf("%d ", node->instr); \
+            putchar('\n'); \
+        }
+#else
+#define YACC_DEBUG(list)
+#endif
 
 #define NODE_IN_QUEUE(node, prev, return)  {\
             if((node) != NULL){   \
@@ -42,7 +59,7 @@ int nextinstr = 0;
     struct column_t *column;
     struct value_t *value;
     struct assign_expr_t *assign_expr;
-    struct condition_expr *condition_expr;
+    struct condition_expr_t *condition_expr;
     struct condition_expr_leaf_t *condition_expr_leaf;
 }
 
@@ -72,7 +89,8 @@ int nextinstr = 0;
 
 %left   ','
 %right  '='
-%left   YY_AND YY_OR
+%left   YY_OR
+%left   YY_AND
 %left   YY_IS YY_NE
 %left   YY_G YY_GE YY_L YY_LE
 %left   '+' '-'
@@ -183,8 +201,6 @@ select_stmt
             if($$ != NULL){
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
-                $6.right = select_stmt;
-                $6.wrong = condition_test;
             }
         }
     | SELECT column_list FROM table_name WHERE condition_expr    {
@@ -193,8 +209,6 @@ select_stmt
                 assign_column_list($$, $2);
                 assign_table_name($$, $4);
                 assign_condition($$, $6);
-                $6.right = select_stmt;
-                $6.wrong = condition_test;
             }
         }
     ;
@@ -225,8 +239,6 @@ update_stmt
                 assign_table_name($$, $2);
                 assign_assign_expr_list($$, $4);
                 assign_condition($$, $6);
-                $6.right = update_stmt;
-                $6.wrong = condition_test;
             }
         }
     ;
@@ -237,8 +249,6 @@ delete_stmt
             if($$ != NULL){
                 assign_table_name($$, $3);
                 assign_condition($$, $5);
-                $5.right = delete_stmt;
-                $5.wrong = condition_test;
             }
         }
     ;
@@ -337,30 +347,108 @@ assign_expr_list
 
 condition_expr
     : condition_expr YY_OR M condition_expr  {
-            backpatch(&($1->falselist), $3);
-            $$.truelist = merge($1->truelist, $3->truelist);
-            $$.falselist = $3->falselist;
+            if($1 != NULL && $4 != NULL){
+                int flag_1 = 0, flag_2 = 0;
+                // new node's flag: .prev = .next = .begin = .end = itself
+                if($1->prev==$1 && $1->next==$1 && $1->begin == $1 && $1->end == $1) // new node
+                    flag_1 = 1;
+                if($4->prev==$4 && $4->next==$4 && $4->begin == $4 && $4->end == $4) // new node
+                    flag_2 = 1; // (next, prev)
+                leaf_merge($1, flag_1, $4, flag_2);
+                backpatch(&($1->falselist), $3);
+                struct condition_expr_t condition = {
+                    .prev  = $4->prev,
+                    .next  = $4->next,
+                    .begin = $4->begin,
+                    .end   = $4->end,
+                    .trueinstr = -1,
+                    .falseinstr = -1,
+                    .leaf = NULL
+                };
+                condition.truelist = merge($1->truelist, flag_1, $4->truelist, flag_2);
+                condition.falselist = $4->falselist;
+                $$ = create_condition_expr(&condition, CONDITION, -1);
+                if(flag_1 == 0)
+                    free($1);
+                if(flag_2 == 0)
+                    free($4);
+                YACC_DEBUG($$, "node");
+            }
+            else
+                $$ = NULL;
         }
     | condition_expr YY_AND M condition_expr {
-            backpatch(&($1->truelist), $3);
-            $$.truelist = $3->truelist;
-            $$.falselist = merge(B1->falselist, B2->falselist);
+            int flag_1 = 0, flag_2 = 0;
+            if($1 != NULL && $4 != NULL){
+                if($1->prev==$1 && $1->next==$1 && $1->begin == $1 && $1->end == $1) // new node
+                    flag_1 = 1;
+                if($4->prev==$4 && $4->next==$4 && $4->begin == $4 && $4->end == $4) // new node
+                    flag_2 = 1; // (next, prev)
+                leaf_merge($1, flag_1, $4, flag_2);
+                backpatch(&($1->truelist), $3);
+                struct condition_expr_t condition = {
+                    .prev  = $4->prev,
+                    .next  = $4->next,
+                    .begin = $4->begin,
+                    .end   = $4->end,
+                    .trueinstr = -1,
+                    .falseinstr = -1,
+                    .leaf = NULL
+                };
+                condition.truelist = $4->truelist;
+                condition.falselist = merge($1->falselist, flag_1, $4->falselist, flag_2);
+                $$ = create_condition_expr(&condition, CONDITION, -1);
+                if(flag_1 == 0)
+                    free($1);
+                if(flag_2 == 0)
+                    free($4);
+                YACC_DEBUG($$, "node");
+            }
+            else
+                $$ = NULL;
         } 
     | YY_NOT condition_expr                {
-            $$.truelist = $2->falselist;
-            $$.falselist = $2->truelist;
+            if($2 != NULL){
+                struct condition_expr_t condition = {
+                    .prev  = $2->prev,
+                    .next  = $2->next,
+                    .begin = $2->begin,
+                    .end   = $2->end,
+                    .truelist = $2->falselist,
+                    .falselist = $2->truelist,
+                    .trueinstr = -1,
+                    .falseinstr = -1,
+                    .leaf = NULL
+                };
+                $$ = create_condition_expr(&condition, CONDITION, -1);
+                if(!($2->prev==$2 && $2->next==$2 && $2->begin == $2 && $2->end == $2)) // not new node
+                    free($2);
+                YACC_DEBUG($$, "node");
+            }
+            else
+                $$ = NULL;
         }
-    | '(' condition_expr ')'    { $$ = *$2; }
+    | '(' condition_expr ')'    { $$ = $2; }
     | condition_expr_leaf   {
-            B.truelist = mklist(nextinstr++);
-            B.falselist = mklist(nextinstr++);
-            /* B.truelist = mklist(nextinstr) */
-            /* B.falselist = mklist(nextinstr+1) */
+            /* 叶子节点由 prev / next 构成双向链表 */
+            /* begin / end 分别是这双向链表的起始、结束节点 */
+            $$ = create_condition_expr($1, CONDITION_LEAF, nextinstr);
+            if($$ != NULL){
+                $$->truelist = mklist(nextinstr++);
+                $$->falselist = mklist(nextinstr++);
+                /* B.truelist = mklist(nextinstr) */
+                /* B.falselist = mklist(nextinstr+1) */
+                YACC_DEBUG($$, "leaf");
+            }
         }
     ;
 
 M
-    : { $$ = nextinstr; }
+    : { $$ = nextinstr; 
+#ifdef DEBUG_YACC
+    printf("M:\n  nextinstr: %d\n", nextinstr);
+#endif
+        }
     ;
 
 condition_expr_leaf
