@@ -437,6 +437,8 @@ void select_xml(const struct query_t *query, FILE *fp){
         }
     }
 
+    free_column_type_list(column_type);
+    mxmlDelete(xml);
     return;
 }
 
@@ -653,4 +655,54 @@ int instr_in_list(struct list_t *list, int instr){
         node = node->next;
     }
     return iresult;
+}
+
+void delete_xml(const struct query_t *query, FILE *fp){
+    mxml_node_t *xml = NULL;
+    mxml_node_t *table = NULL;
+    mxml_node_t *meters = NULL;
+    mxml_node_t *row = NULL;
+    struct column_type_t *column_type = NULL;
+    int iresult = 0;
+
+    xml = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
+    if(xml == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        return;
+    }
+
+    table = mxmlFindElement(xml, xml, query->table_name, NULL, NULL,MXML_DESCEND);
+    if(table == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+    meters = mxmlGetFirstChild(table);  // 第一个孩子一定是表头
+    if(meters == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+
+    column_type = xml_get_column_type(meters);
+
+    for(row=mxmlGetNextSibling(meters);
+            row!=NULL; row=mxmlGetNextSibling(row)){
+        if(condition_test(query->condition, row, column_type) == 1){
+            iresult++;
+            mxmlDelete(row);
+            printf("----------iresult: %d\n", iresult);
+        }
+    }
+
+    if(iresult != 0){
+        fseek(fp, 0, SEEK_SET);
+        if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
+            fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+    }
+    fprintf(stdout, "Query OK, %d rows affected\n", iresult);
+
+    free_column_type_list(column_type);
+    mxmlDelete(xml);
+    return;
 }

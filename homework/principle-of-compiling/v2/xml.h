@@ -23,4 +23,6 @@ int condition_test(struct condition_expr_t *condition, mxml_node_t *row, struct 
 int expr_leaf_test(struct condition_expr_leaf_t *leaf, mxml_node_t *row, struct column_type_t *column_type);
 int instr_in_list(struct list_t *list, int instr);
 
+void delete_xml(const struct query_t *query, FILE *fp);
+
 #endif
