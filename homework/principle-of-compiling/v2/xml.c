@@ -398,6 +398,42 @@ void select_xml(const struct query_t *query, FILE *fp){
             }
         }
         else{
+            do{
+                iresult = 0; // 0 代表没有找到
+                column_type = first_ct;
+                do{
+                    if(strcmp(column_type->column, column->column) == 0){
+                        iresult = 1;
+                        break;
+                    }
+                    column_type = column_type->prev; 
+                }while(column_type != NULL && column_type != first_ct);
+                if(iresult != 1)
+                    break;
+                column = column->prev;
+            } while(column != NULL && column != first_c);
+            if(iresult != 1)
+               fprintf(stderr, "ERROR: You have an error in your SQL syntax\n");
+            else {
+                for(row=mxmlGetNextSibling(meters);
+                        row!=NULL; row=mxmlGetNextSibling(row)){
+                    if(condition_test(query->condition, row, column_type) == 1){
+                        for(node=mxmlGetFirstChild(row);
+                                node!=NULL; node=mxmlGetNextSibling(node)){
+                            node_name = mxmlGetElement(node);
+                            column = first_c;
+                            do{
+                                if(strcmp(column->column, mxmlGetElement(node)) == 0){
+                                    xml_row_output(node);
+                                    break;
+                                }
+                                column = column->prev;
+                            }while(column != NULL && column != first_c);
+                        }
+                        putchar('\n');
+                    }
+                }
+            }
         }
     }
 

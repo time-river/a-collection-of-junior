@@ -10,3 +10,4 @@ select * from tb where i==2 && f==1.0;
 select * from tb where i==2 || f==2.0 && s == "string";
 select * from tb where i==2 || f==1.0;
 select * from tb where i==1&&f==2.0 || s=="string";
+select i from tb where i==1&&f==2.0 || s=="string";
