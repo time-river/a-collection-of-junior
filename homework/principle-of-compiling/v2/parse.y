@@ -464,11 +464,7 @@ condition_expr_leaf
     | column YY_LL expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
     | column YY_LE expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
     | column YY_NE expr_int      { $$ = create_condition_expr_leaf($1, $2, &$3, INT); }
-    | column YY_GG expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
-    | column YY_GE expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
     | column YY_IS expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
-    | column YY_LL expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
-    | column YY_LE expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
     | column YY_NE expr_string   { $$ = create_condition_expr_leaf($1, $2, $3, STRING); }
     ;
 

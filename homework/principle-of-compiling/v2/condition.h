@@ -57,8 +57,6 @@ void free_condition_expr(struct condition_expr_t *node);
 
 void leaf_merge(struct condition_expr_t *B1, int flag_1, struct condition_expr_t *B2, int flag_2);
 
-int condition_test(struct condition_expr_leaf_t *node, const struct condition_expr_leaf_t *first);
-
 void backpatch(struct list_t **prev, int instr);
 struct list_t *merge(struct list_t *B1, int flag_1, struct list_t *B2, int flag_2);
 struct list_t *mklist(int nextinstr);

@@ -386,6 +386,19 @@ void select_xml(const struct query_t *query, FILE *fp){
         }
     }
     else{
+        if(query->column == NULL){ // output all
+            for(row=mxmlGetNextSibling(meters);
+                        row!=NULL; row=mxmlGetNextSibling(row)){
+                if(condition_test(query->condition, row, column_type) == 1){
+                    for(node=mxmlGetFirstChild(row);
+                            node!=NULL; node=mxmlGetNextSibling(node))
+                            xml_row_output(node);
+                }
+                putchar('\n');
+            }
+        }
+        else{
+        }
     }
 
     return;
@@ -399,4 +412,209 @@ void xml_row_output(mxml_node_t *node){
     text = mxmlGetText(mxmlGetFirstChild(node), 0);
     fprintf(stdout, "%-5s:  %-5s  |", column, text == NULL ? "" : text);
     return;
+}
+
+int condition_test(struct condition_expr_t *condition, mxml_node_t *row, struct column_type_t *column_type){
+    struct condition_expr_t *node = condition;
+    int result = 0;
+    int instr = -1;
+    int iresult = 0;
+    
+    if(condition == NULL || row == NULL)
+        iresult = 0;
+    else{
+        node = condition->begin;
+        iresult = 0;
+        do{
+            result = expr_leaf_test(node->leaf, row, column_type);
+            printf("result: %d\n", result);
+            if(result == 0){
+                instr = node->falseinstr;
+                if(instr_in_list(condition->falselist, instr) == 1){
+                    iresult = 0;
+                    break;
+                }
+            }
+            else{
+                instr = node->trueinstr;
+                if(instr_in_list(condition->truelist, instr) == 1){
+                    iresult = 1;
+                    break;
+                }
+            }
+            node = node->next;
+        } while(node != NULL && node != condition->begin);
+        printf("iresult: %d  instr: %d\n", iresult, instr);
+    }
+    return iresult;
+}
+
+int expr_leaf_test(struct condition_expr_leaf_t *leaf, mxml_node_t *row, struct column_type_t *column_type){
+// return leaf's bool
+    struct column_type_t *node = column_type;
+    mxml_node_t *elem = NULL;
+    const char *text = NULL;
+    float numf = 0.0f;
+    int numi = 0;
+    int iresult = 0;
+    int match = 0; // 0 -- not found, 1 -- found, data type is not matched, 2 -- found, right
+
+    do{
+        if(strcmp(leaf->column, node->column) == 0){
+            if((leaf->datatype == node->datatype)
+                    || (node->datatype == FLOAT && leaf->datatype == INT)){
+                match = 2;
+            }
+            else{
+                match = 1;
+                fprintf(stderr, "ERROR: data type is not matched.\n");
+            }
+            break;
+        }
+        node = node->prev;
+    }while(node != NULL && node != column_type); 
+
+    if(match == 0){
+        fprintf(stderr, "ERROR: You have an error in your SQL syntax\n");
+        iresult = 0; // bool is false
+    }
+    else if (match == 1){
+        iresult = 0;
+    }
+    else{
+        elem = mxmlFindPath(row, leaf->column);
+        switch(leaf->datatype){
+            case FLOAT:
+                text =  mxmlGetText(elem, 0);
+                if(text != NULL){
+                    numf = atof(text);
+                        switch(leaf->logic){
+                            case G:
+                                if(numf-leaf->value.numf < 0)
+                                    iresult = 1;
+                                else
+                                    iresult = 0;
+                                break;
+                            case GE:
+                                if((numf-leaf->value.numf < 0) || (fabsf(numf-leaf->value.numf) <= 1e-6))
+                                    iresult = 1;
+                                else
+                                    iresult = 0;
+                                break;
+                            case L:
+                                if(numf-leaf->value.numf > 0)
+                                    iresult = 1;
+                                else
+                                    iresult = 0;
+                                break;
+                            case LE:
+                                if((numf-leaf->value.numf > 0) || (fabsf(numf-leaf->value.numf) <= 1e-6))
+                                    iresult = 1;
+                                else
+                                    iresult = 0;
+                                break;
+                            case NE:
+                                if((fabsf(numf-leaf->value.numf) > 1e-6))
+                                    iresult = 1;
+                                else
+                                    iresult = 0;
+                                break;
+                            case IS:
+                                if((fabsf(numf-leaf->value.numf) <= 1e-6))
+                                    iresult = 1;
+                                else
+                                    iresult = 0;
+                                break;
+                            default:
+                                break;
+                        }
+                }
+                else
+                    iresult = 0; // false, value doesn't exist
+                break;
+            case INT:
+                text =  mxmlGetText(elem, 0);
+                if(text != NULL){
+                    numi = atoi(text);
+                    switch(leaf->logic){
+                        case G:
+                            if((numi-leaf->value.numi) < 0)
+                                iresult = 1;
+                            else
+                                iresult = 0;
+                            break;
+                        case GE:
+                            if((numi-leaf->value.numi) <= 0)
+                                iresult = 1;
+                            else
+                                iresult = 0;
+                            break;
+                        case L:
+                            if((numi-leaf->value.numi) > 0)
+                                iresult = 1;
+                            else
+                                iresult = 0;
+                            break;
+                        case LE:
+                            if((numi-leaf->value.numi) >= 0)
+                                iresult = 1;
+                            else
+                                iresult = 0;
+                            break;
+                        case NE:
+                            if(numi != leaf->value.numi)
+                                iresult = 1;
+                            else
+                                iresult = 0;
+                            break;
+                        case IS:
+                            if(numi == leaf->value.numi)
+                                iresult = 1;
+                            else
+                                iresult = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                    iresult = 0; // false, value doesn't exist
+                break;
+            case STRING:
+                text =  mxmlGetText(elem, 0);
+                switch(leaf->logic){
+                    case IS:
+                        if(strcmp(text, leaf->value.string) == 0)
+                            iresult = 1;// true
+                        else
+                            iresult = 0; // false, value doesn't exist
+                        break;
+                    case NE:
+                        if(strcmp(text, leaf->value.string) != 0)
+                            iresult = 1;// true
+                        else
+                            iresult = 0; // false, value doesn't exist
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+        }
+    }
+    return iresult;
+}
+
+int instr_in_list(struct list_t *list, int instr){
+    struct list_t *node = list;
+    int iresult = 0;
+
+    while(node != NULL){
+        if(instr == node->instr){
+            iresult = 1;
+            break;
+        }
+        node = node->next;
+    }
+    return iresult;
 }

@@ -69,7 +69,6 @@ struct condition_expr_t *create_condition_expr(void *condition, enum condition_t
         switch(type){
             case CONDITION: // assign_condition(query, node)
                 memcpy(node, condition, sizeof(struct condition_expr_t));
-                node->leaf = NULL;
                 /* 这段代码哪里有问题?
                 node->prev = ((struct condition_expr_t *)condition)->prev;
                 node->prev = ((struct condition_expr_t *)condition)->next;
@@ -86,7 +85,7 @@ struct condition_expr_t *create_condition_expr(void *condition, enum condition_t
                 node->begin = node->end = node;
                 node->truelist = node->falselist = NULL;
                 node->trueinstr = nextinstr; // 偶数
-                node->trueinstr = nextinstr + 1; // 奇数
+                node->falseinstr = nextinstr + 1; // 奇数
                 node->leaf = (struct condition_expr_leaf_t *)condition;
                 break;
         }
@@ -104,21 +103,50 @@ void free_condition_expr(struct condition_expr_t *node){
 }
 
 void leaf_merge(struct condition_expr_t *B1, int flag_1, struct condition_expr_t *B2, int flag_2){
+// circular queue, 保证 .begin == 最左边
     if(flag_1 == 1 && flag_2 == 1){ // 两个都是新节点
+        // bool || bool or bool && bool
+        /* question code
         insque(B1, B1);
         insque(B2, B1);
         B2->begin = B1->begin = B1;
         B2->end = B1->end = B2;
+        */
+        B2->begin = B1->begin = B1;
+        B2->end = B1->end = B2;
+        B1->next = B2;
+        B2->next = B1;
+        B1->prev = B2;
+        B2->prev = B1;
     }
     else if(flag_1 == 1 && flag_2 == 0){
+        // bool || expr or bool && expr
+        /* question code
         insque(B1, B2); 
         B1->begin = B2->begin;
         B1->end = B2->end = B1;
+        */
+        B1->prev = B2->end;
+        B1->next = B2->begin;
+        B2->end->next = B1;
+        B2->begin->prev = B1;
+        B1->begin = B2->begin = B1;
+        B1->end = B2->end;
     }
     else if(flag_1 == 0 && flag_2 == 1){
+        // expr || bool or expr && bool
+        /* question code
+        B1->prev = B2->end;
         insque(B2, B1);
         B2->begin = B1->begin;
         B2->end = B2->end = B2;
+        */
+        B2->prev = B1->end;
+        B2->next = B1->begin;
+        B1->end->next = B2;
+        B1->begin->prev = B2;
+        B2->begin = B1->begin;
+        B1->end = B2->end = B2;
     }
     else{ /* (flag_1 = 0 && flag_2 == 0) */
 

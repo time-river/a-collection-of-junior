@@ -245,6 +245,7 @@ void select_stmt(const struct query_t *query){
             fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
         }
         else{
+            fprintf(stdout, "SELECT RESULT:\n");
             select_xml(query, fp);
             fclose(fp);
         }
