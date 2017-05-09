@@ -465,7 +465,6 @@ int condition_test(struct condition_expr_t *condition, mxml_node_t *row, struct 
         iresult = 0;
         do{
             result = expr_leaf_test(node->leaf, row, column_type);
-            printf("result: %d\n", result);
             if(result == 0){
                 instr = node->falseinstr;
                 if(instr_in_list(condition->falselist, instr) == 1){
@@ -482,7 +481,6 @@ int condition_test(struct condition_expr_t *condition, mxml_node_t *row, struct 
             }
             node = node->next;
         } while(node != NULL && node != condition->begin);
-        printf("iresult: %d  instr: %d\n", iresult, instr);
     }
     return iresult;
 }
@@ -662,6 +660,7 @@ void delete_xml(const struct query_t *query, FILE *fp){
     mxml_node_t *table = NULL;
     mxml_node_t *meters = NULL;
     mxml_node_t *row = NULL;
+    mxml_node_t *next_row = NULL;
     struct column_type_t *column_type = NULL;
     int iresult = 0;
 
@@ -687,11 +686,11 @@ void delete_xml(const struct query_t *query, FILE *fp){
     column_type = xml_get_column_type(meters);
 
     for(row=mxmlGetNextSibling(meters);
-            row!=NULL; row=mxmlGetNextSibling(row)){
+            row!=NULL; row=next_row){
+        next_row = mxmlGetNextSibling(row);
         if(condition_test(query->condition, row, column_type) == 1){
             iresult++;
             mxmlDelete(row);
-            printf("----------iresult: %d\n", iresult);
         }
     }
 
