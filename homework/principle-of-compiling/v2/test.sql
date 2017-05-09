@@ -22,4 +22,8 @@ insert into tb (f) values (2^4);
 select * from tb;
 select i, f from tb;
 delete from tb where f==5;
+delete from tb where i==5;
+select * from tb;
+delete from tb where i==2 && i==3 && i==6;
+delete from tb where i==2 || i==3 || i==6;
 select * from tb;

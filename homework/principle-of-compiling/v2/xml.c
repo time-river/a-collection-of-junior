@@ -696,8 +696,12 @@ void delete_xml(const struct query_t *query, FILE *fp){
     }
 
     if(iresult != 0){
-        fseek(fp, 0, SEEK_SET);
-        if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
+        if(ftruncate(fileno(fp), 0) == 0){
+            fseek(fp, 0, SEEK_SET);
+            if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
+                fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        }
+        else
             fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
     }
     fprintf(stdout, "Query OK, %d rows affected\n", iresult);

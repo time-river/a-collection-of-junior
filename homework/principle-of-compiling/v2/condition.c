@@ -171,7 +171,7 @@ void backpatch(struct list_t **prev, int instr){
 
 struct list_t *merge(struct list_t *B1, int flag_1, struct list_t *B2, int flag_2){
     struct list_t *node_1 = NULL, *node_2 = NULL;
-    struct list_t *node = B1;
+    struct list_t *node = NULL;
 
     if(flag_1 == 1){ // new node
         node_1 = (struct list_t *)malloc(sizeof(struct list_t));
@@ -196,6 +196,7 @@ struct list_t *merge(struct list_t *B1, int flag_1, struct list_t *B2, int flag_
     else
         node_2 = B2;
 
+    node = node_1;
     while(node_1->next != NULL)
         node_1 = node_1->next;
     node_1->next = node_2;
