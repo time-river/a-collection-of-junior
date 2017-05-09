@@ -178,9 +178,11 @@ void insert_xml(const struct query_t *query, FILE *fp){
             fseek(fp, 0, SEEK_SET);
             if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
                 fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+            else
+                fprintf(stdout, "Query OK, 1 rows affected\n");
         }
         else
-            fprintf(stdout, "Query OK, 1 rows affected\n");
+            fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
     }
     else
         mxmlDelete(row);
@@ -838,7 +840,8 @@ int update_row(mxml_node_t *row, struct assign_expr_t *assign_expr, struct colum
     if(iresult == 1){
         node_ae = assign_expr;
         do{
-            elem = mxmlFindPath(row, node_ae->column);
+            elem = mxmlFindElement(row, row,node_ae->column, NULL, NULL, MXML_DESCEND);
+            //elem = mxmlFindPath(row, node_ae->column); !! question
             mxmlDelete(mxmlGetFirstChild(elem));
             switch(node_ae->datatype){
                 case FLOAT:

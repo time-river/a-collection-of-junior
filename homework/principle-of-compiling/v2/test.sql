@@ -34,5 +34,5 @@ update tb set s="string" where s!="string";
 update tb set i=20 where i!=10;
 update tb set i=10 where s=="string";
 update tb set i=80  where f==6.0;
-update tb set f=30 where f!=30;
+update tb set f=30.0 where f!=30.0;
 select * from tb;
