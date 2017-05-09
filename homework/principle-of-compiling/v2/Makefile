@@ -1,8 +1,8 @@
 .PYONY: all clean
 
-LDFLAGS := $(LDFLAGS) -g -DDEBUG_LEX -DYYDEBUG=1 -DDEBUG_XML -DDEBUG_YACC
+LDFLAGS := $(LDFLAGS) -g -DDEBUG_LEX -DDEBUG_XML -DDEBUG_YACC -DYYDEBUG=0
 LDLIBS := $(LDLIBS) -ly -lmxml -lm
-CC := clang
+CC := gcc
 
 all: common.c condition.c xml.c parse.tab.c
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)

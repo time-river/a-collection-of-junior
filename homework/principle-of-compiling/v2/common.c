@@ -76,7 +76,9 @@ void free_query(struct query_t *query){
         if(query->value != NULL)
             free_value_list(query->value);
         if(query->assign_expr != NULL)
-            free_assign_expr(query->assign_expr);
+            free_assign_expr_list(query->assign_expr);
+        if(query->condition != NULL)
+            free_condition_expr_list(query->condition);
         free(query);
     }
     return;
@@ -108,6 +110,7 @@ void hub(const struct query_t *query){
                 insert_stmt(query);
                 break;
             case UPDATE_STMT:
+                update_stmt(query);
                 break;
             case DELETE_STMT:
                 delete_stmt(query);
@@ -233,7 +236,7 @@ void use_stmt(const struct query_t *query){
 }
 
 void select_stmt(const struct query_t *query){
-    char path[BUFSIZ];
+    char path[BUFSIZ] = {0};
     FILE *fp = NULL;
 
     snprintf(path, sizeof(path)-1, "%s/%s/%s", ROOT, query->database_name, query->table_name);
@@ -278,8 +281,29 @@ void insert_stmt(const struct query_t *query){
     return;
 }
 
+void update_stmt(const struct query_t *query){
+    char path[BUFSIZ] = {0};
+    FILE *fp = NULL;
+
+    snprintf(path, sizeof(path)-1, "%s/%s/%s", ROOT, query->database_name, query->table_name);
+
+    if(access(path, F_OK&0x7) != 0)
+        fprintf(stderr, "Table '%s.%s' doesn't exist\n", query->database_name, query->table_name);
+    else{
+        fp = fopen(path, "r+");
+        if(fp == NULL){
+            fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        }
+        else{
+            update_xml(query, fp);
+            fclose(fp);
+        }
+    }
+    return;
+}
+
 void delete_stmt(const struct query_t *query){
-    char path[BUFSIZ];
+    char path[BUFSIZ] = {0};
     FILE *fp = NULL;
 
     snprintf(path, sizeof(path)-1, "%s/%s/%s", ROOT, query->database_name, query->table_name);

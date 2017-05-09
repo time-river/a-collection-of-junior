@@ -4,6 +4,12 @@
 
 #define YYERROR_VERBOSE
 
+#ifdef YYDEBUG
+#if YYDEBUG == 1
+int yydebug = 1;
+#endif
+#endif
+
 #ifdef DEBUG_YACC
 #define YACC_DEBUG(list, type)    { \
             struct list_t *node = NULL; \
@@ -92,7 +98,7 @@ int nextinstr = 0;
 %left   YY_OR
 %left   YY_AND
 %left   YY_IS YY_NE
-%left   YY_G YY_GE YY_L YY_LE
+%left   YY_GG YY_GE YY_LL YY_LE
 %left   '+' '-'
 %left   '*' '/' '%'
 %right  UMINUS

@@ -1,9 +1,3 @@
-Terminals unused in grammar
-
-   YY_G
-   YY_L
-
-
 Grammar
 
     0 $accept: start $end
@@ -181,69 +175,67 @@ DATATYPE (286) 31 32
 YY_STRING (287) 96
 NUMI (288) 87
 NUMF (289) 67
-YY_G (290)
-YY_L (291)
-UMINUS (292)
+UMINUS (290)
 
 
 Nonterminals, with rules where they appear
 
-$accept (49)
+$accept (47)
     on left: 0
-start (50)
+start (48)
     on left: 1 2 3 4, on right: 0 1 2
-lines (51)
+lines (49)
     on left: 5 6 7 8 9 10 11 12 13, on right: 1
-create_stmt (52)
+create_stmt (50)
     on left: 14 15 16, on right: 5
-drop_stmt (53)
+drop_stmt (51)
     on left: 17 18, on right: 6
-show_stmt (54)
+show_stmt (52)
     on left: 19 20, on right: 7
-use_stmt (55)
+use_stmt (53)
     on left: 21, on right: 8
-exit_stmt (56)
+exit_stmt (54)
     on left: 22, on right: 9
-select_stmt (57)
+select_stmt (55)
     on left: 23 24 25 26, on right: 10
-insert_stmt (58)
+insert_stmt (56)
     on left: 27 28, on right: 11
-update_stmt (59)
+update_stmt (57)
     on left: 29, on right: 12
-delete_stmt (60)
+delete_stmt (58)
     on left: 30, on right: 13
-column_type_list (61)
+column_type_list (59)
     on left: 31 32, on right: 15 31
-column_list (62)
+column_list (60)
     on left: 33 34, on right: 24 26 28 33
-value_list (63)
+value_list (61)
     on left: 35 36 37 38 39 40, on right: 27 28 35 36 37
-assign_expr_list (64)
+assign_expr_list (62)
     on left: 41 42 43 44 45 46, on right: 29 41 42 43
-condition_expr (65)
+condition_expr (63)
     on left: 47 48 49 50 51, on right: 25 26 29 30 47 48 49 50
-M (66)
+M (64)
     on left: 52, on right: 47 48
-condition_expr_leaf (67)
+condition_expr_leaf (65)
     on left: 53 54 55 56 57 58 59 60 61 62 63 64 65 66, on right: 51
-expr_float (68)
+expr_float (66)
     on left: 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84
     85 86, on right: 36 39 41 44 53 54 55 56 57 58 68 69 70 71 72 73
     74 75 76 77 78 79 80 81 82 83 84 85
-expr_int (69)
+expr_int (67)
     on left: 87 88 89 90 91 92 93 94 95, on right: 35 38 42 45 59 60
     61 62 63 64 69 70 72 73 75 76 78 79 84 85 86 88 89 90 91 92 93
     94 95
-expr_string (70)
+expr_string (68)
     on left: 96, on right: 37 40 43 46 65 66
-database_name (71)
+database_name (69)
     on left: 97, on right: 14 17 21
-table_name (72)
+table_name (70)
     on left: 98, on right: 15 16 18 23 24 25 26 27 28 29 30
-column (73)
+column (71)
     on left: 99, on right: 31 32 33 34 41 42 43 44 45 46 53 54 55 56
     57 58 59 60 61 62 63 64 65 66
-name (74)
+name (72)
     on left: 100, on right: 97 98 99
 
 

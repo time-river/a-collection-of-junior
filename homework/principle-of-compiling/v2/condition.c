@@ -97,7 +97,39 @@ struct condition_expr_t *create_condition_expr(void *condition, enum condition_t
 
 void free_condition_expr(struct condition_expr_t *node){
     if(node != NULL){
-    
+        if(node->leaf != NULL)
+            free_condition_expr_leaf(node->leaf);
+        free(node);
+    }
+    return;
+}
+
+void free_list(struct list_t *node){
+    struct list_t *list;
+
+    while(node != NULL){
+        list = node;
+        node = list->next;
+        free(list);
+    }
+    return;
+}
+
+void free_condition_expr_list(struct condition_expr_t *node){
+    struct list_t *list = NULL;
+    struct condition_expr_t *expr = NULL, *tmp = NULL;
+
+    if(node != NULL){
+        if(node->truelist != NULL)
+            free_list(node->truelist);
+        if(node->falselist != NULL)
+            free_list(node->falselist);
+        for(expr=node->begin; expr != NULL && expr!=node->end;){
+            tmp = expr;
+            expr = expr->next;
+            free(tmp);
+        }
+        free(node);
     }
     return;
 }

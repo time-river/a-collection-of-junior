@@ -54,11 +54,13 @@ struct condition_expr_leaf_t *create_condition_expr_leaf(char *column, char *log
 void free_condition_expr_leaf(struct condition_expr_leaf_t *node);
 struct condition_expr_t *create_condition_expr(void *condition, enum condition_type_t type, int nextinstr);
 void free_condition_expr(struct condition_expr_t *node);
+void free_condition_expr_list(struct condition_expr_t *node);
 
 void leaf_merge(struct condition_expr_t *B1, int flag_1, struct condition_expr_t *B2, int flag_2);
 
 void backpatch(struct list_t **prev, int instr);
 struct list_t *merge(struct list_t *B1, int flag_1, struct list_t *B2, int flag_2);
 struct list_t *mklist(int nextinstr);
+void free_list(struct list_t *node);
 
 #endif

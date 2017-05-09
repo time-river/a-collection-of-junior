@@ -174,9 +174,11 @@ void insert_xml(const struct query_t *query, FILE *fp){
     if(iresult == 0){
         mxmlAdd(table, MXML_ADD_AFTER, MXML_ADD_TO_PARENT, row);
 
-        fseek(fp, 0, SEEK_SET);
-        if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
-            fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        if(ftruncate(fileno(fp), 0) == 0){
+            fseek(fp, 0, SEEK_SET);
+            if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
+                fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        }
         else
             fprintf(stdout, "Query OK, 1 rows affected\n");
     }
@@ -495,6 +497,9 @@ int expr_leaf_test(struct condition_expr_leaf_t *leaf, mxml_node_t *row, struct 
     int iresult = 0;
     int match = 0; // 0 -- not found, 1 -- found, data type is not matched, 2 -- found, right
 
+    if(leaf == NULL || row == NULL || column_type == NULL)
+        return;
+
     do{
         if(strcmp(leaf->column, node->column) == 0){
             if((leaf->datatype == node->datatype)
@@ -562,11 +567,20 @@ int expr_leaf_test(struct condition_expr_leaf_t *leaf, mxml_node_t *row, struct 
                                     iresult = 0;
                                 break;
                             default:
+                                iresult = 0;
                                 break;
                         }
                 }
-                else
-                    iresult = 0; // false, value doesn't exist
+                else{
+                    switch(leaf->logic){
+                        case NE:
+                            iresult = 1;
+                            break;
+                        default:
+                            iresult = 0;
+                            break;
+                    }
+                }
                 break;
             case INT:
                 text =  mxmlGetText(elem, 0);
@@ -613,28 +627,48 @@ int expr_leaf_test(struct condition_expr_leaf_t *leaf, mxml_node_t *row, struct 
                             break;
                     }
                 }
-                else
-                    iresult = 0; // false, value doesn't exist
+                else{
+                    switch(leaf->logic){
+                        case NE:
+                            iresult = 1;
+                            break;
+                        default:
+                            iresult = 0;
+                            break;
+                    }
+                }
                 break;
             case STRING:
                 text =  mxmlGetText(elem, 0);
-                switch(leaf->logic){
-                    case IS:
-                        if(strcmp(text, leaf->value.string) == 0)
-                            iresult = 1;// true
-                        else
-                            iresult = 0; // false, value doesn't exist
-                        break;
-                    case NE:
-                        if(strcmp(text, leaf->value.string) != 0)
-                            iresult = 1;// true
-                        else
-                            iresult = 0; // false, value doesn't exist
-                        break;
-                    default:
-                        break;
+                if(text != NULL){
+                    switch(leaf->logic){
+                        case IS:
+                            if(strcmp(text, leaf->value.string) == 0)
+                                iresult = 1;// true
+                            else
+                                iresult = 0; // false, value doesn't exist
+                            break;
+                        case NE:
+                            if(strcmp(text, leaf->value.string) != 0)
+                                iresult = 1;// true
+                            else
+                                iresult = 0; // false, value doesn't exist
+                            break;
+                        default:
+                            iresult = 0;
+                            break;
+                    }
                 }
-
+                else{
+                    switch(leaf->logic){
+                        case NE:
+                            iresult = 1;
+                            break;
+                        default:
+                            iresult = 0;
+                            break;
+                    }
+                }
                 break;
         }
     }
@@ -653,6 +687,59 @@ int instr_in_list(struct list_t *list, int instr){
         node = node->next;
     }
     return iresult;
+}
+
+void update_xml(const struct query_t *query, FILE *fp){
+    mxml_node_t *xml = NULL;
+    mxml_node_t *table = NULL;
+    mxml_node_t *meters = NULL;
+    mxml_node_t *row = NULL;
+    struct column_type_t *column_type = NULL;
+    int iresult = 0;
+
+    xml = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
+    if(xml == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        return;
+    }
+
+    table = mxmlFindElement(xml, xml, query->table_name, NULL, NULL,MXML_DESCEND);
+    if(table == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+    meters = mxmlGetFirstChild(table);  // 第一个孩子一定是表头
+    if(meters == NULL){
+        fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        mxmlDelete(xml);
+        return;
+    }
+
+    column_type = xml_get_column_type(meters);
+
+    for(row=mxmlGetNextSibling(meters);
+            row!=NULL; row=mxmlGetNextSibling(row)){
+        if(condition_test(query->condition, row, column_type) == 1){
+            if(update_row(row, query->assign_expr, column_type) == 1)
+                iresult++;
+        }
+    }
+
+    if(iresult != 0){
+        if(ftruncate(fileno(fp), 0) == 0){
+            fseek(fp, 0, SEEK_SET);
+            if(mxmlSaveFile(xml, fp, MXML_NO_CALLBACK) == -1)
+                fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+        }
+        else
+            fprintf(stderr, "%s LINE %d: %s\n", __FILE__, __LINE__, strerror(errno));
+    }
+    fprintf(stdout, "Query OK, %d rows affected\n", iresult);
+
+    free_column_type_list(column_type);
+    mxmlDelete(xml);
+    return;
 }
 
 void delete_xml(const struct query_t *query, FILE *fp){
@@ -708,4 +795,65 @@ void delete_xml(const struct query_t *query, FILE *fp){
     free_column_type_list(column_type);
     mxmlDelete(xml);
     return;
+}
+
+int update_row(mxml_node_t *row, struct assign_expr_t *assign_expr, struct column_type_t *column_type){
+/*
+ * 1. 查找
+ * 2. 参数类型检查
+ * 3. 赋值
+ */
+    struct assign_expr_t *node_ae = assign_expr;
+    struct column_type_t *node_ct = column_type;
+    mxml_node_t *elem = NULL;
+    int iresult = 0;
+    
+    do{
+        node_ct = column_type;
+
+        do{
+            iresult = 0;
+            if(strcmp(node_ae->column, node_ct->column) == 0){
+                if((node_ae->datatype == node_ct->datatype)
+                    || (node_ae->datatype == FLOAT && node_ct->datatype == INT)){
+                    iresult = 1;
+                    break;
+                }
+                else{
+                    fprintf(stderr, "ERROR: %s's data type is not matched.\n", node_ae->column);
+                    iresult = 0;
+                }
+            }
+            node_ct = node_ct->prev;
+        }while(node_ct != NULL && node_ct != column_type);
+        
+        if(iresult != 1){
+            fprintf(stderr, "ERROR: You have an error in your SQL syntax\n");
+            break;
+        }
+
+        node_ae = node_ae->next;
+    } while(node_ae != NULL && node_ae != assign_expr);
+
+    if(iresult == 1){
+        node_ae = assign_expr;
+        do{
+            elem = mxmlFindPath(row, node_ae->column);
+            mxmlDelete(mxmlGetFirstChild(elem));
+            switch(node_ae->datatype){
+                case FLOAT:
+                    mxmlNewReal(elem, node_ae->value.numf);
+                    break;
+                case INT:
+                    mxmlNewInteger(elem, node_ae->value.numi);
+                    break;
+                case STRING:
+                    mxmlNewText(elem, 0, node_ae->value.string);
+                    break;
+            }
+            node_ae = node_ae->prev;
+        }while(node_ae != NULL && node_ae != assign_expr);
+    }
+
+    return iresult;
 }
