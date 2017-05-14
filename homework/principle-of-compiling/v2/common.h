@@ -1,3 +1,25 @@
+/* SQL Interpreter Version 2.0:  <03-05-17, river>
+ *   Real End
+ *
+ *   Architecture:
+ *
+ *      Hub +-- create_stmt
+ *          |
+ *          +-- drop_stmt
+ *          |
+ *          +-- show_stmt
+ *          |
+ *          +-- use_stmt
+ *          |
+ *          +-- select_stmt
+ *          |
+ *          +-- insert_stmt
+ *          |
+ *          +-- update_stmt
+ *          |
+ *          +-- delete_stmt
+ */
+
 #ifndef COMMON_H
 #define COMMON_H
 

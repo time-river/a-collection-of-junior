@@ -1,3 +1,7 @@
+/* SQL Interpreter Version 2.0:  <03-05-17, river>
+ *   grammar analysis with bison 3.0.4
+ */
+
 %{
 #include "common.h"
 #include "condition.h"

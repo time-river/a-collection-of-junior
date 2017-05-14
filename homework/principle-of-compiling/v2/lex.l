@@ -1,3 +1,7 @@
+/* SQL Interpreter Version 2.0:  <03-05-17, river>
+ *   lexical analysis with flex 2.6.0
+ */
+
 %option yylineno
 %option noyywrap
 

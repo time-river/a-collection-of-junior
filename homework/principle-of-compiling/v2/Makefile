@@ -1,10 +1,10 @@
-.PYONY: all clean
+.PYONY: clean
 
 LDFLAGS := $(LDFLAGS) -g -DDEBUG_LEX -DDEBUG_XML -DDEBUG_YACC -DYYDEBUG=0
 LDLIBS := $(LDLIBS) -ly -lmxml -lm
 CC := gcc
 
-all: common.c condition.c xml.c parse.tab.c
+interpreter: common.c condition.c xml.c parse.tab.c
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 parse.tab.c: lex.yy.c parse.y

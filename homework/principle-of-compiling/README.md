@@ -1,56 +1,9 @@
+# 结语
 
-基本SQL语句及功能：  
-CREATE DATABASE   	创建数据库  
-USE DATABASE 		选择数据库  
-CREATE   TABLE		创建表  
-SHOW  TABLES  		显示表名  
-INSERT		 	插入元组  
-SELECT 		 	查询元组  
-UPDATE			更新元组  
-DELETE			删除元组  
-DROP	TABLE 		删除表  
-DROP	DATABASE		删除数据库  
-EXIT	 			退出系统  
-注：支持数据类型有INT、CHAR(N) 等  
+回首，不过尔尔。
 
-Syntax
-```sql
-CREATE DATABASE database_name;
-DRROP  DATABASE database_name;
+04/25 -- 05/09，历时二周多，龙书狂看二三百页，flex 与 bison 的帮助文档扫了大半...
 
-CREATE TABLE table_name (
-    column1 datatype,
-    column2 datatype,
-    column3 datatype,
-    ...
-);
-DROP   TABLE table_name;
+为了实现这个 SQL 解释器玩具，看龙书看得痛不欲生——真心难以理解、也没理解...往往凌晨 2 点多才睡觉，现在晚上想睡都睡不着了（哇的一声哭了）。
 
-ALTER TABLE table_name
-    ADD column_name datatype;
-
-SHOW DATABASES;
-SHOW TABLES;
-
-USE database_name;
-
-EXIT;
-
-SELECT column1, column2, ...
-    FROM table_name
-    [WHERE condition];
-SELECT * FROM table_name
-    [WHERE condition];
-
-INSERT INTO table_name (column1, column2, column3, ...)
-    VALUES (values1, values2, values3, ...);
-INSERT INTO table_name
-    VALUES (values1, values2, values3, ...);
-
-UPDATE table_name
-    SET column1 = value1, column2 = value2, ...
-    WHERE condition;
-
-DELETE FROM table_name
-    WHERE condition;
-``
+还是挺值的，哈哈哈...
