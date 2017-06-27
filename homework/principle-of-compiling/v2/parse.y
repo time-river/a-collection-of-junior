@@ -8,10 +8,8 @@
 
 #define YYERROR_VERBOSE
 
-#ifdef YYDEBUG
 #if YYDEBUG == 1
 int yydebug = 1;
-#endif
 #endif
 
 #ifdef DEBUG_YACC
@@ -27,7 +25,7 @@ int yydebug = 1;
             putchar('\n'); \
         }
 #else
-#define YACC_DEBUG(list)
+#define YACC_DEBUG(list, type)
 #endif
 
 #define NODE_IN_QUEUE(node, prev, return)  {\
